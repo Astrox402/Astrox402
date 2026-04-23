@@ -1,0 +1,26 @@
+Product Language                                                                
+                                                                                
+Use copy aligned with the x402-inspired narrative:                              
+- programmable access                                                           
+- monetized resource                                                            
+- payment configuration                                                         
+- settlement                                                                    
+- verification                                                                  
+- paid endpoint                                                                 
+- Solana-native payment flow                                                    
+                                                                                
+Do not make it sound like:                                                      
+- a token trading dashboard                                                     
+- a wallet tracker                                                              
+- a DeFi terminal                                                               
+- a multi-chain infrastructure panel                                            
+                                                                                
+Technical Expectations                                                          
+                                                                                
+- keep the implementation modular                                               
+- reuse existing layout/components where possible                               
+- create reusable form sections/components if helpful                           
+- use mock data for now                                                         
+- structure code so a real backend can be connected later                       
+- make the flow production-friendly in architecture even if data is currently   
+mocked 
