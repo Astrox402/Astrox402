@@ -49,7 +49,7 @@ export function Hero() {
           <a href="#waitlist" className="inline-flex h-11 items-center px-5 rounded-md bg-foreground text-background text-[14px] font-medium hover:bg-foreground/90 transition-all hover:-translate-y-px">
             Request early access
           </a>
-          <a href="#docs" className="inline-flex h-11 items-center px-5 rounded-md border border-border bg-surface/40 text-[14px] font-medium hover:bg-surface transition-colors">
+          <a href="/docs" className="inline-flex h-11 items-center px-5 rounded-md border border-border bg-surface/40 text-[14px] font-medium hover:bg-surface transition-colors">
             Read the protocol →
           </a>
         </motion.div>
