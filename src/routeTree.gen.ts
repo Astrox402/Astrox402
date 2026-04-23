@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProtocolRouteImport } from './routes/protocol'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DocsRouteImport } from './routes/docs'
+import { Route as ConsoleRouteImport } from './routes/console'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsServeRouteImport } from './routes/docs.serve'
@@ -25,9 +29,29 @@ import { Route as DocsClientsRouteImport } from './routes/docs.clients'
 import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
 
+const ProtocolRoute = ProtocolRouteImport.update({
+  id: '/protocol',
+  path: '/protocol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsoleRoute = ConsoleRouteImport.update({
+  id: '/console',
+  path: '/console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -103,7 +127,11 @@ const DocsAgentsRoute = DocsAgentsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/console': typeof ConsoleRoute
   '/docs': typeof DocsRouteWithChildren
+  '/pricing': typeof PricingRoute
+  '/protocol': typeof ProtocolRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -120,6 +148,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/console': typeof ConsoleRoute
+  '/pricing': typeof PricingRoute
+  '/protocol': typeof ProtocolRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -137,7 +169,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/changelog': typeof ChangelogRoute
+  '/console': typeof ConsoleRoute
   '/docs': typeof DocsRouteWithChildren
+  '/pricing': typeof PricingRoute
+  '/protocol': typeof ProtocolRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -156,7 +192,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/changelog'
+    | '/console'
     | '/docs'
+    | '/pricing'
+    | '/protocol'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -173,6 +213,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/changelog'
+    | '/console'
+    | '/pricing'
+    | '/protocol'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -189,7 +233,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/changelog'
+    | '/console'
     | '/docs'
+    | '/pricing'
+    | '/protocol'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -207,16 +255,48 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChangelogRoute: typeof ChangelogRoute
+  ConsoleRoute: typeof ConsoleRoute
   DocsRoute: typeof DocsRouteWithChildren
+  PricingRoute: typeof PricingRoute
+  ProtocolRoute: typeof ProtocolRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/protocol': {
+      id: '/protocol'
+      path: '/protocol'
+      fullPath: '/protocol'
+      preLoaderRoute: typeof ProtocolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs': {
       id: '/docs'
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/console': {
+      id: '/console'
+      path: '/console'
+      fullPath: '/console'
+      preLoaderRoute: typeof ConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -356,7 +436,11 @@ const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChangelogRoute: ChangelogRoute,
+  ConsoleRoute: ConsoleRoute,
   DocsRoute: DocsRouteWithChildren,
+  PricingRoute: PricingRoute,
+  ProtocolRoute: ProtocolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

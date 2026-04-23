@@ -1,10 +1,10 @@
 export function Footer() {
   const cols: { t: string; l: { label: string; href: string }[] }[] = [
     { t: "Product", l: [
-      { label: "Protocol", href: "#" },
-      { label: "Console", href: "#" },
-      { label: "Pricing", href: "#" },
-      { label: "Changelog", href: "#" },
+      { label: "Protocol", href: "/protocol" },
+      { label: "Console", href: "/console" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Changelog", href: "/changelog" },
     ]},
     { t: "Developers", l: [
       { label: "Documentation", href: "/docs" },
