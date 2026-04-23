@@ -56,6 +56,17 @@ const NAV_ITEMS = [
     ),
   },
   {
+    label: "Playground",
+    to: "/dashboard/playground",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M2 4.5h11M2 4.5C2 3.67 2.67 3 3.5 3h8c.83 0 1.5.67 1.5 1.5"/>
+        <rect x="2" y="4.5" width="11" height="8" rx="0"/>
+        <path d="M5 8l2 2 3-3"/>
+      </svg>
+    ),
+  },
+  {
     label: "Settings",
     to: "/dashboard/settings",
     icon: (

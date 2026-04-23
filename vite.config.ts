@@ -130,6 +130,33 @@ const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: 
     },
   },
   {
+    method: "POST", pattern: /^\/api\/payments$/,
+    handler(req, res) {
+      const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);
+      const b = (req as Req).body ?? {};
+      const id = genId("pay_"); const now = new Date().toISOString();
+      const resource_id = b.resource_id ?? null;
+      const resource_name = b.resource_name ?? "Unknown";
+      const amount_lamports = Number(b.amount_lamports) || 0;
+      const token = b.token ?? "USDC";
+      const payer_wallet = b.payer_wallet ?? "";
+      const tx_signature = b.tx_signature ?? "";
+      const status = b.status ?? "settled";
+      dbExec(interpolate(
+        `INSERT INTO payments (id,user_id,resource_id,resource_name,amount_lamports,token,payer_wallet,tx_signature,status,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        [id,u,resource_id,resource_name,amount_lamports,token,payer_wallet,tx_signature,status,now]
+      ));
+      if (resource_id) {
+        dbExec(interpolate(
+          `UPDATE resources SET requests = requests + 1, revenue_lamports = revenue_lamports + $1 WHERE id = $2 AND user_id = $3`,
+          [amount_lamports, resource_id, u]
+        ));
+      }
+      const rows = dbQuery(interpolate(`SELECT * FROM payments WHERE id = $1`, [id]));
+      jsonResp(res, rows[0] ?? {}, 201);
+    },
+  },
+  {
     method: "GET", pattern: /^\/api\/stats$/,
     handler(req, res) {
       const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);

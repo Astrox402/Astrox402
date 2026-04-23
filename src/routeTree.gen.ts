@@ -44,6 +44,7 @@ import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardResourcesRouteImport } from './routes/dashboard.resources'
+import { Route as DashboardPlaygroundRouteImport } from './routes/dashboard.playground'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard.payments'
 import { Route as DashboardDeveloperRouteImport } from './routes/dashboard.developer'
 import { Route as DashboardResourcesIndexRouteImport } from './routes/dashboard.resources.index'
@@ -227,6 +228,11 @@ const DashboardResourcesRoute = DashboardResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPlaygroundRoute = DashboardPlaygroundRouteImport.update({
+  id: '/playground',
+  path: '/playground',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPaymentsRoute = DashboardPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -287,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/status': typeof StatusRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/playground': typeof DashboardPlaygroundRoute
   '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
@@ -329,6 +336,7 @@ export interface FileRoutesByTo {
   '/status': typeof StatusRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/playground': typeof DashboardPlaygroundRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
@@ -372,6 +380,7 @@ export interface FileRoutesById {
   '/status': typeof StatusRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/playground': typeof DashboardPlaygroundRoute
   '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
@@ -418,6 +427,7 @@ export interface FileRouteTypes {
     | '/status'
     | '/dashboard/developer'
     | '/dashboard/payments'
+    | '/dashboard/playground'
     | '/dashboard/resources'
     | '/dashboard/settings'
     | '/docs/agents'
@@ -460,6 +470,7 @@ export interface FileRouteTypes {
     | '/status'
     | '/dashboard/developer'
     | '/dashboard/payments'
+    | '/dashboard/playground'
     | '/dashboard/settings'
     | '/docs/agents'
     | '/docs/architecture'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/status'
     | '/dashboard/developer'
     | '/dashboard/payments'
+    | '/dashboard/playground'
     | '/dashboard/resources'
     | '/dashboard/settings'
     | '/docs/agents'
@@ -794,6 +806,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardResourcesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/playground': {
+      id: '/dashboard/playground'
+      path: '/playground'
+      fullPath: '/dashboard/playground'
+      preLoaderRoute: typeof DashboardPlaygroundRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/payments': {
       id: '/dashboard/payments'
       path: '/payments'
@@ -877,6 +896,7 @@ const DashboardResourcesRouteWithChildren =
 interface DashboardRouteChildren {
   DashboardDeveloperRoute: typeof DashboardDeveloperRoute
   DashboardPaymentsRoute: typeof DashboardPaymentsRoute
+  DashboardPlaygroundRoute: typeof DashboardPlaygroundRoute
   DashboardResourcesRoute: typeof DashboardResourcesRouteWithChildren
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -885,6 +905,7 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDeveloperRoute: DashboardDeveloperRoute,
   DashboardPaymentsRoute: DashboardPaymentsRoute,
+  DashboardPlaygroundRoute: DashboardPlaygroundRoute,
   DashboardResourcesRoute: DashboardResourcesRouteWithChildren,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,

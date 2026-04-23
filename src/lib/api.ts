@@ -111,6 +111,22 @@ export const api = {
     if (!r.ok) return null;
     return r.json();
   },
+
+  async createPayment(data: {
+    resource_id: string | null;
+    resource_name: string;
+    amount_lamports: number;
+    token: string;
+    payer_wallet: string;
+    tx_signature: string;
+    status: "settled" | "pending" | "failed";
+  }): Promise<ApiPayment> {
+    const r = await apiFetch("/api/payments", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    return r.json();
+  },
 };
 
 export function lamportsToDisplay(lamports: number, token: string): string {
