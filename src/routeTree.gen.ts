@@ -49,6 +49,8 @@ import { Route as DashboardDeveloperRouteImport } from './routes/dashboard.devel
 import { Route as DashboardResourcesIndexRouteImport } from './routes/dashboard.resources.index'
 import { Route as DashboardResourcesNewRouteImport } from './routes/dashboard.resources.new'
 import { Route as DashboardResourcesIdRouteImport } from './routes/dashboard.resources.$id'
+import { Route as DashboardResourcesIdIndexRouteImport } from './routes/dashboard.resources.$id.index'
+import { Route as DashboardResourcesIdEditRouteImport } from './routes/dashboard.resources.$id.edit'
 
 const StatusRoute = StatusRouteImport.update({
   id: '/status',
@@ -250,6 +252,18 @@ const DashboardResourcesIdRoute = DashboardResourcesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DashboardResourcesRoute,
 } as any)
+const DashboardResourcesIdIndexRoute =
+  DashboardResourcesIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardResourcesIdRoute,
+  } as any)
+const DashboardResourcesIdEditRoute =
+  DashboardResourcesIdEditRouteImport.update({
+    id: '/edit',
+    path: '/edit',
+    getParentRoute: () => DashboardResourcesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -289,9 +303,11 @@ export interface FileRoutesByFullPath {
   '/docs/serve': typeof DocsServeRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
-  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdRouteWithChildren
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources/': typeof DashboardResourcesIndexRoute
+  '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id/': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -328,9 +344,10 @@ export interface FileRoutesByTo {
   '/docs/serve': typeof DocsServeRoute
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
-  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources': typeof DashboardResourcesIndexRoute
+  '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -371,9 +388,11 @@ export interface FileRoutesById {
   '/docs/serve': typeof DocsServeRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
-  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdRouteWithChildren
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources/': typeof DashboardResourcesIndexRoute
+  '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id/': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -418,6 +437,8 @@ export interface FileRouteTypes {
     | '/dashboard/resources/$id'
     | '/dashboard/resources/new'
     | '/dashboard/resources/'
+    | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -454,9 +475,10 @@ export interface FileRouteTypes {
     | '/docs/serve'
     | '/dashboard'
     | '/docs'
-    | '/dashboard/resources/$id'
     | '/dashboard/resources/new'
     | '/dashboard/resources'
+    | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id'
   id:
     | '__root__'
     | '/'
@@ -499,6 +521,8 @@ export interface FileRouteTypes {
     | '/dashboard/resources/$id'
     | '/dashboard/resources/new'
     | '/dashboard/resources/'
+    | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -805,17 +829,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardResourcesIdRouteImport
       parentRoute: typeof DashboardResourcesRoute
     }
+    '/dashboard/resources/$id/': {
+      id: '/dashboard/resources/$id/'
+      path: '/'
+      fullPath: '/dashboard/resources/$id/'
+      preLoaderRoute: typeof DashboardResourcesIdIndexRouteImport
+      parentRoute: typeof DashboardResourcesIdRoute
+    }
+    '/dashboard/resources/$id/edit': {
+      id: '/dashboard/resources/$id/edit'
+      path: '/edit'
+      fullPath: '/dashboard/resources/$id/edit'
+      preLoaderRoute: typeof DashboardResourcesIdEditRouteImport
+      parentRoute: typeof DashboardResourcesIdRoute
+    }
   }
 }
 
+interface DashboardResourcesIdRouteChildren {
+  DashboardResourcesIdEditRoute: typeof DashboardResourcesIdEditRoute
+  DashboardResourcesIdIndexRoute: typeof DashboardResourcesIdIndexRoute
+}
+
+const DashboardResourcesIdRouteChildren: DashboardResourcesIdRouteChildren = {
+  DashboardResourcesIdEditRoute: DashboardResourcesIdEditRoute,
+  DashboardResourcesIdIndexRoute: DashboardResourcesIdIndexRoute,
+}
+
+const DashboardResourcesIdRouteWithChildren =
+  DashboardResourcesIdRoute._addFileChildren(DashboardResourcesIdRouteChildren)
+
 interface DashboardResourcesRouteChildren {
-  DashboardResourcesIdRoute: typeof DashboardResourcesIdRoute
+  DashboardResourcesIdRoute: typeof DashboardResourcesIdRouteWithChildren
   DashboardResourcesNewRoute: typeof DashboardResourcesNewRoute
   DashboardResourcesIndexRoute: typeof DashboardResourcesIndexRoute
 }
 
 const DashboardResourcesRouteChildren: DashboardResourcesRouteChildren = {
-  DashboardResourcesIdRoute: DashboardResourcesIdRoute,
+  DashboardResourcesIdRoute: DashboardResourcesIdRouteWithChildren,
   DashboardResourcesNewRoute: DashboardResourcesNewRoute,
   DashboardResourcesIndexRoute: DashboardResourcesIndexRoute,
 }

@@ -30,6 +30,41 @@ function CodeBlock({ code, lang = "typescript" }: { code: string; lang?: string 
   );
 }
 
+const FLOW_STEPS = [
+  {
+    n: "1",
+    label: "Request",
+    color: "border-accent/40 bg-accent/5 text-accent",
+    dot: "bg-accent",
+    desc: "Caller makes a standard HTTP request to your monetized endpoint.",
+    detail: "GET /v1/resource → server",
+  },
+  {
+    n: "2",
+    label: "402 Issued",
+    color: "border-yellow-500/40 bg-yellow-500/5 text-yellow-400",
+    dot: "bg-yellow-400",
+    desc: "Server responds 402 Payment Required with payment terms in headers.",
+    detail: "X-Payment-Price: 0.002 USDC",
+  },
+  {
+    n: "3",
+    label: "Intent Signed",
+    color: "border-purple-500/40 bg-purple-500/5 text-purple-400",
+    dot: "bg-purple-400",
+    desc: "SDK signs a payment intent using Ed25519. No wallet popup — fully programmatic.",
+    detail: "Ed25519 · ~5ms",
+  },
+  {
+    n: "4",
+    label: "Settled",
+    color: "border-emerald-500/40 bg-emerald-500/5 text-emerald-400",
+    dot: "bg-emerald-400",
+    desc: "Solana confirms payment. Server verifies on-chain and fulfills the request.",
+    detail: "~400ms · on-chain proof",
+  },
+];
+
 function DeveloperPage() {
   const user = getUser()!;
   const apiKey = `astro_live_${user.id.slice(0, 8)}xxxxxxxxxxxx`;
@@ -59,11 +94,30 @@ const resource = await client.resources.create({
 const response = await client.fetch("https://api.myapp.com/v1/inference", {
   method: "POST",
   body: JSON.stringify({ prompt: "Summarize this document…" }),
-  // SDK handles 402 → sign intent → retry automatically
+  // SDK intercepts 402 → signs Ed25519 intent → retries automatically
 });
 
 const data = await response.json();
-// Response includes X-Payment-Receipt header with on-chain proof`;
+// Response includes X-Payment-Receipt with on-chain proof
+console.log(response.headers.get("X-Payment-Receipt"));
+// → "5JhkLq9Rv…|slot:281492120|settled"`;
+
+  const verifyCode = `// Verify incoming payment on your server before fulfilling
+import { verifyPayment } from "@astro/x402-sdk/server";
+
+app.post("/v1/inference", async (req, res) => {
+  const receipt = req.headers["x-payment-receipt"];
+  const verified = await verifyPayment(receipt, {
+    expectedAmount: "0.002 USDC",
+    network: "solana",
+  });
+
+  if (!verified) return res.status(402).json({ error: "Payment required" });
+
+  // Fulfil the request
+  const result = await runInference(req.body);
+  res.json(result);
+});`;
 
   const webhookCode = `// Webhook payload (POST to your endpoint)
 {
@@ -83,12 +137,39 @@ const data = await response.json();
         <p className="text-sm text-muted-foreground mt-0.5">API keys, SDK setup, and integration guide</p>
       </div>
 
+      {/* x402 Flow */}
+      <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-5">
+        <div>
+          <div className="text-[13px] font-medium">How x402 works</div>
+          <div className="text-[11px] text-muted-foreground mt-0.5">The Solana-native payment flow behind every monetized resource</div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {FLOW_STEPS.map((step) => (
+            <div key={step.n} className={`rounded-xl border p-4 ${step.color}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <div className={`h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-mono font-bold ${step.dot} text-background`}>{step.n}</div>
+                <span className="text-[11px] font-semibold">{step.label}</span>
+              </div>
+              <p className="text-[10px] leading-snug opacity-80 mb-2">{step.desc}</p>
+              <div className="text-[9px] font-mono opacity-60">{step.detail}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground bg-background/40 border border-border/50 rounded-lg px-4 py-3">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0"/>
+          <span>Protocol: HTTP 402 · Network: Solana · Settlement: ~400ms · Signature: Ed25519 · Asset: USDC or SOL</span>
+        </div>
+      </div>
+
+      {/* API credentials */}
       <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
         <div className="text-[13px] font-medium">API credentials</div>
         <div className="space-y-3">
           {[
             { label: "Project ID", value: `proj_${user.id.slice(0, 8)}`, copy: true },
-            { label: "API Key",    value: showKey ? apiKey : maskedKey, copy: true, reveal: true },
+            { label: "API Key",    value: showKey ? apiKey : maskedKey,   copy: true, reveal: true },
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-3">
               <div className="w-24 text-[11px] font-mono uppercase tracking-wider text-muted-foreground flex-shrink-0">{item.label}</div>
@@ -113,22 +194,33 @@ const data = await response.json();
         </div>
       </div>
 
+      {/* SDK */}
       <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
         <div className="text-[13px] font-medium">SDK installation</div>
         <CodeBlock code={installCode} lang="bash" />
       </div>
 
+      {/* Register resource */}
       <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
         <div className="text-[13px] font-medium">Register a resource + initialize client</div>
         <CodeBlock code={sdkCode} />
       </div>
 
+      {/* Request flow */}
       <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
-        <div className="text-[13px] font-medium">x402-compatible request flow</div>
-        <p className="text-[12px] text-muted-foreground">The SDK intercepts 402 responses, signs a Solana payment intent using Ed25519, and retries — all transparently.</p>
+        <div className="text-[13px] font-medium">Making a paid request (caller side)</div>
+        <p className="text-[12px] text-muted-foreground">The SDK intercepts 402 responses, signs a Solana payment intent using Ed25519, and retries — all transparently. No wallet popup.</p>
         <CodeBlock code={requestCode} />
       </div>
 
+      {/* Server verify */}
+      <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
+        <div className="text-[13px] font-medium">Verifying payment on your server</div>
+        <p className="text-[12px] text-muted-foreground">Use the server SDK to verify the X-Payment-Receipt header before fulfilling any request.</p>
+        <CodeBlock code={verifyCode} />
+      </div>
+
+      {/* Webhook */}
       <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="text-[13px] font-medium">Webhook events</div>
@@ -147,6 +239,31 @@ const data = await response.json();
           </div>
         </div>
         <CodeBlock code={webhookCode} lang="json" />
+      </div>
+
+      {/* Docs links */}
+      <div className="rounded-xl border border-border bg-surface/50 p-5">
+        <div className="text-[13px] font-medium mb-4">Resources & documentation</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {[
+            { label: "SDK reference",         sub: "Full API documentation",      badge: "Coming soon" },
+            { label: "x402 spec",             sub: "Protocol specification",      badge: null          },
+            { label: "Solana settlement",      sub: "How on-chain settlement works", badge: null        },
+            { label: "Payment verification",  sub: "Ed25519 receipt format",      badge: null          },
+            { label: "Webhook integration",   sub: "Event delivery & retries",    badge: "Coming soon" },
+            { label: "CLI tools",             sub: "Manage resources from shell",  badge: "Coming soon" },
+          ].map((item) => (
+            <div key={item.label} className="p-3.5 rounded-lg border border-border bg-background/30 hover:bg-background/60 transition-colors cursor-default">
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <div className="text-[12px] font-medium">{item.label}</div>
+                {item.badge && (
+                  <span className="text-[9px] font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5 flex-shrink-0">{item.badge}</span>
+                )}
+              </div>
+              <div className="text-[11px] text-muted-foreground">{item.sub}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

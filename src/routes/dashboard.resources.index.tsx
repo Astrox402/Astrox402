@@ -7,27 +7,29 @@ export const Route = createFileRoute("/dashboard/resources/")({
 });
 
 const STATUS_COLORS: Record<string, string> = {
-  active: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
-  paused: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
-  draft:  "bg-border/30 border-border text-muted-foreground",
+  active:   "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+  paused:   "bg-yellow-500/10  border-yellow-500/20  text-yellow-400",
+  draft:    "bg-border/30      border-border          text-muted-foreground",
+  archived: "bg-red-500/10     border-red-500/20      text-red-400",
 };
 const STATUS_DOT: Record<string, string> = {
-  active: "bg-emerald-400",
-  paused: "bg-yellow-400",
-  draft:  "bg-muted-foreground",
+  active:   "bg-emerald-400",
+  paused:   "bg-yellow-400",
+  draft:    "bg-muted-foreground",
+  archived: "bg-red-400",
 };
 
 function ResourcesPage() {
   const resources = useResources();
   const [filter, setFilter] = useState<"all" | ResourceStatus>("all");
 
-  const filtered = filter === "all" ? resources : resources.filter((r) => r.status === filter);
-  const totalRevenue = resources.reduce((sum, r) => {
+  const filtered      = filter === "all" ? resources : resources.filter((r) => r.status === filter);
+  const totalRevenue  = resources.reduce((sum, r) => {
     const n = parseFloat(r.revenue.replace("$", "")) || 0;
     return sum + n;
   }, 0);
   const totalRequests = resources.reduce((s, r) => s + r.requests, 0);
-  const activeCount = resources.filter((r) => r.status === "active").length;
+  const activeCount   = resources.filter((r) => r.status === "active").length;
 
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
@@ -47,9 +49,9 @@ function ResourcesPage() {
 
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Active resources", value: activeCount.toString(),              color: "text-emerald-400" },
-          { label: "Total requests",   value: totalRequests.toLocaleString(),      color: "text-foreground"  },
-          { label: "Total revenue",    value: `$${totalRevenue.toFixed(2)}`,       color: "text-accent"      },
+          { label: "Active resources", value: activeCount.toString(),         color: "text-emerald-400" },
+          { label: "Total requests",   value: totalRequests.toLocaleString(), color: "text-foreground"  },
+          { label: "Total revenue",    value: `$${totalRevenue.toFixed(2)}`,  color: "text-accent"      },
         ].map((s) => (
           <div key={s.label} className="rounded-xl border border-border bg-surface/50 p-4">
             <div className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">{s.label}</div>
@@ -60,7 +62,7 @@ function ResourcesPage() {
 
       <div className="rounded-xl border border-border bg-surface/50">
         <div className="flex items-center gap-2 p-4 border-b border-border">
-          {(["all", "active", "paused", "draft"] as const).map((f) => (
+          {(["all", "active", "paused", "draft", "archived"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -78,7 +80,11 @@ function ResourcesPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <EmptyState />
+          resources.length === 0 ? <EmptyState /> : (
+            <div className="py-12 text-center text-[12px] text-muted-foreground">
+              No {filter} resources.
+            </div>
+          )
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-[12px]">
