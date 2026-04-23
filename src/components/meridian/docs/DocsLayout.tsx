@@ -8,7 +8,9 @@ export const DOC_NAV = [
     group: "Getting started",
     items: [
       { to: "/docs", label: "Introduction", exact: true },
-      { to: "/docs/quickstart", label: "Quickstart", exact: true },
+      { to: "/docs/quickstart", label: "Quickstart" },
+      { to: "/docs/concepts", label: "Core concepts" },
+      { to: "/docs/architecture", label: "Architecture" },
     ],
   },
   {
@@ -18,12 +20,21 @@ export const DOC_NAV = [
       { to: "/docs/serve", label: "serve()" },
       { to: "/docs/pricing", label: "Pricing functions" },
       { to: "/docs/receipts", label: "Receipts & settlement" },
+      { to: "/docs/security", label: "Security model" },
+      { to: "/docs/errors", label: "Errors & status codes" },
     ],
   },
   {
     group: "Clients",
     items: [
       { to: "/docs/clients", label: "SDK clients" },
+      { to: "/docs/agents", label: "Agent commerce" },
+    ],
+  },
+  {
+    group: "Resources",
+    items: [
+      { to: "/docs/faq", label: "FAQ" },
     ],
   },
 ] as const;
