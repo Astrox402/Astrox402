@@ -10,7 +10,7 @@ const SYSTEMS = [
   { name: "Receipt indexer", status: "operational", latency: "1.2 s", uptime: "99.98%" },
   { name: "Quote API", status: "operational", latency: "18 ms", uptime: "100%" },
   { name: "Console", status: "operational", latency: "—", uptime: "99.97%" },
-  { name: "Ethereum L1 settlement", status: "operational", latency: "~12 s", uptime: "100%" },
+  { name: "Solana settlement", status: "operational", latency: "~12 s", uptime: "100%" },
   { name: "Base settlement", status: "operational", latency: "~2 s", uptime: "100%" },
   { name: "Optimism settlement", status: "operational", latency: "~2 s", uptime: "100%" },
   { name: "Arbitrum settlement", status: "operational", latency: "~1 s", uptime: "100%" },

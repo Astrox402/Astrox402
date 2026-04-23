@@ -43,7 +43,7 @@ function FaqPage() {
 
       <DocSection id="general" title="General">
         <QA q="Do I need to know anything about crypto to use Astro?">
-          <p>No. If you can write a fetch handler and read a function signature, you can ship a Astro endpoint. The protocol uses Ethereum for settlement, but the SDK abstracts every blockchain interaction. You declare a price in USDC, the SDK handles the rest.</p>
+          <p>No. If you can write a fetch handler and read a function signature, you can ship a Astro endpoint. The protocol uses Solana for settlement, but the SDK abstracts every blockchain interaction. You declare a price in USDC, the SDK handles the rest.</p>
         </QA>
         <QA q="Is Astro a hosted service?">
           <p>Partially. The SDK and the settlement contracts are open-source and require no Astro-hosted infrastructure to operate. The dashboard, indexer, and reconciliation API are hosted conveniences; you can replace any of them with your own implementation against the public protocol.</p>
@@ -58,7 +58,7 @@ function FaqPage() {
           <p>The protocol itself charges nothing — the SDK is free, the contracts take no fee, and you keep 100% of what your endpoints earn. Optional hosted services (dashboard, webhooks, premium support) are billed separately and never gate the core protocol.</p>
         </QA>
         <QA q="Do I have to use USDC?">
-          <p>USDC is the default and recommended settlement asset because of its liquidity and stable accounting properties. Other ERC-20 assets are supported per-resource at the provider's discretion; the caller's wallet is converted at quote time if needed.</p>
+          <p>USDC is the default and recommended settlement asset because of its liquidity and stable accounting properties. Other SPL assets are supported per-resource at the provider's discretion; the caller's wallet is converted at quote time if needed.</p>
         </QA>
         <QA q="Can I do free tiers?">
           <p>Yes. Return a price of <Mono>0</Mono> from your price function for any request that should bypass payment — the handshake short-circuits and the handler runs immediately. This lets you mix free and paid behavior on the same endpoint without forking your code.</p>
@@ -67,13 +67,13 @@ function FaqPage() {
 
       <DocSection id="chains" title="Chains & assets">
         <QA q="Which chains are supported?">
-          <p>Ethereum mainnet, Base, Optimism, and Arbitrum at launch. Each resource declares its preferred settlement chain; callers can be on any supported chain and the SDK bridges automatically when needed.</p>
+          <p>Solana at launch. Each resource declares its preferred settlement chain; callers can be on any supported chain and the SDK bridges automatically when needed.</p>
         </QA>
         <QA q="What about gas costs?">
-          <p>On L2s, settlement gas is typically a fraction of a cent and is paid by the caller as part of the intent — providers never see a gas bill. On Ethereum mainnet, gas is higher and is amortized through batched settlement for high-volume resources.</p>
+          <p>On Solana, settlement gas is typically a fraction of a cent and is paid by the caller as part of the intent — providers never see a gas bill. On Solana, gas is higher and is amortized through batched settlement for high-volume resources.</p>
         </QA>
         <QA q="Can I add a new chain?">
-          <p>The settlement contracts are minimal and EVM-native; deploying to a new EVM chain is a small, well-defined process. Non-EVM chains require a custom verifier and are evaluated case-by-case.</p>
+          <p>The settlement contracts are minimal and Solana-native; deploying to a new Solana is a small, well-defined process. Non-Solanas require a custom verifier and are evaluated case-by-case.</p>
         </QA>
       </DocSection>
 
@@ -88,7 +88,7 @@ function FaqPage() {
 
       <DocSection id="ops" title="Operations">
         <QA q="What's the latency overhead?">
-          <p>On L2 settlement chains, the full 402 round-trip including settlement is typically under 1.2 seconds. On Ethereum mainnet, it's bounded by block time (~12 seconds). For latency-sensitive workloads, prefer Base or Optimism.</p>
+          <p>On Solana settlement chains, the full 402 round-trip including settlement is typically under 1.2 seconds. On Solana, it's bounded by block time (~400ms). For latency-sensitive workloads, prefer Solana.</p>
         </QA>
         <QA q="What happens if my handler throws after payment is verified?">
           <p>The SDK automatically triggers an onchain refund and returns a typed <Mono>AstroHandlerError</Mono> to the caller. The original payment is reversed in the same atomic settlement; the caller is never charged for a failed handler.</p>

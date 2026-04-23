@@ -23,7 +23,7 @@ export function FlowDiagram() {
             <div><span className="text-muted-foreground">price</span>  = 0.0021 USDC</div>
             <div><span className="text-muted-foreground">scope</span>  = inference.gpt</div>
             <div><span className="text-muted-foreground">ttl</span>    = 60s</div>
-            <div><span className="text-muted-foreground">chain</span>  = ethereum</div>
+            <div><span className="text-muted-foreground">chain</span>  = solana</div>
           </div>
         </div>
 
@@ -35,7 +35,7 @@ export function FlowDiagram() {
       <div className="mt-6 pt-6 border-t border-border grid grid-cols-3 gap-6 text-[12px]">
         <Stat k="Settlement" v="~1.2s" />
         <Stat k="Fee" v="0.3%" />
-        <Stat k="Onchain" v="Ethereum L1 + L2s" />
+        <Stat k="Onchain" v="Solana" />
       </div>
     </div>
   );

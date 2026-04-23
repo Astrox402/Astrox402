@@ -12,7 +12,7 @@ const VALUES = [
   },
   {
     title: "Boring cryptography",
-    desc: "We use the most widely reviewed, most widely deployed primitives: EIP-712, ECDSA, ERC-20. No exotic schemes. No proprietary chains. No new token.",
+    desc: "We use the most widely reviewed, most widely deployed primitives: off-chain signing, Ed25519, SPL. No exotic schemes. No proprietary chains. No new token.",
   },
   {
     title: "Receipts, not promises",
@@ -49,7 +49,7 @@ function AboutPage() {
                 Astro grew out of a frustration we shared across too many teams: every API that needed to charge money ended up with the same bespoke billing stack — API keys, Stripe integrations, entitlement tables, reconciliation pipelines. Weeks of engineering for infrastructure that has nothing to do with the actual product.
               </p>
               <p>
-                The HTTP 402 status code has been reserved for "Payment Required" since 1991. Nobody ever shipped a real implementation because there was no programmable settlement layer to back it. Ethereum changed that. We spent a year figuring out what a correct, minimal, open implementation actually looks like.
+                The HTTP 402 status code has been reserved for "Payment Required" since 1991. Nobody ever shipped a real implementation because there was no programmable settlement layer to back it. Solana changed that. We spent a year figuring out what a correct, minimal, open implementation actually looks like.
               </p>
               <p>
                 The result is Astro: a protocol that makes access and payment the same request, with cryptographic proof that the payment happened, and no infrastructure beyond the chain.

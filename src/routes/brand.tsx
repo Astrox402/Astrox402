@@ -78,7 +78,7 @@ function BrandPage() {
         <div className="space-y-6">
           {[
             { label: "Display / Headings", font: "Inter, sans-serif", weight: "500", sample: "Payment-native protocol.", size: "text-[3rem]" },
-            { label: "Italic accent", font: "Playfair Display, serif", weight: "400 italic", sample: "Ethereum.", size: "text-[3rem] italic font-serif" },
+            { label: "Italic accent", font: "Playfair Display, serif", weight: "400 italic", sample: "Solana.", size: "text-[3rem] italic font-serif" },
             { label: "Body", font: "Inter, sans-serif", weight: "400", sample: "Astro turns any endpoint into a programmable, monetizable primitive.", size: "text-[17px]" },
             { label: "Mono / Labels", font: "JetBrains Mono, monospace", weight: "400", sample: "X-Payment-Quote · v0.402 · USDC", size: "text-[14px] font-mono" },
           ].map((t) => (

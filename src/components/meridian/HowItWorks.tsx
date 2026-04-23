@@ -22,7 +22,7 @@ const steps = [
   {
     n: "04",
     t: "Settle and observe",
-    d: "Settlement clears on Ethereum. Usage, revenue, and access proofs land in your dashboard live.",
+    d: "Settlement clears on Solana. Usage, revenue, and access proofs land in your dashboard live.",
     code: `settle.tx → 0x9f…2a\nrevenue +0.0021 USDC\nproof onchain ✓`,
   },
 ];

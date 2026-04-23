@@ -11,7 +11,7 @@ const ROLES = [
     team: "Protocol",
     type: "Full-time · Remote",
     desc: "Own the core spec — intent encoding, settlement contract upgrades, receipt anchoring, and replay protection. You'll work directly on the protocol layer, audit PRs against the spec, and drive the roadmap for new settlement chains.",
-    reqs: ["Deep familiarity with EIP-712, ERC-20, and EVM internals", "Experience writing or auditing Solidity contracts", "Strong sense of cryptographic threat modelling", "Comfort reading and writing protocol specs"],
+    reqs: ["Deep familiarity with off-chain signing, SPL, and Solana internals", "Experience writing or auditing Solidity contracts", "Strong sense of cryptographic threat modelling", "Comfort reading and writing protocol specs"],
   },
   {
     title: "SDK Engineer — TypeScript",
@@ -32,7 +32,7 @@ const ROLES = [
     team: "Platform",
     type: "Full-time · Remote",
     desc: "Own the hosted infrastructure: the verifier fleet, the receipt indexer, and the Console backend. You'll keep latency under 50ms, uptime over 99.98%, and the receipt indexer within 2 seconds of finality — at any scale.",
-    reqs: ["Experience operating distributed systems at scale", "Familiarity with EVM RPC infrastructure", "Strong observability and on-call culture", "Ideally experience with Cloudflare Workers or similar edge platforms"],
+    reqs: ["Experience operating distributed systems at scale", "Familiarity with Solana RPC infrastructure", "Strong observability and on-call culture", "Ideally experience with Cloudflare Workers or similar edge platforms"],
   },
 ];
 

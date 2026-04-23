@@ -28,7 +28,7 @@ const ENTRIES = [
       "Arbitrum One added as a supported settlement chain. Configure with `{ chain: 'arbitrum' }` in `serve()`.",
       "Settlement contracts deployed and verified on Arbitrum One mainnet. Contract addresses published in docs.",
       "Quote responses now include `chains` field — an array of all chains the endpoint accepts, so callers can select the cheapest route.",
-      "Gas estimation improved for L2 chains — quotes now include an accurate `gasEstimate` field in USD.",
+      "Gas estimation improved for Solana chains — quotes now include an accurate `gasEstimate` field in USD.",
     ],
   },
   {
@@ -40,7 +40,7 @@ const ENTRIES = [
       "Console receipt log now supports full-text search across resource paths, caller addresses, and transaction hashes.",
       "Export filtered receipts to CSV. Date range, chain, resource, and caller filters all apply to the export.",
       "Added batch verification — select multiple receipts and verify all onchain in one click.",
-      "Receipt detail drawer now shows the full EIP-712 payload, decoded and formatted.",
+      "Receipt detail drawer now shows the full off-chain signing payload, decoded and formatted.",
     ],
   },
   {
@@ -50,7 +50,7 @@ const ENTRIES = [
     title: "Public beta — Base + Optimism live",
     items: [
       "Astro protocol enters public beta. Breaking changes will be communicated with ≥ 14 days notice from this release forward.",
-      "Base and Optimism settlement contracts deployed and audited. Ethereum mainnet remains live.",
+      "Solana settlement contracts deployed and audited. Solana remains live.",
       "TypeScript SDK `@astro/sdk` published to npm under a source-available license.",
       "Python SDK `astro-sdk` published to PyPI — supports FastAPI, Flask, and Django middleware patterns.",
       "Scope system formalized: scopes are now dot-namespaced strings (`inference.gpt`, `data.read.public`). Wildcards supported.",
@@ -64,7 +64,7 @@ const ENTRIES = [
     title: "Go SDK alpha + intent serialization fixes",
     items: [
       "Go SDK `github.com/meridian-protocol/go-sdk` tagged at v0.3.1-alpha. HTTP middleware pattern compatible with `net/http` and `chi`.",
-      "Fixed intent serialization bug affecting callers on Windows due to line-ending normalization in the EIP-712 encoder.",
+      "Fixed intent serialization bug affecting callers on Windows due to line-ending normalization in the off-chain signing encoder.",
       "Added `ctx.payment.scope` to handler context — lets handlers branch on the caller's authorized scope without re-parsing the intent.",
     ],
   },
@@ -75,7 +75,7 @@ const ENTRIES = [
     title: "Agent identity + budget policies",
     items: [
       "Agent-scoped keys: autonomous callers can now hold a Astro identity with a per-period spend ceiling enforced at the protocol level.",
-      "Budget policies specified as onchain EIP-712 typed-data. Policies are verifiable without trusting Astro infrastructure.",
+      "Budget policies specified as onchain off-chain signing typed-data. Policies are verifiable without trusting Astro infrastructure.",
       "Added `ctx.caller.isAgent` and `ctx.caller.budget` to the server handler context.",
       "New docs section: Agent commerce — covers identity provisioning, budget setting, and policy verification.",
     ],

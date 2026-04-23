@@ -38,7 +38,7 @@ export function Footer() {
               <span className="font-medium tracking-tight">Astro</span>
             </div>
             <p className="text-[13px] text-muted-foreground max-w-xs leading-relaxed">
-              Payment-native protocol layer for the internet. Programmable access, settled on Ethereum.
+              Payment-native protocol layer for the internet. Programmable access, settled on Solana.
             </p>
           </div>
           {cols.map((c) => (
@@ -58,7 +58,7 @@ export function Footer() {
             <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms</a>
             <a href="#" className="hover:text-foreground transition-colors">Security</a>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em]">v0.402 · ethereum</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em]">v0.402 · solana</span>
           </div>
         </div>
       </div>

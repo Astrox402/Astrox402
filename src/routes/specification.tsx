@@ -19,17 +19,17 @@ const SECTIONS = [
   {
     id: "quote",
     title: "Quote object",
-    description: "A quote is a short-lived cryptographic offer. It commits the server to a price and a handler behavior for the duration of the TTL. Quotes are EIP-712 typed data and can be verified without trusting Astro infrastructure.",
+    description: "A quote is a short-lived cryptographic offer. It commits the server to a price and a handler behavior for the duration of the TTL. Quotes are off-chain message signing and can be verified without trusting Astro infrastructure.",
     fields: [
       ["resource", "string", "Fully qualified resource path"],
       ["scope", "string", "Required capability (e.g. inference.gpt)"],
       ["price", "uint256", "Amount in atomic units of the settlement asset"],
-      ["asset", "address", "ERC-20 token contract (or zero address for ETH)"],
+      ["asset", "address", "SPL token contract (or zero address for ETH)"],
       ["chain", "uint256", "EIP-155 chain ID"],
       ["ttl", "uint64", "Quote expiry — unix timestamp in seconds"],
       ["nonce", "bytes32", "Replay-protection nonce"],
       ["serverKey", "address", "Server's signing address"],
-      ["signature", "bytes", "ECDSA signature over the EIP-712 digest"],
+      ["signature", "bytes", "Ed25519 signature over the message digest"],
     ],
   },
   {
@@ -38,8 +38,8 @@ const SECTIONS = [
     description: "The client signs an intent that references the quote and authorizes the token transfer. The intent is submitted as the X-Payment-Intent header on the retry request. The server verifies the signature, submits the settlement, and — if successful — runs the handler.",
     fields: [
       ["quoteHash", "bytes32", "Keccak hash of the quote envelope"],
-      ["payer", "address", "Caller's Ethereum address"],
-      ["signature", "bytes", "ECDSA signature over the EIP-712 intent digest"],
+      ["payer", "address", "Caller's Solana address"],
+      ["signature", "bytes", "Ed25519 signature over the off-chain signing intent digest"],
     ],
   },
   {

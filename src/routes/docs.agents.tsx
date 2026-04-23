@@ -45,7 +45,7 @@ function AgentsPage() {
 
       <DocSection id="model" title="Identity model">
         <p>
-          An agent identity is a cryptographic key — typically held in an MPC service, an HSM, or a KMS — that signs EIP-712 intents on the agent's behalf. The same identity works across every Astro endpoint and every supported chain. There is no per-provider registration, no key exchange, and no rotation ceremony beyond the standard wallet rotation any operator already runs.
+          An agent identity is a cryptographic key — typically held in an MPC service, an HSM, or a KMS — that signs off-chain signing intents on the agent's behalf. The same identity works across every Astro endpoint and every supported chain. There is no per-provider registration, no key exchange, and no rotation ceremony beyond the standard wallet rotation any operator already runs.
         </p>
         <Code lang="ts" code={`import { astro } from "@astro/sdk";
 

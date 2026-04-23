@@ -16,14 +16,14 @@ const PILLARS = [
   {
     num: "02",
     title: "Cryptographic intents",
-    desc: "The caller signs an EIP-712 typed-data intent authorizing a specific payment to a specific resource at a specific price. Signatures are verifiable onchain and off. No private key ever leaves the client.",
-    detail: "Standard ECDSA over EIP-712 structured data. Compatible with every Ethereum wallet and MPC service.",
+    desc: "The caller signs an off-chain signing typed-data intent authorizing a specific payment to a specific resource at a specific price. Signatures are verifiable onchain and off. No private key ever leaves the client.",
+    detail: "Standard Ed25519 over off-chain signing structured data. Compatible with every Solana wallet and MPC service.",
   },
   {
     num: "03",
     title: "Non-custodial settlement",
     desc: "Astro's audited settlement contracts execute atomic token transfers between caller and provider. No escrow. No intermediary. If the transfer fails, the handler never runs. If the handler runs, settlement is final.",
-    detail: "Deployed on Ethereum mainnet, Base, Optimism, and Arbitrum. USDC, USDT, and native ETH supported.",
+    detail: "Deployed on Solana. USDC, USDT, and native SOL supported.",
   },
   {
     num: "04",
@@ -35,10 +35,10 @@ const PILLARS = [
 
 const SPECS = [
   ["Wire format", "HTTP/1.1 + HTTP/2", "Standard headers, standard verbs"],
-  ["Quote encoding", "JSON + EIP-712", "Machine-readable, signable"],
-  ["Signature scheme", "ECDSA over secp256k1", "Same as Ethereum accounts"],
-  ["Settlement assets", "ERC-20 + native ETH", "USDC, USDT, ETH"],
-  ["Settlement chains", "L1 + L2", "Ethereum, Base, Optimism, Arbitrum"],
+  ["Quote encoding", "JSON + off-chain signing", "Machine-readable, signable"],
+  ["Signature scheme", "Ed25519 over secp256k1", "Same as Solana accounts"],
+  ["Settlement assets", "SPL + native SOL", "USDC, USDT, ETH"],
+  ["Settlement chains", "Solana", "Solana, Base, Optimism, Arbitrum"],
   ["Receipt anchoring", "Onchain event log", "Publicly verifiable"],
   ["TTL / replay protection", "Nonce + expiry", "Quotes expire, replays fail"],
   ["Scope system", "String-based capabilities", "Fine-grained per-resource access"],

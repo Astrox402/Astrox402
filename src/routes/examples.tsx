@@ -17,7 +17,7 @@ export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004,
-  settle:   { chain: "base", asset: "USDC" },
+  settle:   { chain: "solana", asset: "USDC" },
 
   async handler(req, ctx) {
     const { prompt } = await req.json();
@@ -42,7 +42,7 @@ export const GET = astro.serve({
     const resFactor = resolution === "full" ? 2 : 1;
     return (base + rowCost) * resFactor;
   },
-  settle: { chain: "ethereum", asset: "USDC" },
+  settle: { chain: "solana", asset: "USDC" },
 
   async handler(req, ctx) {
     const { rows, resolution } = ctx.params;
@@ -85,7 +85,7 @@ const agentKey = await astro.agent.create({
     period: "daily",
     ceiling: 5.00,   // USD
     asset: "USDC",
-    chain: "base",
+    chain: "solana",
   },
 });
 
@@ -111,7 +111,7 @@ const receipt = {
 };
 
 const result = await verifyReceipt(receipt, {
-  chain: "base",
+  chain: "solana",
   rpcUrl: process.env.BASE_RPC_URL,
 });
 

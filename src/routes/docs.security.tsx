@@ -39,13 +39,13 @@ function SecurityPage() {
           <li><strong>No implicit trust.</strong> Every authorization is an explicit, signed message bound to specific values.</li>
           <li><strong>No silent failure.</strong> A successful response always carries a verifiable receipt; absence of a receipt is a failure signal.</li>
           <li><strong>No central kill-switch.</strong> Astro cannot revoke your endpoint, freeze your settlements, or block a counterparty.</li>
-          <li><strong>No proprietary cryptography.</strong> Standard EIP-712, standard ECDSA, standard EVM transactions.</li>
+          <li><strong>No proprietary cryptography.</strong> Ed25519, SPL tokens, Solana programs transactions.</li>
         </ul>
       </DocSection>
 
       <DocSection id="threats" title="Threat model">
         <p>
-          Astro is designed to defend against an attacker who can observe all network traffic, intercept and replay any HTTP message, and freely interact with any public smart contract. The attacker is assumed <em>not</em> to have access to the payer's private key — that is the only secret the system relies on.
+          Astro is designed to defend against an attacker who can observe all network traffic, intercept and replay any HTTP message, and freely interact with any public program. The attacker is assumed <em>not</em> to have access to the payer's private key — that is the only secret the system relies on.
         </p>
         <p>
           Within that model, the protocol prevents: replay of a captured intent against the same or a different resource; reuse of a quote past its TTL; collusion between a malicious server and a third party to extract a higher-value payment; silent dropping of a settlement transaction; and substitution of a different recipient in the settlement step.
@@ -75,7 +75,7 @@ function SecurityPage() {
 
       <DocSection id="signatures" title="Signature scheme">
         <p>
-          Intents are signed using EIP-712 typed-data signatures with a Astro-specific domain separator. The domain binds signatures to the protocol name, version, and chain ID, preventing cross-protocol and cross-chain replay. The typed structure binds the signature to specific named fields, preventing the kind of ambiguous-message attacks that have historically plagued <Mono>personal_sign</Mono> flows.
+          Intents are signed using off-chain message signatures with a Astro-specific domain separator. The domain binds signatures to the protocol name, version, and chain ID, preventing cross-protocol and cross-chain replay. The typed structure binds the signature to specific named fields, preventing the kind of ambiguous-message attacks that have historically plagued <Mono>signMessage</Mono> flows.
         </p>
         <Code lang="ts" code={`// Domain separator (simplified)
 {
@@ -88,10 +88,10 @@ function SecurityPage() {
 
       <DocSection id="keys" title="Key management">
         <p>
-          The payer's signing key never leaves the wallet. Astro works with hardware wallets, mobile wallets, embedded MPC wallets, and backend key services — anything that can produce an EIP-712 signature. The SDK never asks for, stores, or transmits a private key.
+          The payer's signing key never leaves the wallet. Astro works with hardware wallets, mobile wallets, embedded MPC wallets, and backend key services — anything that can produce an Ed25519 signature. The SDK never asks for, stores, or transmits a private key.
         </p>
         <p>
-          For server-side identities (agents, batch jobs, webhooks), we strongly recommend MPC or HSM-backed keys with scope-restricted policies. The SDK provides first-class hooks for Turnkey, Privy, Fireblocks, and AWS KMS, but any signer that satisfies the EIP-712 interface is supported.
+          For server-side identities (agents, batch jobs, webhooks), we strongly recommend MPC or HSM-backed keys with scope-restricted policies. The SDK provides first-class hooks for Turnkey, Privy, Squads, and AWS KMS, but any signer that satisfies the signing interface is supported.
         </p>
       </DocSection>
 

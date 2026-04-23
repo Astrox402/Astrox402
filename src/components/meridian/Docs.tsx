@@ -12,7 +12,7 @@ export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004 + 0.001, // USDC
-  settle:   { chain: "ethereum", asset: "USDC" },
+  settle:   { chain: "solana", asset: "USDC" },
   ttl:      60,
 
   async handler(req, ctx) {
@@ -35,7 +35,7 @@ export const POST = astro.serve({
     resource="/v1/infer",
     scope="inference.gpt",
     price=lambda req: req.tokens * 0.000004 + 0.001,
-    settle={"chain": "ethereum", "asset": "USDC"},
+    settle={"chain": "solana", "asset": "USDC"},
     ttl=60,
 )
 async def infer(req, ctx):
@@ -51,7 +51,7 @@ $ curl -i https://api.acme.dev/v1/infer
 HTTP/1.1 402 Payment Required
 x-astro-price:  0.0021 USDC
 x-astro-scope:  inference.gpt
-x-astro-settle: ethereum
+x-astro-settle: "solana"
 x-astro-ttl:    60
 
 # 2. Sign + retry — the SDK handles it transparently

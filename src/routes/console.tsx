@@ -42,7 +42,7 @@ const FEATURES = [
 const STATS = [
   { v: "< 50 ms", l: "Median quote latency" },
   { v: "99.98 %", l: "Uptime SLA" },
-  { v: "4 chains", l: "L1 + L2 settlement" },
+  { v: "4 chains", l: "Solana settlement" },
   { v: "∞", l: "Receipts stored" },
 ];
 

@@ -37,7 +37,7 @@ export function Hero() {
           className="mt-8 max-w-2xl mx-auto text-center text-[17px] leading-relaxed text-muted-foreground"
         >
           Astro is a payment-native protocol layer for the internet. Price requests,
-          settle access, and let software transact with software — natively, on Ethereum.
+          settle access, and let software transact with software — natively, on Solana.
         </motion.p>
 
         <motion.div

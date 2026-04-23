@@ -5,7 +5,7 @@ import { Problem } from "@/components/meridian/Problem";
 import { Solution } from "@/components/meridian/Solution";
 import { HowItWorks } from "@/components/meridian/HowItWorks";
 import { UseCases } from "@/components/meridian/UseCases";
-import { Ethereum } from "@/components/meridian/Ethereum";
+import { Solana } from "@/components/meridian/Solana";
 import { Dashboard } from "@/components/meridian/Dashboard";
 import { Docs } from "@/components/meridian/Docs";
 import { Manifesto } from "@/components/meridian/Manifesto";
@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Astro — Payment-native protocol layer for the internet" },
-      { name: "description", content: "Make every API, agent, and digital resource monetizable. Programmable access and settlement, built on Ethereum." },
+      { name: "description", content: "Make every API, agent, and digital resource monetizable. Programmable access and settlement, built on Solana." },
       { property: "og:title", content: "Astro — Payment-native protocol layer for the internet" },
-      { property: "og:description", content: "Programmable access and settlement for APIs, agents, and digital resources. Launching on Ethereum." },
+      { property: "og:description", content: "Programmable access and settlement for APIs, agents, and digital resources. Launching on Solana." },
     ],
   }),
   component: Index,
@@ -33,7 +33,7 @@ function Index() {
       <Solution />
       <HowItWorks />
       <UseCases />
-      <Ethereum />
+      <Solana />
       <Dashboard />
       <Docs />
       <Manifesto />

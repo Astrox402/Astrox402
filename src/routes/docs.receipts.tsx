@@ -6,7 +6,7 @@ export const Route = createFileRoute("/docs/receipts")({
   head: () => ({
     meta: [
       { title: "Receipts & settlement — Astro Docs" },
-      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Astro call produces a verifiable proof on Ethereum." },
+      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Astro call produces a verifiable proof on Solana." },
       { property: "og:title", content: "Receipts & settlement — Astro Docs" },
       { property: "og:description", content: "Verifiable onchain proofs for every paid endpoint call. Receipts, chains, and reconciliation." },
     ],
@@ -33,7 +33,7 @@ function ReceiptsPage() {
       <PageHeader
         eyebrow="Protocol"
         title="Receipts & settlement"
-        intro="Every successful Astro call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Ethereum. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
+        intro="Every successful Astro call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Solana. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
       />
 
       <DocSection id="what" title="What is a receipt">
@@ -44,7 +44,7 @@ function ReceiptsPage() {
           Crucially, a receipt is not a database row in Astro's infrastructure. It is a derived view over public chain data. The hosted indexer makes receipts convenient to query, but the canonical record lives onchain and any party can reconstruct the same view from a public RPC.
         </p>
         <Callout>
-          You don't have to use Astro's database to trust the data — every receipt is independently verifiable from any Ethereum RPC. The chain is the source of truth.
+          You don't have to use Astro's database to trust the data — every receipt is independently verifiable from any Solana RPC. The chain is the source of truth.
         </Callout>
       </DocSection>
 
@@ -55,14 +55,14 @@ function ReceiptsPage() {
   scope:       string;            // "inference.gpt"
   amount:      string;            // "0.0021 USDC"
   amountRaw:   bigint;            // 2100n (base units)
-  asset:       \`0x\${string}\`;     // ERC-20 contract
+  asset:       \`0x\${string}\`;     // SPL token
   payer:       \`0x\${string}\`;
   payee:       \`0x\${string}\`;
-  chain:       "ethereum" | "base" | "optimism" | "arbitrum";
+  chain:       "solana" | "solana-devnet";
   txHash:      \`0x\${string}\`;
   blockNumber: number;
   settledAt:   number;            // unix seconds
-  proof:       \`0x\${string}\`;     // EIP-712 digest
+  proof:       \`0x\${string}\`;     // message digest
   refunded:    boolean;
   refundTx?:   \`0x\${string}\`;
 };`} />
@@ -80,10 +80,10 @@ function ReceiptsPage() {
 
       <DocSection id="chains" title="Supported chains">
         <Params rows={[
-          ["ethereum", "L1", "~12s finality, highest assurance, suited for large settlements."],
-          ["base", "L2", "~1.2s, low fees, default for high-volume API endpoints."],
-          ["optimism", "L2", "~1.5s, broad ecosystem support."],
-          ["arbitrum", "L2", "~1.5s, low fees, broad tooling."],
+          ["solana", "L1", "~400ms finality, highest assurance, suited for large settlements."],
+          ["base", "Solana", "~1.2s, low fees, default for high-volume API endpoints."],
+          ["optimism", "Solana", "~1.5s, broad ecosystem support."],
+          ["arbitrum", "Solana", "~1.5s, low fees, broad tooling."],
         ]} />
         <p>Settlement target is declared per-resource in <Mono>serve()</Mono>. The same payer wallet works across all supported chains — the client SDK selects the cheapest path that satisfies the declared target, bridging if necessary.</p>
       </DocSection>
@@ -91,16 +91,16 @@ function ReceiptsPage() {
       <DocSection id="timing" title="Settlement timing">
         <p>The settlement transaction is broadcast in parallel with the intent submission, so verification is already in-flight by the time the server begins parsing the intent. End-to-end timing typically looks like:</p>
         <Params rows={[
-          ["L2 (Base, Optimism, Arbitrum)", "~1.2s", "Includes pre-confirmation and one block."],
-          ["Ethereum mainnet", "~13s", "One block; faster with optimistic mode + pre-confirmation."],
+          ["Solana (Base, Optimism, Arbitrum)", "~1.2s", "Includes pre-confirmation and one block."],
+          ["Solana", "~13s", "One slot (~400ms)."],
           ["Optimistic mode", "~50ms", "Server proceeds on signed pre-confirmation; settlement finalizes in background."],
           ["Batched mode", "~2s window", "Many intents settle in one transaction, amortizing cost."],
         ]} />
-        <p>For latency-sensitive workloads (interactive APIs, real-time agents), prefer L2s with optimistic mode. For high-value settlements (enterprise contracts, bulk transfers), prefer Ethereum mainnet with pessimistic mode.</p>
+        <p>For latency-sensitive workloads (interactive APIs, real-time agents), prefer Solana with optimistic mode. For high-value settlements (enterprise contracts, bulk transfers), prefer Solana with pessimistic mode.</p>
       </DocSection>
 
       <DocSection id="verify" title="Verifying receipts">
-        <p>Receipts can be verified locally from any Ethereum RPC, with no Astro dependency. The verifier checks the EIP-712 digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
+        <p>Receipts can be verified locally from any Solana RPC, with no Astro dependency. The verifier checks the message digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
         <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {

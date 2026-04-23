@@ -85,7 +85,7 @@ deny:  ["inference.fine-tune"]`} />
 
       <DocSection id="intent" title="Intent">
         <p>
-          An intent is the client's signed acceptance of a quote. It's an EIP-712 typed-data structure that binds the payer's wallet to the exact resource, scope, amount, and nonce — and nothing else. Intents are opaque to the application layer; the client SDK signs them, the server verifies them, your handler never sees them.
+          An intent is the client's signed acceptance of a quote. It's an signed message structure that binds the payer's wallet to the exact resource, scope, amount, and nonce — and nothing else. Intents are opaque to the application layer; the client SDK signs them, the server verifies them, your handler never sees them.
         </p>
         <Code lang="json" code={`{
   "domain":  { "name": "Astro", "chainId": 8453 },
@@ -96,13 +96,13 @@ deny:  ["inference.fine-tune"]`} />
   "expires": 1727384981
 }`} />
         <p>
-          Because intents are EIP-712, every wallet — hardware, mobile, embedded, or backend — can sign them with no Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
+          Because intents are off-chain signing, every wallet — hardware, mobile, embedded, or backend — can sign them with no Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
         </p>
       </DocSection>
 
       <DocSection id="receipt" title="Receipt">
         <p>
-          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object that is independently verifiable from any Ethereum RPC. Receipts are what make Astro auditable without sharing private logs.
+          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object that is independently verifiable from any Solana RPC. Receipts are what make Astro auditable without sharing private logs.
         </p>
         <p>
           Receipts are returned inline (in the response body or a header), streamed via webhook, and queryable via the reconciliation API. They are also publicly indexable, which means a customer can verify your revenue claims, a partner can verify a referral payout, and an auditor can reconstruct your books — all without you exposing internal data.
@@ -141,7 +141,7 @@ deny:  ["inference.fine-tune"]`} />
           ["Resource", "REST endpoint", "Stable URL + verb."],
           ["Scope", "OAuth scope", "Namespace for capabilities."],
           ["Quote", "Stripe PaymentIntent", "Server-issued offer with TTL."],
-          ["Intent", "EIP-712 signature", "Client's signed acceptance."],
+          ["Intent", "Ed25519 signature", "Client's signed acceptance."],
           ["Receipt", "Stripe Charge", "Public, verifiable settlement record."],
           ["Policy", "Spend rule", "Local guardrail before signing."],
         ]} />

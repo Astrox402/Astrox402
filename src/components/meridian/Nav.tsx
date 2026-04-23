@@ -18,7 +18,7 @@ export function Nav() {
           <Link to="/" hash="protocol" className="hover:text-foreground transition-colors">Protocol</Link>
           <Link to="/" hash="flow" className="hover:text-foreground transition-colors">How it works</Link>
           <Link to="/" hash="usecases" className="hover:text-foreground transition-colors">Use cases</Link>
-          <Link to="/" hash="ethereum" className="hover:text-foreground transition-colors">Ethereum</Link>
+          <Link to="/" hash="solana" className="hover:text-foreground transition-colors">Solana</Link>
           <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
         </nav>
         <div className="flex items-center gap-2">

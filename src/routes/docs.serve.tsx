@@ -42,7 +42,7 @@ export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004 + 0.001,
-  settle:   { chain: "ethereum", asset: "USDC" },
+  settle:   { chain: "solana", asset: "USDC" },
   ttl:      60,
   async handler(req, ctx) {
     const { prompt } = await req.json();
@@ -58,7 +58,7 @@ export const POST = astro.serve({
           ["resource", "string", "Stable identifier for this endpoint. Treat like a primary key."],
           ["scope", "string", "Capability namespace (e.g. inference.gpt)."],
           ["price", "Money | (req) => Money | { quote, commit }", "Static, derived, or two-phase price. See pricing."],
-          ["settle", "{ chain, asset }", "Target chain and asset. Defaults to ethereum + USDC."],
+          ["settle", "{ chain, asset }", "Target chain and asset. Defaults to solana + USDC."],
           ["ttl", "number", "Validity window for the quote, in seconds. Defaults to 60."],
           ["handler", "(req, ctx) => Response", "Runs only after payment is verified."],
           ["batch", "BatchConfig", "Optional batched settlement config. See batching below."],
@@ -76,7 +76,7 @@ export const POST = astro.serve({
   payment: {
     amount:  string;       // "0.0021 USDC"
     txHash:  \`0x\${string}\`;
-    chain:   "ethereum" | "base" | "optimism" | "arbitrum";
+    chain:   "solana" | "solana-devnet";
     payer:   \`0x\${string}\`;
     payee:   \`0x\${string}\`;
     settledAt: number;     // unix seconds
@@ -117,7 +117,7 @@ export const POST = astro.serve({
       </DocSection>
 
       <DocSection id="batching" title="Batched settlement">
-        <p>For high-volume endpoints (thousands of calls per second), per-call settlement on Ethereum mainnet is wasteful. Astro supports batched settlement that aggregates many intents into a single onchain transaction:</p>
+        <p>For high-volume endpoints (thousands of calls per second), per-call settlement on Solana is wasteful. Astro supports batched settlement that aggregates many intents into a single onchain transaction:</p>
         <Code lang="ts" code={`batch: {
   windowMs:   2000,        // flush at most every 2s
   maxIntents: 500,         // or when 500 intents accumulate

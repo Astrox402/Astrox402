@@ -17,8 +17,8 @@ This is not an accident. It reflects a genuine gap: the internet was built witho
   },
   {
     num: "II",
-    title: "Ethereum closed the gap.",
-    body: `Ethereum is the first neutral, programmable, public settlement layer. Its assets are the first assets that software can transact with natively — no bank API, no merchant account, no acquirer. A smart contract is a payment processor that no one controls and anyone can verify.
+    title: "Solana closed the gap.",
+    body: `Solana is the first neutral, programmable, public settlement layer. Its assets are the first assets that software can transact with natively — no bank API, no merchant account, no acquirer. A program is a payment processor that no one controls and anyone can verify.
 
 The combination of a standard HTTP status code that reserved the right concept and an onchain settlement layer that makes that concept concrete creates an opportunity that didn't exist before: a real implementation of 402.
 

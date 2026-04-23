@@ -37,10 +37,10 @@ function HandshakePage() {
 
       <DocSection id="overview" title="Overview">
         <p>
-          When a caller requests a Astro-protected resource without a valid payment, the server responds with <Mono>HTTP 402 Payment Required</Mono>. The response carries the price, scope, settlement chain, and a short-lived nonce. The client signs a payment intent and retries; the server verifies the intent onchain and returns the resource with a receipt. The whole loop typically completes in under 1.2 seconds on L2s, comparable to a normal authenticated API call.
+          When a caller requests a Astro-protected resource without a valid payment, the server responds with <Mono>HTTP 402 Payment Required</Mono>. The response carries the price, scope, settlement chain, and a short-lived nonce. The client signs a payment intent and retries; the server verifies the intent onchain and returns the resource with a receipt. The whole loop typically completes in under 1.2 seconds on Solana, comparable to a normal authenticated API call.
         </p>
         <Callout>
-          The handshake is stateless on the server. Every quote is bound to a nonce and TTL, and every receipt is independently verifiable on Ethereum. There is no session, no cookie, and no shared mutable state.
+          The handshake is stateless on the server. Every quote is bound to a nonce and TTL, and every receipt is independently verifiable on Solana. There is no session, no cookie, and no shared mutable state.
         </Callout>
       </DocSection>
 
@@ -74,7 +74,7 @@ function HandshakePage() {
      X-Astro-Receipt: 0x<receipt-bytes>
      Content-Type: application/json
      { "result": "..." }`} />
-        <p>The full round-trip is typically under <strong>1.2 seconds</strong>, including settlement on supported L2s. The settlement transaction is broadcast in parallel with step 3, so verification is already in-flight by the time the server begins parsing the intent.</p>
+        <p>The full round-trip is typically under <strong>1.2 seconds</strong>, including settlement on supported Solana. The settlement transaction is broadcast in parallel with step 3, so verification is already in-flight by the time the server begins parsing the intent.</p>
       </DocSection>
 
       <DocSection id="headers" title="Response headers">
@@ -82,17 +82,17 @@ function HandshakePage() {
         <Params rows={[
           ["x-astro-price", "string", "Quoted price as 'amount asset', e.g. '0.0021 USDC'."],
           ["x-astro-scope", "string", "Capability namespace (e.g. inference.gpt)."],
-          ["x-astro-settle", "string", "Settlement target chain (ethereum, base, optimism, arbitrum)."],
+          ["x-astro-settle", "string", "Settlement target chain (solana, base, optimism, arbitrum)."],
           ["x-astro-ttl", "number", "Validity window for the quote, in seconds."],
           ["x-astro-nonce", "hex", "Single-use nonce binding the quote to this request."],
-          ["x-astro-domain", "string", "EIP-712 domain hash for signature binding."],
+          ["x-astro-domain", "string", "domain hash for signature binding."],
           ["x-astro-resource", "string", "Echo of the resource identifier; used for client-side scope routing."],
         ]} />
         <p>All headers are case-insensitive per HTTP semantics. The SDK reads them with normalization; if you implement your own client, do the same.</p>
       </DocSection>
 
       <DocSection id="intent" title="Payment intent">
-        <p>The client signs an EIP-712 typed-data payload binding the nonce, scope, and price. The intent is opaque to the application layer — your handler never reads it directly; the verifier produces a structured <Mono>ctx.payment</Mono> after validation.</p>
+        <p>The client signs an signed message payload binding the nonce, scope, and price. The intent is opaque to the application layer — your handler never reads it directly; the verifier produces a structured <Mono>ctx.payment</Mono> after validation.</p>
         <Code lang="json" code={`{
   "domain": {
     "name":              "Astro",
@@ -119,13 +119,13 @@ function HandshakePage() {
     "expires":  1727384981
   }
 }`} />
-        <p>Because the intent is standard EIP-712, every wallet — hardware, mobile, embedded, MPC, or backend KMS — can sign it without Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.</p>
+        <p>Because the intent is standard off-chain signing, every wallet — hardware, mobile, embedded, MPC, or backend KMS — can sign it without Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.</p>
       </DocSection>
 
       <DocSection id="verification" title="Verification & retry">
         <p>The server verifies the intent in three steps before any handler code runs:</p>
         <ol className="list-decimal pl-5 space-y-2">
-          <li><strong>Signature.</strong> Recover the signer from the EIP-712 hash; check it matches the declared payer.</li>
+          <li><strong>Signature.</strong> Recover the signer from the message hash; check it matches the declared payer.</li>
           <li><strong>Quote binding.</strong> Confirm the intent's resource, scope, amount, and nonce match the original quote and that the quote hasn't expired.</li>
           <li><strong>Onchain settlement.</strong> Wait for the settlement transaction (broadcast in parallel by the client) to confirm. The verifier supports both pessimistic (wait for inclusion) and optimistic (proceed on signed pre-confirmation) modes.</li>
         </ol>
@@ -148,7 +148,7 @@ const res = await client.fetch("/v1/infer", { method: "POST" });`} />
         <ul className="list-disc pl-5 space-y-2">
           <li><strong>No replay:</strong> nonces are single-use and bound to a specific resource and quote. The settlement contract maintains the canonical nonce registry; off-chain replays are caught at the contract level even if the server is compromised.</li>
           <li><strong>No overpay:</strong> the signed amount is exact; intents cannot be silently reused for higher-value calls. Two-phase pricing uses the quote as a hard ceiling that the commit cannot exceed.</li>
-          <li><strong>No silent settlement:</strong> every successful response carries a receipt the caller can verify independently from any Ethereum RPC, without trusting the server or Astro.</li>
+          <li><strong>No silent settlement:</strong> every successful response carries a receipt the caller can verify independently from any Solana RPC, without trusting the server or Astro.</li>
         </ul>
         <p>The full threat model — including key compromise, network adversaries, and chain-level failures — is documented in <Mono>/docs/security</Mono>.</p>
       </DocSection>

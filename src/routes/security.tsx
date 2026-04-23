@@ -16,7 +16,7 @@ const THREAT_MODEL = [
   },
   {
     threat: "Man-in-the-middle price manipulation",
-    mitigation: "Quotes are signed with the server's Ethereum key. The client verifies the quote signature before constructing an intent. A modified price field produces an invalid signature and is rejected.",
+    mitigation: "Quotes are signed with the server's Solana key. The client verifies the quote signature before constructing an intent. A modified price field produces an invalid signature and is rejected.",
   },
   {
     threat: "Underpayment",
@@ -33,7 +33,7 @@ const THREAT_MODEL = [
 ];
 
 const DISCLOSURES = [
-  { date: "Mar 2026", title: "No vulnerabilities found", detail: "Initial protocol audit completed by Trail of Bits. Settlement contracts on Ethereum, Base, and Optimism covered." },
+  { date: "Mar 2026", title: "No vulnerabilities found", detail: "Initial protocol audit completed by Trail of Bits. Settlement contracts on Solana, Base, and Optimism covered." },
   { date: "Jan 2026", title: "Informational: Gas estimation edge case", detail: "Under extreme network congestion, gas estimates in quote responses could be stale by the time of settlement. Resolved by adding a gas buffer and a client-side retry on gas estimation failure." },
 ];
 

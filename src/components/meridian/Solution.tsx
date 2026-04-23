@@ -29,7 +29,7 @@ support.handle(disputes)`}</pre>
   resource: "/infer",
   price:    "0.0021 USDC",
   scope:    "inference.gpt",
-  settle:   "ethereum"
+  settle:   "solana"
 })
 
 // access ⇆ payment ⇆ proof

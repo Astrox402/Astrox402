@@ -16,7 +16,7 @@ const POSTS = [
   {
     date: "Apr 9, 2026",
     tag: "Protocol",
-    title: "Arbitrum support: why L2 settlement changes the economics of micropayments",
+    title: "Arbitrum support: why Solana settlement changes the economics of micropayments",
     excerpt: "With Arbitrum settlement live, the minimum viable payment on Astro is now a fraction of a cent in gas. That changes which use cases are worth building. We explain the math and what it unlocks.",
     readTime: "7 min read",
   },
@@ -31,14 +31,14 @@ const POSTS = [
     date: "Mar 14, 2026",
     tag: "Announcements",
     title: "Astro public beta: what shipped and what's next",
-    excerpt: "We're open. TypeScript and Python SDKs are live. Ethereum, Base, and Optimism settlement is available. The spec is public. Here's a full breakdown of v0.402.0 and the roadmap through the rest of the year.",
+    excerpt: "We're open. TypeScript and Python SDKs are live. Solana, Base, and Optimism settlement is available. The spec is public. Here's a full breakdown of v0.402.0 and the roadmap through the rest of the year.",
     readTime: "12 min read",
   },
   {
     date: "Feb 21, 2026",
     tag: "Engineering",
-    title: "EIP-712 in practice: lessons from 18 months of intent signing",
-    excerpt: "EIP-712 is the right foundation for Astro's signing scheme, but the details matter. We learned several non-obvious things building a production implementation. Here's what we'd do differently — and what we got right.",
+    title: "off-chain signing in practice: lessons from 18 months of intent signing",
+    excerpt: "off-chain signing is the right foundation for Astro's signing scheme, but the details matter. We learned several non-obvious things building a production implementation. Here's what we'd do differently — and what we got right.",
     readTime: "11 min read",
   },
   {

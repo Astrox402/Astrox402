@@ -1,6 +1,6 @@
 # Astro
 
-A marketing landing page and technical documentation site for the Astro protocol — a payment-native protocol layer for the internet that makes APIs, agents, and digital resources monetizable via programmable access and settlement on Ethereum.
+A marketing landing page and technical documentation site for the Astro protocol — a payment-native protocol layer for the internet that makes APIs, agents, and digital resources monetizable via programmable access and settlement on Solana.
 
 ## Tech Stack
 

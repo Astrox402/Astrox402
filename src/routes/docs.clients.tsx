@@ -41,7 +41,7 @@ function ClientsPage() {
       </DocSection>
 
       <DocSection id="fetch" title="Web client">
-        <p>For human-in-the-loop applications, use a wallet-backed client. The signer can be anything that implements EIP-712 — wagmi, viem, ethers, RainbowKit, embedded wallets like Privy or Turnkey, or a custom MPC service.</p>
+        <p>For human-in-the-loop applications, use a wallet-backed client. The signer can be anything that implements off-chain signing — @solana/web3.js, wallet-adapter, Anchor, embedded wallets like Privy or Turnkey (Solana), or a custom MPC service.</p>
         <Code lang="ts" code={`import { astroClient } from "@astro/sdk";
 
 const client = astroClient({
@@ -60,7 +60,7 @@ const receipt = res.receipt;        // attached automatically`} />
       </DocSection>
 
       <DocSection id="wallets" title="Wallet integration">
-        <p>Astro works with any signer that can produce an EIP-712 signature. The SDK ships first-class adapters for the most common stacks:</p>
+        <p>Astro works with any signer that can produce an Ed25519 signature. The SDK ships first-class adapters for the most common stacks:</p>
         <Params rows={[
           ["viem", "WalletClient", "Pass the wallet client directly as the signer."],
           ["ethers", "Signer", "v5 and v6 supported via astro.adapters.ethers()."],
@@ -138,7 +138,7 @@ cargo add astro-sdk`} />
       </DocSection>
 
       <DocSection id="interop" title="Interop & raw HTTP">
-        <p>You don't need an SDK to call a Astro endpoint. The protocol is plain HTTP plus EIP-712 signatures, both of which are widely supported. Implementing a client from scratch takes around 200 lines of code in any language with an EVM signing library.</p>
+        <p>You don't need an SDK to call a Astro endpoint. The protocol is plain HTTP plus Ed25519 signatures, both of which are widely supported. Implementing a client from scratch takes around 200 lines of code in any language with an Solana signing library.</p>
         <p>The full wire specification is published at the protocol repository, including reference test vectors that any new client implementation can validate against. If you build one, the interop test suite will tell you whether it's protocol-compliant before you ship.</p>
       </DocSection>
 

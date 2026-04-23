@@ -17,7 +17,7 @@ const PLANS = [
     ctaHref: "#waitlist",
     features: [
       "Up to 10,000 settled calls / month",
-      "Ethereum mainnet + Base",
+      "Solana + Base",
       "USDC settlement",
       "Onchain receipt log",
       "TypeScript SDK",
@@ -34,7 +34,7 @@ const PLANS = [
     ctaHref: "#waitlist",
     features: [
       "Up to 1M settled calls / month",
-      "All 4 chains (L1 + L2)",
+      "All 4 chains (Solana)",
       "USDC, USDT, ETH",
       "Advanced receipt search & export",
       "Pricing playground",
@@ -71,7 +71,7 @@ const FAQS = [
   },
   {
     q: "Who pays gas fees?",
-    a: "Gas is paid by the caller's wallet at settlement time. On L2 chains (Base, Optimism, Arbitrum) gas costs are negligible — typically fractions of a cent per settlement.",
+    a: "Gas is paid by the caller's wallet at settlement time. On Solana chains (Base, Optimism, Arbitrum) gas costs are negligible — typically fractions of a cent per settlement.",
   },
   {
     q: "Can I start on Starter and upgrade?",

@@ -33,7 +33,7 @@ function DocsIndex() {
       <PageHeader
         eyebrow="Documentation"
         title="Build on the payment-native internet."
-        intro="Astro turns any endpoint, capability, or digital resource into a programmable, monetizable primitive — settled on Ethereum. These docs walk through the protocol, the SDKs, the production patterns, and the operational posture in depth."
+        intro="Astro turns any endpoint, capability, or digital resource into a programmable, monetizable primitive — settled on Solana. These docs walk through the protocol, the SDKs, the production patterns, and the operational posture in depth."
       />
 
       <DocSection id="introduction" title="Introduction">
@@ -50,7 +50,7 @@ function DocsIndex() {
 
       <DocSection id="what" title="What Astro is">
         <p>
-          Astro is an open protocol — built on the long-reserved HTTP <Mono>402 Payment Required</Mono> status code — for declaring, settling, and proving payment for any digital resource. It's also a set of SDKs (TypeScript, Python, Go, Rust) that implement the protocol, and a small set of audited smart contracts on Ethereum, Base, Optimism, and Arbitrum that handle non-custodial settlement.
+          Astro is an open protocol — built on the long-reserved HTTP <Mono>402 Payment Required</Mono> status code — for declaring, settling, and proving payment for any digital resource. It's also a set of SDKs (TypeScript, Python, Go, Rust) that implement the protocol, and a small set of audited programs on Solana, Solana that handle non-custodial settlement.
         </p>
         <p>
           A Astro endpoint is a normal fetch handler with one extra wrapper. A Astro client is a normal HTTP client with one extra retry rule. The interesting work — pricing logic, settlement chain selection, scope enforcement, receipt generation — happens in the protocol layer, not in your application code.
@@ -85,7 +85,7 @@ function DocsIndex() {
           <li><strong>Stateless servers.</strong> Quotes are cryptographic offers, not reservations. The server never holds session state.</li>
           <li><strong>Public proofs.</strong> Every paid call produces a receipt anyone can verify. Trust is replaced by math.</li>
           <li><strong>Open by default.</strong> Open spec, open contracts, source-available SDKs. No part of the protocol is gated by Astro.</li>
-          <li><strong>Boring cryptography.</strong> Standard EIP-712, standard ECDSA, standard EVM. No exotic primitives.</li>
+          <li><strong>Boring cryptography.</strong> Ed25519, SPL tokens, Solana programs. No exotic primitives.</li>
         </ul>
       </DocSection>
 
@@ -109,7 +109,7 @@ export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004 + 0.001,
-  settle:   { chain: "ethereum", asset: "USDC" },
+  settle:   { chain: "solana", asset: "USDC" },
   ttl:      60,
 
   async handler(req, ctx) {

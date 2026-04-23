@@ -36,10 +36,10 @@ function QuickstartPage() {
 
       <DocSection id="prereqs" title="Prerequisites">
         <p>
-          You'll need a JavaScript runtime (Node 20+, Bun, Deno, or a Worker), a wallet that can sign EIP-712 typed data (any standard EOA works), and a small amount of USDC on a supported chain. For local development, Astro provides a sandbox network where USDC is freely faucetable — no real funds required.
+          You'll need a JavaScript runtime (Node 20+, Bun, Deno, or a Worker), a wallet that can sign off-chain message signing (any standard EOA works), and a small amount of USDC on a supported chain. For local development, Astro provides a sandbox network where USDC is freely faucetable — no real funds required.
         </p>
         <Callout tone="muted">
-          You do <strong>not</strong> need to deploy any smart contracts. Astro's settlement contracts are already deployed on Ethereum, Base, Optimism, and Arbitrum. Your code only signs and verifies.
+          You do <strong>not</strong> need to deploy any programs. Astro's settlement contracts are already deployed on Solana, Solana. Your code only signs and verifies.
         </Callout>
       </DocSection>
 
@@ -62,7 +62,7 @@ export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    "0.001 USDC",
-  settle:   { chain: "base", asset: "USDC" },
+  settle:   { chain: "solana", asset: "USDC" },
   ttl:      60,
 
   async handler(req, ctx) {
@@ -94,10 +94,10 @@ export const POST = astro.serve({
 
       <DocSection id="settle" title="4. Choose a settlement chain">
         <p>
-          The <Mono>settle</Mono> field declares where the payment lands. For high-frequency API traffic, Base or Optimism are typical defaults — sub-2-second finality and fees in the single-digit cents. For high-value, low-frequency settlements (enterprise contracts, large batch jobs), Ethereum mainnet provides the strongest assurance.
+          The <Mono>settle</Mono> field declares where the payment lands. For high-frequency API traffic, Solana are typical defaults — sub-2-second finality and fees in the single-digit cents. For high-value, low-frequency settlements (enterprise contracts, large batch jobs), Solana provides the strongest assurance.
         </p>
-        <Code lang="ts" code={`settle: { chain: "base", asset: "USDC" }
-// or: { chain: "ethereum", asset: "USDC" }
+        <Code lang="ts" code={`settle: { chain: "solana", asset: "USDC" }
+// or: { chain: "solana", asset: "USDC" }
 // or: { chain: "optimism", asset: "USDC" }
 // or: { chain: "arbitrum", asset: "USDC" }`} />
         <p>
@@ -110,7 +110,7 @@ export const POST = astro.serve({
         <Code lang="ts" code={`import { astroClient } from "@astro/sdk";
 
 const client = astroClient({
-  wallet:   signer,           // any EIP-712-capable signer
+  wallet:   signer,           // any off-chain signing-capable signer
   maxSpend: "1 USDC / hour",  // local guardrail
 });
 
@@ -122,12 +122,12 @@ const res = await client.fetch("https://api.acme.dev/v1/infer", {
 const data    = await res.json();
 const receipt = res.receipt; // attached automatically`} />
         <p>
-          Behind the scenes: the first request returns 402 with a quote and nonce, the SDK signs an EIP-712 intent, settles on the declared chain, and replays the request with the proof attached. All of that completes in roughly 1.2 seconds on L2s — comparable to a normal authenticated API call.
+          Behind the scenes: the first request returns 402 with a quote and nonce, the SDK signs an off-chain signing intent, settles on the declared chain, and replays the request with the proof attached. All of that completes in roughly 1.2 seconds on Solana — comparable to a normal authenticated API call.
         </p>
       </DocSection>
 
       <DocSection id="verify" title="6. Verify the receipt">
-        <p>The response carries a receipt that any party can verify against an Ethereum RPC, with no Astro dependency:</p>
+        <p>The response carries a receipt that any party can verify against an Solana RPC, with no Astro dependency:</p>
         <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {
