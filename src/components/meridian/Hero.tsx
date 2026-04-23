@@ -12,7 +12,7 @@ export function Hero() {
         className="absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0.18 }}
       >
-        <source src="https://res.cloudinary.com/dvfrmhk5z/video/upload/v1776859224/13161041_1920_1080_30fps_me4dzq.mp4" type="video/mp4" />
+        <source src="https://res.cloudinary.com/dvfrmhk5z/video/upload/q_auto/f_auto/v1776950209/14544289_1920_1080_24fps_jk8fun.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
       <div className="absolute inset-0 grid-bg radial-fade opacity-30" />
