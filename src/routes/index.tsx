@@ -1,26 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Nav } from "@/components/meridian/Nav";
+import { Hero } from "@/components/meridian/Hero";
+import { Problem } from "@/components/meridian/Problem";
+import { Solution } from "@/components/meridian/Solution";
+import { HowItWorks } from "@/components/meridian/HowItWorks";
+import { UseCases } from "@/components/meridian/UseCases";
+import { Ethereum } from "@/components/meridian/Ethereum";
+import { Dashboard } from "@/components/meridian/Dashboard";
+import { Manifesto } from "@/components/meridian/Manifesto";
+import { CTA } from "@/components/meridian/CTA";
+import { Footer } from "@/components/meridian/Footer";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Meridian — Payment-native protocol layer for the internet" },
+      { name: "description", content: "Make every API, agent, and digital resource monetizable. Programmable access and settlement, built on Ethereum." },
+      { property: "og:title", content: "Meridian — Payment-native protocol layer for the internet" },
+      { property: "og:description", content: "Programmable access and settlement for APIs, agents, and digital resources. Launching on Ethereum." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <main className="min-h-screen bg-background text-foreground antialiased">
+      <Nav />
+      <Hero />
+      <Problem />
+      <Solution />
+      <HowItWorks />
+      <UseCases />
+      <Ethereum />
+      <Dashboard />
+      <Manifesto />
+      <CTA />
+      <Footer />
+    </main>
+  );
 }
