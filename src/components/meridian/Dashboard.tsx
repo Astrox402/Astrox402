@@ -65,12 +65,12 @@ export function Dashboard() {
                 <svg viewBox="0 0 400 80" className="w-full h-full">
                   <defs>
                     <linearGradient id="spark" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="oklch(0.78 0.13 195)" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="oklch(0.78 0.13 195)" stopOpacity="0" />
+                      <stop offset="0%" stopColor="oklch(0.72 0.26 355)" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="oklch(0.72 0.26 355)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path d="M0,60 L30,55 L60,58 L90,40 L120,45 L150,30 L180,38 L210,22 L240,28 L270,18 L300,24 L330,12 L360,18 L400,8 L400,80 L0,80 Z" fill="url(#spark)" />
-                  <path d="M0,60 L30,55 L60,58 L90,40 L120,45 L150,30 L180,38 L210,22 L240,28 L270,18 L300,24 L330,12 L360,18 L400,8" fill="none" stroke="oklch(0.78 0.13 195)" strokeWidth="1.5" />
+                  <path d="M0,60 L30,55 L60,58 L90,40 L120,45 L150,30 L180,38 L210,22 L240,28 L270,18 L300,24 L330,12 L360,18 L400,8" fill="none" stroke="oklch(0.72 0.26 355)" strokeWidth="1.5" />
                 </svg>
               </div>
 

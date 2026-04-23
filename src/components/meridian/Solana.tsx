@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 
-const A = "oklch(0.78 0.13 195)";
-const A20 = "oklch(0.78 0.13 195 / 0.20)";
-const A08 = "oklch(0.78 0.13 195 / 0.08)";
-const A40 = "oklch(0.78 0.13 195 / 0.40)";
-const DARK = "oklch(0.10 0.015 250)";
+const A = "oklch(0.72 0.26 355)";
+const A20 = "oklch(0.72 0.26 355 / 0.20)";
+const A08 = "oklch(0.72 0.26 355 / 0.08)";
+const A40 = "oklch(0.72 0.26 355 / 0.40)";
+const DARK = "oklch(0.09 0.012 345)";
 
 const NODES = [
   { id: 0, x: 200, y: 200, r: 10, hub: true,  label: "HUB"   },

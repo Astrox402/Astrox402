@@ -68,8 +68,8 @@ function PacketDot({ direction, label, color }: { direction: string; label: stri
 
   const col =
     color === "purple" ? "oklch(0.72 0.18 290)" :
-    color === "green"  ? "oklch(0.75 0.18 155)" :
-                         "oklch(0.78 0.13 195)";
+    color === "green"  ? "oklch(0.80 0.20 5)" :
+                         "oklch(0.72 0.26 355)";
 
   return (
     <motion.div
@@ -101,19 +101,19 @@ function NodeBox({
       className={`rounded-xl border p-5 relative overflow-hidden transition-colors duration-300 ${
         active
           ? highlight
-            ? "border-emerald-500/60 bg-emerald-500/5"
+            ? "border-pink-400/60 bg-pink-400/5"
             : "border-accent/60 bg-accent/5"
           : highlight
             ? "border-border bg-background/40"
             : "border-border bg-background/40"
       }`}
-      animate={{ boxShadow: active ? (highlight ? "0 0 20px oklch(0.75 0.18 155 / 0.15)" : "0 0 20px oklch(0.78 0.13 195 / 0.15)") : "0 0 0px transparent" }}
+      animate={{ boxShadow: active ? (highlight ? "0 0 20px oklch(0.80 0.20 5 / 0.15)" : "0 0 20px oklch(0.72 0.26 355 / 0.15)") : "0 0 0px transparent" }}
       transition={{ duration: 0.4 }}
     >
       {active && (
         <motion.div
           className="absolute inset-x-0 top-0 h-px"
-          style={{ background: highlight ? "oklch(0.75 0.18 155)" : "oklch(0.78 0.13 195)" }}
+          style={{ background: highlight ? "oklch(0.80 0.20 5)" : "oklch(0.72 0.26 355)" }}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
@@ -122,7 +122,7 @@ function NodeBox({
       <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-3">{sub}</div>
       <div className="text-[15px] font-medium mb-2">{label}</div>
       <motion.div
-        className={`font-mono text-[12px] ${active ? (highlight ? "text-emerald-400" : "text-accent") : "text-muted-foreground"}`}
+        className={`font-mono text-[12px] ${active ? (highlight ? "text-pink-400" : "text-accent") : "text-muted-foreground"}`}
         animate={{ opacity: active ? 1 : 0.5 }}
       >
         {code}
@@ -134,16 +134,16 @@ function NodeBox({
 function ProtocolBox({ active, phase }: { active: boolean; phase: number }) {
   const lines = phase === 3 ? RECEIPT_LINES : QUOTE_LINES;
   const headerText = phase === 3 ? "200 OK · Settled" : "402 Payment Required";
-  const headerColor = phase === 3 ? "oklch(0.75 0.18 155)" : "oklch(0.78 0.13 195)";
+  const headerColor = phase === 3 ? "oklch(0.80 0.20 5)" : "oklch(0.72 0.26 355)";
 
   return (
     <motion.div
       className="rounded-xl border relative overflow-hidden transition-colors duration-300"
       style={{
-        borderColor: active ? (phase === 3 ? "oklch(0.75 0.18 155 / 0.6)" : "oklch(0.78 0.13 195 / 0.5)") : "oklch(0.22 0.01 250)",
-        background: active ? (phase === 3 ? "oklch(0.75 0.18 155 / 0.04)" : "oklch(0.78 0.13 195 / 0.04)") : "oklch(0 0 0 / 0.40)",
+        borderColor: active ? (phase === 3 ? "oklch(0.80 0.20 5 / 0.6)" : "oklch(0.72 0.26 355 / 0.5)") : "oklch(0.18 0.024 345)",
+        background: active ? (phase === 3 ? "oklch(0.80 0.20 5 / 0.04)" : "oklch(0.72 0.26 355 / 0.04)") : "oklch(0 0 0 / 0.40)",
       }}
-      animate={{ boxShadow: active ? "0 0 24px oklch(0.78 0.13 195 / 0.12)" : "0 0 0px transparent" }}
+      animate={{ boxShadow: active ? "0 0 24px oklch(0.72 0.26 355 / 0.12)" : "0 0 0px transparent" }}
       transition={{ duration: 0.4 }}
     >
       <motion.div
@@ -177,7 +177,7 @@ function ProtocolBox({ active, phase }: { active: boolean; phase: number }) {
                   className="flex gap-2"
                 >
                   <span className="text-muted-foreground w-14 flex-shrink-0">{l.k}</span>
-                  <span className={l.k === "status" ? "text-emerald-400" : ""}>{l.v}</span>
+                  <span className={l.k === "status" ? "text-pink-400" : ""}>{l.v}</span>
                 </motion.div>
               ))}
             </div>
@@ -240,12 +240,12 @@ export function FlowDiagram() {
           <div key={p.id} className="flex items-center gap-1 flex-1">
             <motion.div
               className="flex items-center gap-1.5 text-[10px] font-mono tracking-wide"
-              animate={{ color: phase === i ? "oklch(0.78 0.13 195)" : "oklch(0.55 0.02 250)" }}
+              animate={{ color: phase === i ? "oklch(0.72 0.26 355)" : "oklch(0.55 0.02 345)" }}
               transition={{ duration: 0.3 }}
             >
               <motion.div
                 className="h-1 rounded-full flex-1 min-w-[20px]"
-                animate={{ backgroundColor: phase === i ? "oklch(0.78 0.13 195)" : phase > i ? "oklch(0.78 0.13 195 / 0.3)" : "oklch(0.22 0.01 250)" }}
+                animate={{ backgroundColor: phase === i ? "oklch(0.72 0.26 355)" : phase > i ? "oklch(0.72 0.26 355 / 0.3)" : "oklch(0.18 0.024 345)" }}
                 style={{ height: "2px", minWidth: "100%" }}
                 transition={{ duration: 0.3 }}
               />
