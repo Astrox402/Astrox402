@@ -1,4 +1,41 @@
+import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
+
+const ACCENT = "oklch(0.78 0.13 195)";
+const ACCENT_DIM = "oklch(0.78 0.13 195 / 0.3)";
+const LINE_COLOR = "oklch(1 0 0 / 0.08)";
+const DOT_STROKE = "oklch(1 0 0 / 0.06)";
+
+const ORBITS = [
+  { r: 60,  duration: 10, dots: 6,  reverse: false },
+  { r: 100, duration: 18, dots: 8,  reverse: true  },
+  { r: 145, duration: 28, dots: 12, reverse: false },
+];
+
+function Orbit({ r, duration, dots, reverse }: { r: number; duration: number; dots: number; reverse: boolean }) {
+  return (
+    <g>
+      <circle cx="200" cy="200" r={r} fill="none" stroke={DOT_STROKE} strokeDasharray="2 6" />
+      <motion.g
+        style={{ originX: "200px", originY: "200px" }}
+        animate={{ rotate: reverse ? -360 : 360 }}
+        transition={{ duration, repeat: Infinity, ease: "linear" }}
+      >
+        {Array.from({ length: dots }).map((_, i) => {
+          const angle = (i / dots) * 2 * Math.PI;
+          const x = 200 + r * Math.cos(angle);
+          const y = 200 + r * Math.sin(angle);
+          return (
+            <g key={i}>
+              <circle cx={x} cy={y} r="2.5" fill={ACCENT} />
+              <circle cx={x} cy={y} r="6" fill="none" stroke={ACCENT_DIM} strokeWidth="1" />
+            </g>
+          );
+        })}
+      </motion.g>
+    </g>
+  );
+}
 
 export function Ethereum() {
   return (
@@ -33,32 +70,45 @@ export function Ethereum() {
           <div className="aspect-square rounded-2xl border border-border bg-surface/40 p-10 relative overflow-hidden">
             <svg viewBox="0 0 400 400" className="w-full h-full">
               <defs>
-                <radialGradient id="rg" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="oklch(0.78 0.13 195)" stopOpacity="0.4" />
+                <radialGradient id="eth-rg" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="oklch(0.78 0.13 195)" stopOpacity="0.18" />
                   <stop offset="100%" stopColor="oklch(0.78 0.13 195)" stopOpacity="0" />
                 </radialGradient>
               </defs>
-              <circle cx="200" cy="200" r="180" fill="url(#rg)" />
-              {[40, 80, 120, 160].map((r) => (
-                <circle key={r} cx="200" cy="200" r={r} fill="none" stroke="oklch(1 0 0 / 0.08)" />
-              ))}
+
+              <circle cx="200" cy="200" r="185" fill="url(#eth-rg)" />
+
               {[0, 60, 120, 180, 240, 300].map((a) => {
                 const rad = (a * Math.PI) / 180;
-                return <line key={a} x1="200" y1="200" x2={200 + 180 * Math.cos(rad)} y2={200 + 180 * Math.sin(rad)} stroke="oklch(1 0 0 / 0.06)" />;
+                return (
+                  <line
+                    key={a}
+                    x1="200" y1="200"
+                    x2={200 + 185 * Math.cos(rad)}
+                    y2={200 + 185 * Math.sin(rad)}
+                    stroke={LINE_COLOR}
+                  />
+                );
               })}
-              {[
-                [200, 60], [340, 140], [340, 260], [200, 340], [60, 260], [60, 140],
-              ].map(([x, y], i) => (
-                <g key={i}>
-                  <circle cx={x} cy={y} r="4" fill="oklch(0.78 0.13 195)" />
-                  <circle cx={x} cy={y} r="10" fill="none" stroke="oklch(0.78 0.13 195 / 0.3)" />
-                </g>
+
+              {ORBITS.map((o) => (
+                <Orbit key={o.r} {...o} />
               ))}
-              <g transform="translate(200,200)">
-                <rect x="-22" y="-22" width="44" height="44" fill="none" stroke="oklch(0.97 0.005 250)" strokeWidth="1" transform="rotate(45)" />
-                <rect x="-12" y="-12" width="24" height="24" fill="oklch(0.78 0.13 195)" transform="rotate(45)" />
+
+              <g transform="translate(200, 200)">
+                <circle r="34" fill="oklch(0.12 0.02 250)" stroke={ACCENT} strokeWidth="1.5" />
+                <g transform="scale(0.9)">
+                  <polygon points="0,-22 13,-4 0,-8 -13,-4" fill={ACCENT} fillOpacity="0.95" />
+                  <polygon points="0,-22 13,-4 0,-8 -13,-4" fill="white" fillOpacity="0.08" />
+                  <polygon points="0,-8 13,-4 0,10 -13,-4" fill={ACCENT} fillOpacity="0.65" />
+                  <polygon points="0,10 13,-4 0,22 -13,-4" fill="white" fillOpacity="0.0" />
+                  <polygon points="0,10 13,-4 0,22" fill={ACCENT} fillOpacity="0.95" />
+                  <polygon points="0,10 -13,-4 0,22" fill={ACCENT} fillOpacity="0.7" />
+                  <polygon points="0,-8 -13,-4 0,10" fill={ACCENT} fillOpacity="0.4" />
+                </g>
               </g>
             </svg>
+
             <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">
               <span>Settlement mesh</span>
               <span className="text-accent">L1 + L2</span>
