@@ -1,6 +1,6 @@
-# Astro
+# Astro x402
 
-A marketing landing page and technical documentation site for the Astro protocol — a payment-native protocol layer for the internet that makes APIs, agents, and digital resources monetizable via programmable access and settlement on Solana.
+A marketing landing page, technical documentation site, and authenticated control-plane dashboard for the Astro protocol — a payment-native protocol layer that makes APIs, agents, and digital resources monetizable via HTTP 402 with settlement on Solana.
 
 ## Tech Stack
 
@@ -9,7 +9,6 @@ A marketing landing page and technical documentation site for the Astro protocol
 - **Styling**: Tailwind CSS v4
 - **UI Components**: Shadcn UI (Radix UI primitives) in `src/components/ui/`
 - **Animations**: Framer Motion
-- **Icons**: Lucide React
 - **Language**: TypeScript
 - **Build Tool**: Vite 7
 - **Package Manager**: npm
@@ -17,14 +16,34 @@ A marketing landing page and technical documentation site for the Astro protocol
 ## Project Structure
 
 - `src/routes/` — Application pages (TanStack Router file-based routing)
-  - `__root.tsx` — Root layout with HTML shell
+  - `__root.tsx` — Root layout
   - `index.tsx` — Main landing page
+  - `sign-in.tsx` — Login page (any email + password; localStorage auth)
+  - `dashboard.tsx` — Dashboard layout (sidebar + topbar); auth-guarded via `beforeLoad`
+  - `dashboard.index.tsx` — Dashboard overview (stats, chart, activity, resource table)
+  - `dashboard.resources.tsx` — Resources list with filter tabs
+  - `dashboard.resources.$id.tsx` — Resource detail (config, logs, settlement events)
+  - `dashboard.payments.tsx` — Payment history with filter tabs
+  - `dashboard.developer.tsx` — API keys, SDK snippets, webhook config
+  - `dashboard.settings.tsx` — Profile, wallet, network, team sections
   - `docs.tsx` + `docs/` — Documentation section with nested routes
-- `src/components/meridian/` — Feature-specific landing page components
+- `src/components/meridian/` — Landing page feature components
+  - `Nav.tsx` — Top nav; shows "Dashboard" badge when user is logged in
+  - `Solana.tsx` — Animated settlement mesh (SVG animateMotion)
+  - `FlowDiagram.tsx` — Animated 4-phase 402 protocol flow (Framer Motion)
+- `src/lib/auth.ts` — localStorage-based auth utilities (getUser, signIn, signOut)
 - `src/components/ui/` — Reusable Shadcn UI components
 - `src/router.tsx` — Router configuration
 - `src/routeTree.gen.ts` — Auto-generated route tree (do not edit manually)
 - `src/styles.css` — Global styles (Tailwind)
+
+## Auth Flow
+
+1. User visits landing page → clicks "Sign in" in nav
+2. `/sign-in` — any email + password accepted; creates a user object in localStorage
+3. Redirects to `/dashboard` on success
+4. All `/dashboard/*` routes use `beforeLoad` to redirect unauthenticated users to `/sign-in`
+5. Sign out clears localStorage and returns to `/`
 
 ## Development
 

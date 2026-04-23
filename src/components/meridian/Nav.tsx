@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { getUser } from "@/lib/auth";
 
 export function Nav() {
+  const user = getUser();
+
   return (
     <header className="fixed top-0 inset-x-0 z-50 border-b border-border/60 backdrop-blur-xl bg-background/70">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
@@ -22,9 +25,24 @@ export function Nav() {
           <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
         </nav>
         <div className="flex items-center gap-2">
-          <a href="#waitlist" className="hidden sm:inline-flex h-9 items-center px-3.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors">
-            Sign in
-          </a>
+          {user ? (
+            <Link
+              to="/dashboard"
+              className="hidden sm:inline-flex h-9 items-center gap-2 px-3.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <span className="h-5 w-5 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[10px] font-mono text-accent">
+                {user.avatar}
+              </span>
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/sign-in"
+              className="hidden sm:inline-flex h-9 items-center px-3.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Sign in
+            </Link>
+          )}
           <a href="#waitlist" className="inline-flex h-9 items-center px-4 rounded-md bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">
             Request access
           </a>

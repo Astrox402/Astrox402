@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SpecificationRouteImport } from './routes/specification'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as SdksRouteImport } from './routes/sdks'
 import { Route as ProtocolRouteImport } from './routes/protocol'
@@ -18,6 +19,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ManifestoRouteImport } from './routes/manifesto'
 import { Route as ExamplesRouteImport } from './routes/examples'
 import { Route as DocsRouteImport } from './routes/docs'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as ChangelogRouteImport } from './routes/changelog'
@@ -27,6 +29,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DocsServeRouteImport } from './routes/docs.serve'
 import { Route as DocsSecurityRouteImport } from './routes/docs.security'
 import { Route as DocsReceiptsRouteImport } from './routes/docs.receipts'
@@ -39,6 +42,11 @@ import { Route as DocsConceptsRouteImport } from './routes/docs.concepts'
 import { Route as DocsClientsRouteImport } from './routes/docs.clients'
 import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardResourcesRouteImport } from './routes/dashboard.resources'
+import { Route as DashboardPaymentsRouteImport } from './routes/dashboard.payments'
+import { Route as DashboardDeveloperRouteImport } from './routes/dashboard.developer'
+import { Route as DashboardResourcesIdRouteImport } from './routes/dashboard.resources.$id'
 
 const StatusRoute = StatusRouteImport.update({
   id: '/status',
@@ -48,6 +56,11 @@ const StatusRoute = StatusRouteImport.update({
 const SpecificationRoute = SpecificationRouteImport.update({
   id: '/specification',
   path: '/specification',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SecurityRoute = SecurityRouteImport.update({
@@ -83,6 +96,11 @@ const ExamplesRoute = ExamplesRouteImport.update({
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -129,6 +147,11 @@ const DocsIndexRoute = DocsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DocsRoute,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DocsServeRoute = DocsServeRouteImport.update({
   id: '/serve',
@@ -190,6 +213,31 @@ const DocsAgentsRoute = DocsAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => DocsRoute,
 } as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardResourcesRoute = DashboardResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPaymentsRoute = DashboardPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDeveloperRoute = DashboardDeveloperRouteImport.update({
+  id: '/developer',
+  path: '/developer',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardResourcesIdRoute = DashboardResourcesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashboardResourcesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -200,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRouteWithChildren
   '/examples': typeof ExamplesRoute
   '/manifesto': typeof ManifestoRoute
@@ -207,8 +256,13 @@ export interface FileRoutesByFullPath {
   '/protocol': typeof ProtocolRoute
   '/sdks': typeof SdksRoute
   '/security': typeof SecurityRoute
+  '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/developer': typeof DashboardDeveloperRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -221,7 +275,9 @@ export interface FileRoutesByFullPath {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -238,8 +294,13 @@ export interface FileRoutesByTo {
   '/protocol': typeof ProtocolRoute
   '/sdks': typeof SdksRoute
   '/security': typeof SecurityRoute
+  '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/developer': typeof DashboardDeveloperRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -252,7 +313,9 @@ export interface FileRoutesByTo {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -264,6 +327,7 @@ export interface FileRoutesById {
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRouteWithChildren
   '/examples': typeof ExamplesRoute
   '/manifesto': typeof ManifestoRoute
@@ -271,8 +335,13 @@ export interface FileRoutesById {
   '/protocol': typeof ProtocolRoute
   '/sdks': typeof SdksRoute
   '/security': typeof SecurityRoute
+  '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/developer': typeof DashboardDeveloperRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -285,7 +354,9 @@ export interface FileRoutesById {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
+  '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -298,6 +369,7 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/console'
     | '/contact'
+    | '/dashboard'
     | '/docs'
     | '/examples'
     | '/manifesto'
@@ -305,8 +377,13 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/sdks'
     | '/security'
+    | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/developer'
+    | '/dashboard/payments'
+    | '/dashboard/resources'
+    | '/dashboard/settings'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -319,7 +396,9 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/dashboard/'
     | '/docs/'
+    | '/dashboard/resources/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -336,8 +415,13 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/sdks'
     | '/security'
+    | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/developer'
+    | '/dashboard/payments'
+    | '/dashboard/resources'
+    | '/dashboard/settings'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -350,7 +434,9 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/dashboard'
     | '/docs'
+    | '/dashboard/resources/$id'
   id:
     | '__root__'
     | '/'
@@ -361,6 +447,7 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/console'
     | '/contact'
+    | '/dashboard'
     | '/docs'
     | '/examples'
     | '/manifesto'
@@ -368,8 +455,13 @@ export interface FileRouteTypes {
     | '/protocol'
     | '/sdks'
     | '/security'
+    | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/developer'
+    | '/dashboard/payments'
+    | '/dashboard/resources'
+    | '/dashboard/settings'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -382,7 +474,9 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/dashboard/'
     | '/docs/'
+    | '/dashboard/resources/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -394,6 +488,7 @@ export interface RootRouteChildren {
   ChangelogRoute: typeof ChangelogRoute
   ConsoleRoute: typeof ConsoleRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   DocsRoute: typeof DocsRouteWithChildren
   ExamplesRoute: typeof ExamplesRoute
   ManifestoRoute: typeof ManifestoRoute
@@ -401,6 +496,7 @@ export interface RootRouteChildren {
   ProtocolRoute: typeof ProtocolRoute
   SdksRoute: typeof SdksRoute
   SecurityRoute: typeof SecurityRoute
+  SignInRoute: typeof SignInRoute
   SpecificationRoute: typeof SpecificationRoute
   StatusRoute: typeof StatusRoute
 }
@@ -419,6 +515,13 @@ declare module '@tanstack/react-router' {
       path: '/specification'
       fullPath: '/specification'
       preLoaderRoute: typeof SpecificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/security': {
@@ -468,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -532,6 +642,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/docs/'
       preLoaderRoute: typeof DocsIndexRouteImport
       parentRoute: typeof DocsRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/docs/serve': {
       id: '/docs/serve'
@@ -617,8 +734,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsAgentsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/resources': {
+      id: '/dashboard/resources'
+      path: '/resources'
+      fullPath: '/dashboard/resources'
+      preLoaderRoute: typeof DashboardResourcesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/payments': {
+      id: '/dashboard/payments'
+      path: '/payments'
+      fullPath: '/dashboard/payments'
+      preLoaderRoute: typeof DashboardPaymentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/developer': {
+      id: '/dashboard/developer'
+      path: '/developer'
+      fullPath: '/dashboard/developer'
+      preLoaderRoute: typeof DashboardDeveloperRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/resources/$id': {
+      id: '/dashboard/resources/$id'
+      path: '/$id'
+      fullPath: '/dashboard/resources/$id'
+      preLoaderRoute: typeof DashboardResourcesIdRouteImport
+      parentRoute: typeof DashboardResourcesRoute
+    }
   }
 }
+
+interface DashboardResourcesRouteChildren {
+  DashboardResourcesIdRoute: typeof DashboardResourcesIdRoute
+}
+
+const DashboardResourcesRouteChildren: DashboardResourcesRouteChildren = {
+  DashboardResourcesIdRoute: DashboardResourcesIdRoute,
+}
+
+const DashboardResourcesRouteWithChildren =
+  DashboardResourcesRoute._addFileChildren(DashboardResourcesRouteChildren)
+
+interface DashboardRouteChildren {
+  DashboardDeveloperRoute: typeof DashboardDeveloperRoute
+  DashboardPaymentsRoute: typeof DashboardPaymentsRoute
+  DashboardResourcesRoute: typeof DashboardResourcesRouteWithChildren
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardDeveloperRoute: DashboardDeveloperRoute,
+  DashboardPaymentsRoute: DashboardPaymentsRoute,
+  DashboardResourcesRoute: DashboardResourcesRouteWithChildren,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 interface DocsRouteChildren {
   DocsAgentsRoute: typeof DocsAgentsRoute
@@ -663,6 +846,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChangelogRoute: ChangelogRoute,
   ConsoleRoute: ConsoleRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   DocsRoute: DocsRouteWithChildren,
   ExamplesRoute: ExamplesRoute,
   ManifestoRoute: ManifestoRoute,
@@ -670,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtocolRoute: ProtocolRoute,
   SdksRoute: SdksRoute,
   SecurityRoute: SecurityRoute,
+  SignInRoute: SignInRoute,
   SpecificationRoute: SpecificationRoute,
   StatusRoute: StatusRoute,
 }
