@@ -1,9 +1,29 @@
 export function Footer() {
-  const cols = [
-    { t: "Product", l: ["Protocol", "Console", "Pricing", "Changelog"] },
-    { t: "Developers", l: ["Documentation", "Specification", "SDKs", "Examples"] },
-    { t: "Company", l: ["About", "Manifesto", "Blog", "Careers"] },
-    { t: "Resources", l: ["Security", "Brand", "Status", "Contact"] },
+  const cols: { t: string; l: { label: string; href: string }[] }[] = [
+    { t: "Product", l: [
+      { label: "Protocol", href: "#" },
+      { label: "Console", href: "#" },
+      { label: "Pricing", href: "#" },
+      { label: "Changelog", href: "#" },
+    ]},
+    { t: "Developers", l: [
+      { label: "Documentation", href: "/docs" },
+      { label: "Specification", href: "#" },
+      { label: "SDKs", href: "#" },
+      { label: "Examples", href: "#" },
+    ]},
+    { t: "Company", l: [
+      { label: "About", href: "#" },
+      { label: "Manifesto", href: "#" },
+      { label: "Blog", href: "#" },
+      { label: "Careers", href: "#" },
+    ]},
+    { t: "Resources", l: [
+      { label: "Security", href: "#" },
+      { label: "Brand", href: "#" },
+      { label: "Status", href: "#" },
+      { label: "Contact", href: "#" },
+    ]},
   ];
   return (
     <footer className="relative border-t border-border py-16">
@@ -26,7 +46,7 @@ export function Footer() {
               <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-4">{c.t}</div>
               <ul className="space-y-2.5 text-[13.5px]">
                 {c.l.map((i) => (
-                  <li key={i}><a href="#" className="text-foreground/80 hover:text-foreground transition-colors">{i}</a></li>
+                  <li key={i.label}><a href={i.href} className="text-foreground/80 hover:text-foreground transition-colors">{i.label}</a></li>
                 ))}
               </ul>
             </div>
