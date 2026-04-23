@@ -1,7 +1,7 @@
-import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { redirect } from "@tanstack/react-router";
-import { getUser, signOut } from "@/lib/auth";
-import { useState } from "react";
+import { createFileRoute, Outlet, Link, useNavigate, useLocation, redirect } from "@tanstack/react-router";
+import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
+import { getUser, buildUserFromPrivy, setUser, clearUser } from "@/lib/auth";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: () => {
@@ -95,8 +95,12 @@ function SidebarLink({ item, collapsed }: { item: (typeof NAV_ITEMS)[0]; collaps
   );
 }
 
-function TopbarProfileMenu({ onSignOut }: { onSignOut: () => void }) {
-  const user = getUser()!;
+function TopbarProfileMenu({ displayName, displayEmail, avatarInitials, onSignOut }: {
+  displayName: string;
+  displayEmail: string;
+  avatarInitials: string;
+  onSignOut: () => void;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -106,9 +110,9 @@ function TopbarProfileMenu({ onSignOut }: { onSignOut: () => void }) {
         className="flex items-center gap-2 h-8 pl-1 pr-2.5 rounded-lg hover:bg-white/6 transition-colors"
       >
         <div className="h-6 w-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[10px] font-mono font-bold text-accent flex-shrink-0">
-          {user.avatar}
+          {avatarInitials}
         </div>
-        <span className="text-[12px] text-foreground font-medium hidden sm:block">{user.name}</span>
+        <span className="text-[12px] text-foreground font-medium hidden sm:block">{displayName}</span>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
           <path d="M2 4L5.5 7.5L9 4"/>
         </svg>
@@ -119,8 +123,8 @@ function TopbarProfileMenu({ onSignOut }: { onSignOut: () => void }) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full mt-1.5 w-52 bg-[oklch(0.11_0.005_250)] border border-border rounded-xl shadow-2xl shadow-black/50 py-1.5 z-50">
             <div className="px-3 py-2 border-b border-border mb-1">
-              <div className="text-[12px] font-medium text-foreground">{user.name}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{user.email}</div>
+              <div className="text-[12px] font-medium text-foreground">{displayName}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{displayEmail}</div>
             </div>
             <Link
               to="/dashboard"
@@ -157,12 +161,60 @@ function TopbarProfileMenu({ onSignOut }: { onSignOut: () => void }) {
 function DashboardLayout() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
-  const user = getUser()!;
 
-  function handleSignOut() {
-    signOut();
+  const { ready, authenticated, user } = usePrivy();
+  const { logout } = useLogout({ onSuccess: () => {
+    clearUser();
     navigate({ to: "/" });
-  }
+  }});
+  const { wallets } = useWallets();
+  const solanaWallets = wallets.filter((w) => w.walletClientType?.toLowerCase().includes("solana"));
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!authenticated) {
+      clearUser();
+      navigate({ to: "/sign-in" });
+      return;
+    }
+    if (user) {
+      const localUser = buildUserFromPrivy(user as any);
+      setUser(localUser);
+    }
+  }, [ready, authenticated, user, navigate]);
+
+  const localUser = getUser();
+
+  const displayName = (() => {
+    if (!user) return localUser?.name ?? "User";
+    if (user.google?.name) return user.google.name;
+    if (user.github?.name) return user.github.name;
+    const email = user.email?.address ?? user.google?.email ?? user.github?.email;
+    if (email) return email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const wallet = user.wallet?.address;
+    if (wallet) return `${wallet.slice(0, 4)}…${wallet.slice(-4)}`;
+    return "Astro User";
+  })();
+
+  const displayEmail = (() => {
+    if (!user) return localUser?.email ?? "";
+    return (
+      user.email?.address ??
+      user.google?.email ??
+      user.github?.email ??
+      user.wallet?.address ??
+      ""
+    );
+  })();
+
+  const avatarInitials = displayName.slice(0, 2).toUpperCase();
+
+  const workspaceName = localUser?.workspace ?? `${displayEmail.split("@")[0] || "workspace"}-workspace`;
+
+  const primarySolanaWallet = solanaWallets[0];
+  const walletDisplay = primarySolanaWallet
+    ? `${primarySolanaWallet.address.slice(0, 4)}…${primarySolanaWallet.address.slice(-4)}`
+    : null;
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -210,15 +262,15 @@ function DashboardLayout() {
           ))}
         </nav>
 
-        {/* Sidebar footer — workspace info only */}
+        {/* Sidebar footer */}
         {!collapsed && (
           <div className="border-t border-border p-3">
             <div className="flex items-center gap-2.5 px-2 py-1.5">
               <div className="h-5 w-5 rounded-sm bg-accent/20 border border-accent/30 flex items-center justify-center text-[9px] font-mono font-bold text-accent flex-shrink-0">
-                {user.workspace.slice(0, 1).toUpperCase()}
+                {workspaceName.slice(0, 1).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <div className="text-[11px] font-medium text-foreground truncate">{user.workspace}</div>
+                <div className="text-[11px] font-medium text-foreground truncate">{workspaceName}</div>
                 <div className="text-[10px] text-muted-foreground">Free plan</div>
               </div>
             </div>
@@ -234,7 +286,7 @@ function DashboardLayout() {
 
           {/* Workspace name */}
           <div className="flex items-center gap-2 mr-2">
-            <span className="text-[13px] font-medium text-foreground">{user.workspace}</span>
+            <span className="text-[13px] font-medium text-foreground">{workspaceName}</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground/40"><path d="M3 4.5L6 7.5L9 4.5"/></svg>
           </div>
 
@@ -255,13 +307,22 @@ function DashboardLayout() {
           <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-border bg-white/4 text-[11px] font-mono text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0 animate-pulse"/>
             <span className="hidden sm:inline">Solana Mainnet</span>
-            <span className="sm:hidden">Mainnet</span>
-            <span className="ml-1 text-muted-foreground/40">·</span>
-            <span className="text-emerald-400/80 font-mono">12.4 SOL</span>
+            <span className="sm:hidden">SOL</span>
+            {walletDisplay && (
+              <>
+                <span className="ml-1 text-muted-foreground/40">·</span>
+                <span className="text-emerald-400/80 font-mono">{walletDisplay}</span>
+              </>
+            )}
           </div>
 
           {/* Profile menu */}
-          <TopbarProfileMenu onSignOut={handleSignOut} />
+          <TopbarProfileMenu
+            displayName={displayName}
+            displayEmail={displayEmail}
+            avatarInitials={avatarInitials}
+            onSignOut={logout}
+          />
         </header>
 
         {/* ── Page content ── */}

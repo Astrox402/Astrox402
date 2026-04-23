@@ -14,6 +14,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": `${process.cwd()}/src`,
+      "react": `${process.cwd()}/node_modules/react`,
+      "react-dom": `${process.cwd()}/node_modules/react-dom`,
+      "react/jsx-runtime": `${process.cwd()}/node_modules/react/jsx-runtime.js`,
+      "react/jsx-dev-runtime": `${process.cwd()}/node_modules/react/jsx-dev-runtime.js`,
     },
     dedupe: [
       "react",
@@ -22,6 +26,8 @@ export default defineConfig({
       "react/jsx-dev-runtime",
       "@tanstack/react-query",
       "@tanstack/query-core",
+      "@privy-io/react-auth",
+      "zustand",
     ],
   },
   server: {
@@ -29,5 +35,12 @@ export default defineConfig({
     port: 5000,
     strictPort: true,
     allowedHosts: true,
+    watch: {
+      ignored: [
+        "**/.local/share/pnpm/**",
+        "**/node_modules/.pnpm/**",
+        "**/node_modules/.cache/**",
+      ],
+    },
   },
 });

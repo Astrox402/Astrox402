@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { getUser } from "@/lib/auth";
+import { usePrivy } from "@privy-io/react-auth";
 
 export function Nav() {
-  const user = getUser();
+  const { authenticated, ready } = usePrivy();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 border-b border-border/60 backdrop-blur-xl bg-background/70">
@@ -25,13 +25,13 @@ export function Nav() {
           <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
         </nav>
         <div className="flex items-center gap-2">
-          {user ? (
+          {ready && authenticated ? (
             <Link
               to="/dashboard"
               className="hidden sm:inline-flex h-9 items-center gap-2 px-3.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors"
             >
               <span className="h-5 w-5 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[10px] font-mono text-accent">
-                {user.avatar}
+                ◎
               </span>
               Dashboard
             </Link>

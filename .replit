@@ -38,3 +38,8 @@ externalPort = 80
 deploymentTarget = "static"
 build = ["npm", "run", "build"]
 publicDir = "dist/client"
+
+[userenv]
+
+[userenv.shared]
+VITE_PRIVY_APP_ID = "cmob69m6600iz0cjmil0ywhmb"
