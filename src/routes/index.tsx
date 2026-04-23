@@ -7,6 +7,7 @@ import { HowItWorks } from "@/components/meridian/HowItWorks";
 import { UseCases } from "@/components/meridian/UseCases";
 import { Ethereum } from "@/components/meridian/Ethereum";
 import { Dashboard } from "@/components/meridian/Dashboard";
+import { Docs } from "@/components/meridian/Docs";
 import { Manifesto } from "@/components/meridian/Manifesto";
 import { CTA } from "@/components/meridian/CTA";
 import { Footer } from "@/components/meridian/Footer";
@@ -34,6 +35,7 @@ function Index() {
       <UseCases />
       <Ethereum />
       <Dashboard />
+      <Docs />
       <Manifesto />
       <CTA />
       <Footer />
