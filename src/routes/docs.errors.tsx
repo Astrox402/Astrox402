@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, PageFooterNav, Mono, Params, Callout } fr
 export const Route = createFileRoute("/docs/errors")({
   head: () => ({
     meta: [
-      { title: "Errors & status codes — Meridian Docs" },
-      { name: "description", content: "Complete reference for HTTP status codes, typed error classes, and structured error payloads emitted by the Meridian protocol and SDK." },
-      { property: "og:title", content: "Errors & status codes — Meridian Docs" },
-      { property: "og:description", content: "Status codes, typed errors, retry semantics, and structured payloads for Meridian." },
+      { title: "Errors & status codes — Astro Docs" },
+      { name: "description", content: "Complete reference for HTTP status codes, typed error classes, and structured error payloads emitted by the Astro protocol and SDK." },
+      { property: "og:title", content: "Errors & status codes — Astro Docs" },
+      { property: "og:description", content: "Status codes, typed errors, retry semantics, and structured payloads for Astro." },
     ],
   }),
   component: ErrorsPage,
@@ -29,12 +29,12 @@ function ErrorsPage() {
       <PageHeader
         eyebrow="Reference"
         title="Errors & status codes"
-        intro="Meridian errors are structured, typed, and machine-actionable. Every error response follows the same envelope, every typed class extends a common base, and every retryable failure declares its retry policy explicitly."
+        intro="Astro errors are structured, typed, and machine-actionable. Every error response follows the same envelope, every typed class extends a common base, and every retryable failure declares its retry policy explicitly."
       />
 
       <DocSection id="philosophy" title="Philosophy">
         <p>
-          Most billing and authorization systems return opaque strings on failure (<Mono>"insufficient_funds"</Mono>, <Mono>"unauthorized"</Mono>) that callers parse with regex. Meridian treats this as a protocol-level mistake. Every error carries a stable code, a human-readable message, a typed class on the SDK side, and — when relevant — the underlying onchain transaction hash for forensic analysis.
+          Most billing and authorization systems return opaque strings on failure (<Mono>"insufficient_funds"</Mono>, <Mono>"unauthorized"</Mono>) that callers parse with regex. Astro treats this as a protocol-level mistake. Every error carries a stable code, a human-readable message, a typed class on the SDK side, and — when relevant — the underlying onchain transaction hash for forensic analysis.
         </p>
         <Callout>
           The rule of thumb: <strong>no caller should ever need to read an error message to decide what to do.</strong> The code and class are the contract; the message is for humans.
@@ -59,7 +59,7 @@ function ErrorsPage() {
   "error": {
     "code":    "MERIDIAN_QUOTE_EXPIRED",
     "message": "The quote bound to nonce 0x9f4a… expired at 2025-04-23T10:14:31Z.",
-    "type":    "MeridianQuoteError",
+    "type":    "AstroQuoteError",
     "retry":   { "after": 0, "with": "fresh_quote" },
     "context": {
       "resource": "/v1/infer",
@@ -75,19 +75,19 @@ function ErrorsPage() {
 
       <DocSection id="typed" title="Typed error classes">
         <Params rows={[
-          ["MeridianQuoteError", "Price function failed or quote expired."],
-          ["MeridianIntentError", "Intent signature invalid or doesn't match the quote."],
-          ["MeridianSettleError", "Onchain settlement reverted or timed out."],
-          ["MeridianHandlerError", "User handler threw after payment was verified. Refund triggered automatically."],
-          ["MeridianPolicyError", "Client-side policy (spend cap, scope allowlist) blocked the call before signing."],
-          ["MeridianNetworkError", "Network failure between caller, server, or chain RPC."],
+          ["AstroQuoteError", "Price function failed or quote expired."],
+          ["AstroIntentError", "Intent signature invalid or doesn't match the quote."],
+          ["AstroSettleError", "Onchain settlement reverted or timed out."],
+          ["AstroHandlerError", "User handler threw after payment was verified. Refund triggered automatically."],
+          ["AstroPolicyError", "Client-side policy (spend cap, scope allowlist) blocked the call before signing."],
+          ["AstroNetworkError", "Network failure between caller, server, or chain RPC."],
         ]} />
-        <Code lang="ts" code={`import { MeridianSettleError } from "@meridian/sdk";
+        <Code lang="ts" code={`import { AstroSettleError } from "@astro/sdk";
 
 try {
   await client.fetch("/v1/infer", { method: "POST" });
 } catch (err) {
-  if (err instanceof MeridianSettleError) {
+  if (err instanceof AstroSettleError) {
     // err.txHash, err.chain, err.revertReason all available
     console.error("Onchain settlement failed:", err.revertReason);
   }
@@ -107,7 +107,7 @@ try {
 
       <DocSection id="logging" title="Logging & observability">
         <p>
-          Every error includes a <Mono>traceId</Mono> in its context block. On the server, the same trace ID is attached to your handler's logging context so you can correlate caller-visible errors with internal traces. The Meridian dashboard exposes a per-resource error explorer that joins HTTP errors, settlement reverts, and handler failures into a single timeline.
+          Every error includes a <Mono>traceId</Mono> in its context block. On the server, the same trace ID is attached to your handler's logging context so you can correlate caller-visible errors with internal traces. The Astro dashboard exposes a per-resource error explorer that joins HTTP errors, settlement reverts, and handler failures into a single timeline.
         </p>
       </DocSection>
 

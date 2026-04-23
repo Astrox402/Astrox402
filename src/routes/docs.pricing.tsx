@@ -5,9 +5,9 @@ import { PageHeader, DocSection, Code, Params, PageFooterNav, Callout, Mono } fr
 export const Route = createFileRoute("/docs/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing functions — Meridian Docs" },
-      { name: "description", content: "Programmable, per-request pricing for Meridian endpoints. Static prices, request-derived prices, tiered pricing, outcome-based pricing, and the Money type." },
-      { property: "og:title", content: "Pricing functions — Meridian Docs" },
+      { title: "Pricing functions — Astro Docs" },
+      { name: "description", content: "Programmable, per-request pricing for Astro endpoints. Static prices, request-derived prices, tiered pricing, outcome-based pricing, and the Money type." },
+      { property: "og:title", content: "Pricing functions — Astro Docs" },
       { property: "og:description", content: "Programmable, per-request pricing — by tokens, payload, model, or outcome." },
     ],
   }),
@@ -33,12 +33,12 @@ function PricingPage() {
       <PageHeader
         eyebrow="Protocol"
         title="Pricing functions"
-        intro="Meridian prices every request individually. A price can be a constant, a pure function of the request, or a function of upstream signals — evaluated at quote time and locked for the TTL. This page covers every pricing pattern, the Money type, and the rules that keep pricing deterministic and safe."
+        intro="Astro prices every request individually. A price can be a constant, a pure function of the request, or a function of upstream signals — evaluated at quote time and locked for the TTL. This page covers every pricing pattern, the Money type, and the rules that keep pricing deterministic and safe."
       />
 
       <DocSection id="model" title="Pricing model">
         <p>
-          When a caller hits a protected resource, Meridian invokes the price function with a normalized view of the request. The result becomes the quote — bound to a nonce, returned in the 402 response, and verified at settlement. The function runs in your server's process, has access to your code's lexical scope, and is free to use any pure logic you want.
+          When a caller hits a protected resource, Astro invokes the price function with a normalized view of the request. The result becomes the quote — bound to a nonce, returned in the 402 response, and verified at settlement. The function runs in your server's process, has access to your code's lexical scope, and is free to use any pure logic you want.
         </p>
         <p>
           The mental model: <strong>pricing is part of your application</strong>, not a configuration in a billing dashboard. You can version it with your code, test it with your test suite, and reason about it with the same tools you use for any other request handler.
@@ -55,7 +55,7 @@ function PricingPage() {
       </DocSection>
 
       <DocSection id="derived" title="Request-derived">
-        <p>The price function receives a typed snapshot of the request — body shape, headers, and declared estimates (tokens, bytes, duration). The snapshot is constructed by Meridian; the original request body is not yet consumed when the price function runs, so subsequent <Mono>req.json()</Mono> in the handler still works.</p>
+        <p>The price function receives a typed snapshot of the request — body shape, headers, and declared estimates (tokens, bytes, duration). The snapshot is constructed by Astro; the original request body is not yet consumed when the price function runs, so subsequent <Mono>req.json()</Mono> in the handler still works.</p>
         <Code lang="ts" code={`price: ({ tokens, model, headers }) => {
   const base = model === "gpt-large" ? 0.002 : 0.0005;
   const region = headers["x-region"] === "eu" ? 1.1 : 1.0;
@@ -83,13 +83,13 @@ function PricingPage() {
 }`} />
         <p>This is the right pattern for streaming inference, search with variable result counts, and any workload where the meaningful cost driver is only known after execution. The caller never pays more than they signed for; you never undercharge for actual work.</p>
         <Callout tone="muted">
-          The commit function runs after your handler and has access to <Mono>ctx.handlerResult</Mono>. If commit throws, Meridian falls back to the quoted amount — your endpoint never silently fails to settle.
+          The commit function runs after your handler and has access to <Mono>ctx.handlerResult</Mono>. If commit throws, Astro falls back to the quoted amount — your endpoint never silently fails to settle.
         </Callout>
       </DocSection>
 
       <DocSection id="subscriptions" title="Subscriptions & credits">
         <p>
-          Meridian is a per-call protocol, but subscription-style pricing is straightforward to layer on top. The recommended pattern: deploy a "credit" endpoint that accepts a one-time payment and issues a signed credit token; check the token in your price function and return 0 when it's valid.
+          Astro is a per-call protocol, but subscription-style pricing is straightforward to layer on top. The recommended pattern: deploy a "credit" endpoint that accepts a one-time payment and issues a signed credit token; check the token in your price function and return 0 when it's valid.
         </p>
         <Code lang="ts" code={`price: (req) => {
   const credit = parseCredit(req.headers["x-credit"]);
@@ -122,7 +122,7 @@ function PricingPage() {
           ["number", "0.0021", "Defaults to the asset declared in settle."],
           ["bigint", "2100n", "Integer units of the asset's smallest denomination (e.g. 2100 = 0.0021 USDC at 6 decimals)."],
         ]} />
-        <p>Internally, Meridian normalizes all three to bigints in the asset's base units before signing. Floating-point arithmetic is never used for the on-the-wire amount, so there is no rounding ambiguity between client and server.</p>
+        <p>Internally, Astro normalizes all three to bigints in the asset's base units before signing. Floating-point arithmetic is never used for the on-the-wire amount, so there is no rounding ambiguity between client and server.</p>
       </DocSection>
 
       <DocSection id="rules" title="Rules & guarantees">
@@ -131,7 +131,7 @@ function PricingPage() {
           <li><strong>Bounded latency:</strong> price functions should resolve in under 50ms; longer evaluations are timed out and the request fails with <Mono>503</Mono>.</li>
           <li><strong>No external state:</strong> avoid network or DB calls inside <Mono>price</Mono> — use signed estimates from the request body, in-memory data, or the credit-token pattern instead.</li>
           <li><strong>No mutation:</strong> the price function must not mutate any state visible to other requests. The same input twice must produce the same output, even if called back-to-back.</li>
-          <li><strong>Error handling:</strong> a thrown price function returns <Mono>503</Mono> with <Mono>MeridianQuoteError</Mono>; the handler is not called.</li>
+          <li><strong>Error handling:</strong> a thrown price function returns <Mono>503</Mono> with <Mono>AstroQuoteError</Mono>; the handler is not called.</li>
         </ul>
       </DocSection>
 

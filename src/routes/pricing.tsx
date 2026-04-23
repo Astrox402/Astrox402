@@ -66,8 +66,8 @@ const PLANS = [
 
 const FAQS = [
   {
-    q: "What does Meridian charge on top of settlement?",
-    a: "Nothing per transaction. Meridian charges a flat monthly platform fee for Console access and infrastructure. The settlement amount your endpoint receives goes directly to your wallet — Meridian takes no cut of the payment.",
+    q: "What does Astro charge on top of settlement?",
+    a: "Nothing per transaction. Astro charges a flat monthly platform fee for Console access and infrastructure. The settlement amount your endpoint receives goes directly to your wallet — Astro takes no cut of the payment.",
   },
   {
     q: "Who pays gas fees?",
@@ -79,7 +79,7 @@ const FAQS = [
   },
   {
     q: "Is the protocol itself free?",
-    a: "The protocol is open and free. You can implement the wire spec yourself, run your own verifier, and never pay Meridian anything. The platform fee covers Console, hosted verification, and managed infrastructure — not protocol access.",
+    a: "The protocol is open and free. You can implement the wire spec yourself, run your own verifier, and never pay Astro anything. The platform fee covers Console, hosted verification, and managed infrastructure — not protocol access.",
   },
 ];
 

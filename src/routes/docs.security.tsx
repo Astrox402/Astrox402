@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, Callout, PageFooterNav, Mono } from "@/co
 export const Route = createFileRoute("/docs/security")({
   head: () => ({
     meta: [
-      { title: "Security model — Meridian Docs" },
-      { name: "description", content: "Threat model, replay protection, signature scheme, key management, and audit posture for the Meridian payment-native protocol." },
-      { property: "og:title", content: "Security model — Meridian Docs" },
-      { property: "og:description", content: "How Meridian prevents replay, overpay, key compromise, and silent settlement failures." },
+      { title: "Security model — Astro Docs" },
+      { name: "description", content: "Threat model, replay protection, signature scheme, key management, and audit posture for the Astro payment-native protocol." },
+      { property: "og:title", content: "Security model — Astro Docs" },
+      { property: "og:description", content: "How Astro prevents replay, overpay, key compromise, and silent settlement failures." },
     ],
   }),
   component: SecurityPage,
@@ -31,27 +31,27 @@ function SecurityPage() {
       <PageHeader
         eyebrow="Security"
         title="Security model"
-        intro="Meridian's security model is built on a small number of strong guarantees: every payment is bound to a single resource, every intent is single-use, and every settlement is publicly verifiable. This page documents the threat model, the defenses, and the operational posture."
+        intro="Astro's security model is built on a small number of strong guarantees: every payment is bound to a single resource, every intent is single-use, and every settlement is publicly verifiable. This page documents the threat model, the defenses, and the operational posture."
       />
 
       <DocSection id="principles" title="Principles">
         <ul className="list-disc pl-5 space-y-2">
           <li><strong>No implicit trust.</strong> Every authorization is an explicit, signed message bound to specific values.</li>
           <li><strong>No silent failure.</strong> A successful response always carries a verifiable receipt; absence of a receipt is a failure signal.</li>
-          <li><strong>No central kill-switch.</strong> Meridian cannot revoke your endpoint, freeze your settlements, or block a counterparty.</li>
+          <li><strong>No central kill-switch.</strong> Astro cannot revoke your endpoint, freeze your settlements, or block a counterparty.</li>
           <li><strong>No proprietary cryptography.</strong> Standard EIP-712, standard ECDSA, standard EVM transactions.</li>
         </ul>
       </DocSection>
 
       <DocSection id="threats" title="Threat model">
         <p>
-          Meridian is designed to defend against an attacker who can observe all network traffic, intercept and replay any HTTP message, and freely interact with any public smart contract. The attacker is assumed <em>not</em> to have access to the payer's private key — that is the only secret the system relies on.
+          Astro is designed to defend against an attacker who can observe all network traffic, intercept and replay any HTTP message, and freely interact with any public smart contract. The attacker is assumed <em>not</em> to have access to the payer's private key — that is the only secret the system relies on.
         </p>
         <p>
           Within that model, the protocol prevents: replay of a captured intent against the same or a different resource; reuse of a quote past its TTL; collusion between a malicious server and a third party to extract a higher-value payment; silent dropping of a settlement transaction; and substitution of a different recipient in the settlement step.
         </p>
         <Callout tone="muted">
-          Meridian does <strong>not</strong> defend against compromise of the payer's signing key, against handler bugs that disclose data after payment, or against denial-of-service against the underlying chain. These are out of scope and require defenses at the wallet, application, and infrastructure layers respectively.
+          Astro does <strong>not</strong> defend against compromise of the payer's signing key, against handler bugs that disclose data after payment, or against denial-of-service against the underlying chain. These are out of scope and require defenses at the wallet, application, and infrastructure layers respectively.
         </Callout>
       </DocSection>
 
@@ -75,11 +75,11 @@ function SecurityPage() {
 
       <DocSection id="signatures" title="Signature scheme">
         <p>
-          Intents are signed using EIP-712 typed-data signatures with a Meridian-specific domain separator. The domain binds signatures to the protocol name, version, and chain ID, preventing cross-protocol and cross-chain replay. The typed structure binds the signature to specific named fields, preventing the kind of ambiguous-message attacks that have historically plagued <Mono>personal_sign</Mono> flows.
+          Intents are signed using EIP-712 typed-data signatures with a Astro-specific domain separator. The domain binds signatures to the protocol name, version, and chain ID, preventing cross-protocol and cross-chain replay. The typed structure binds the signature to specific named fields, preventing the kind of ambiguous-message attacks that have historically plagued <Mono>personal_sign</Mono> flows.
         </p>
         <Code lang="ts" code={`// Domain separator (simplified)
 {
-  name:    "Meridian",
+  name:    "Astro",
   version: "1",
   chainId: 8453,
   verifyingContract: "0x…"  // settlement contract on the target chain
@@ -88,7 +88,7 @@ function SecurityPage() {
 
       <DocSection id="keys" title="Key management">
         <p>
-          The payer's signing key never leaves the wallet. Meridian works with hardware wallets, mobile wallets, embedded MPC wallets, and backend key services — anything that can produce an EIP-712 signature. The SDK never asks for, stores, or transmits a private key.
+          The payer's signing key never leaves the wallet. Astro works with hardware wallets, mobile wallets, embedded MPC wallets, and backend key services — anything that can produce an EIP-712 signature. The SDK never asks for, stores, or transmits a private key.
         </p>
         <p>
           For server-side identities (agents, batch jobs, webhooks), we strongly recommend MPC or HSM-backed keys with scope-restricted policies. The SDK provides first-class hooks for Turnkey, Privy, Fireblocks, and AWS KMS, but any signer that satisfies the EIP-712 interface is supported.
@@ -99,7 +99,7 @@ function SecurityPage() {
         <p>
           Autonomous agents run with a declared budget and scope allowlist. The SDK enforces both <em>before</em> signing — an agent that tries to call a denied scope or exceed its budget never produces a signature, so no value is ever at risk. The server independently enforces the same constraints at settlement, providing defense in depth.
         </p>
-        <Code lang="ts" code={`const agent = meridian.agent({
+        <Code lang="ts" code={`const agent = astro.agent({
   identity: process.env.AGENT_KEY,  // KMS-backed signer
   budget:   "5 USDC / day",
   allow:    ["inference.*", "search.web"],

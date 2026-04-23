@@ -9,7 +9,7 @@ const POSTS = [
   {
     date: "Apr 18, 2026",
     tag: "Engineering",
-    title: "How we designed the Meridian pricing function API",
+    title: "How we designed the Astro pricing function API",
     excerpt: "Pricing logic is the most application-specific part of a paid endpoint. Here's how we landed on a composable, testable function API that covers 90% of use cases without sacrificing flexibility for the rest.",
     readTime: "9 min read",
   },
@@ -17,7 +17,7 @@ const POSTS = [
     date: "Apr 9, 2026",
     tag: "Protocol",
     title: "Arbitrum support: why L2 settlement changes the economics of micropayments",
-    excerpt: "With Arbitrum settlement live, the minimum viable payment on Meridian is now a fraction of a cent in gas. That changes which use cases are worth building. We explain the math and what it unlocks.",
+    excerpt: "With Arbitrum settlement live, the minimum viable payment on Astro is now a fraction of a cent in gas. That changes which use cases are worth building. We explain the math and what it unlocks.",
     readTime: "7 min read",
   },
   {
@@ -30,7 +30,7 @@ const POSTS = [
   {
     date: "Mar 14, 2026",
     tag: "Announcements",
-    title: "Meridian public beta: what shipped and what's next",
+    title: "Astro public beta: what shipped and what's next",
     excerpt: "We're open. TypeScript and Python SDKs are live. Ethereum, Base, and Optimism settlement is available. The spec is public. Here's a full breakdown of v0.402.0 and the roadmap through the rest of the year.",
     readTime: "12 min read",
   },
@@ -38,7 +38,7 @@ const POSTS = [
     date: "Feb 21, 2026",
     tag: "Engineering",
     title: "EIP-712 in practice: lessons from 18 months of intent signing",
-    excerpt: "EIP-712 is the right foundation for Meridian's signing scheme, but the details matter. We learned several non-obvious things building a production implementation. Here's what we'd do differently — and what we got right.",
+    excerpt: "EIP-712 is the right foundation for Astro's signing scheme, but the details matter. We learned several non-obvious things building a production implementation. Here's what we'd do differently — and what we got right.",
     readTime: "11 min read",
   },
   {
@@ -61,7 +61,7 @@ function BlogPage() {
   return (
     <PageLayout
       eyebrow="Blog"
-      title="Writing from the Meridian team."
+      title="Writing from the Astro team."
       intro="Protocol design, engineering decisions, announcements, and thinking about the payment-native web."
     >
       <div className="grid lg:grid-cols-3 gap-5 mb-20">

@@ -16,15 +16,15 @@ const CHANNELS = [
   {
     title: "Security disclosures",
     desc: "Found a vulnerability? We respond within 48 hours. Please encrypt sensitive disclosures with our PGP key.",
-    action: "security@meridian.xyz",
-    href: "mailto:security@meridian.xyz",
+    action: "security@astro.xyz",
+    href: "mailto:security@astro.xyz",
     icon: "⬡",
   },
   {
     title: "Business & partnerships",
     desc: "Enterprise deployments, chain partnerships, integration opportunities, and press inquiries.",
-    action: "hello@meridian.xyz",
-    href: "mailto:hello@meridian.xyz",
+    action: "hello@astro.xyz",
+    href: "mailto:hello@astro.xyz",
     icon: "◎",
   },
   {
@@ -91,7 +91,7 @@ function ContactPage() {
       <div className="border-t border-border pt-20">
         <div className="flex flex-wrap gap-8 text-[13.5px] text-muted-foreground">
           <div>
-            <div className="text-[11px] font-mono uppercase tracking-[0.18em] mb-2">Meridian Labs</div>
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] mb-2">Astro Labs</div>
             <p className="leading-relaxed">Remote-first · Incorporated in Delaware</p>
           </div>
           <div>

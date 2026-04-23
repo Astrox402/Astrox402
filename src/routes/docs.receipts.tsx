@@ -5,9 +5,9 @@ import { PageHeader, DocSection, Code, Params, PageFooterNav, Callout, Mono } fr
 export const Route = createFileRoute("/docs/receipts")({
   head: () => ({
     meta: [
-      { title: "Receipts & settlement — Meridian Docs" },
-      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Meridian call produces a verifiable proof on Ethereum." },
-      { property: "og:title", content: "Receipts & settlement — Meridian Docs" },
+      { title: "Receipts & settlement — Astro Docs" },
+      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Astro call produces a verifiable proof on Ethereum." },
+      { property: "og:title", content: "Receipts & settlement — Astro Docs" },
       { property: "og:description", content: "Verifiable onchain proofs for every paid endpoint call. Receipts, chains, and reconciliation." },
     ],
   }),
@@ -33,18 +33,18 @@ function ReceiptsPage() {
       <PageHeader
         eyebrow="Protocol"
         title="Receipts & settlement"
-        intro="Every successful Meridian call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Ethereum. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
+        intro="Every successful Astro call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Ethereum. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
       />
 
       <DocSection id="what" title="What is a receipt">
         <p>
-          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object. Receipts are what make Meridian auditable without sharing private logs — anyone with the receipt ID can independently confirm that the payment occurred, on which chain, between which parties, and for which exact amount.
+          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object. Receipts are what make Astro auditable without sharing private logs — anyone with the receipt ID can independently confirm that the payment occurred, on which chain, between which parties, and for which exact amount.
         </p>
         <p>
-          Crucially, a receipt is not a database row in Meridian's infrastructure. It is a derived view over public chain data. The hosted indexer makes receipts convenient to query, but the canonical record lives onchain and any party can reconstruct the same view from a public RPC.
+          Crucially, a receipt is not a database row in Astro's infrastructure. It is a derived view over public chain data. The hosted indexer makes receipts convenient to query, but the canonical record lives onchain and any party can reconstruct the same view from a public RPC.
         </p>
         <Callout>
-          You don't have to use Meridian's database to trust the data — every receipt is independently verifiable from any Ethereum RPC. The chain is the source of truth.
+          You don't have to use Astro's database to trust the data — every receipt is independently verifiable from any Ethereum RPC. The chain is the source of truth.
         </Callout>
       </DocSection>
 
@@ -71,7 +71,7 @@ function ReceiptsPage() {
       <DocSection id="delivery" title="How receipts are delivered">
         <p>Receipts arrive through three independent channels — pick whichever fits your operational shape:</p>
         <ul className="list-disc pl-5 space-y-2">
-          <li><strong>Inline:</strong> the <Mono>X-Meridian-Receipt</Mono> response header carries the receipt bytes; the SDK exposes them as <Mono>res.receipt</Mono>.</li>
+          <li><strong>Inline:</strong> the <Mono>X-Astro-Receipt</Mono> response header carries the receipt bytes; the SDK exposes them as <Mono>res.receipt</Mono>.</li>
           <li><strong>Webhook:</strong> subscribe to <Mono>receipt.settled</Mono> events for asynchronous, signed delivery. Best for backend reconciliation pipelines.</li>
           <li><strong>Pull:</strong> the reconciliation API exposes paginated, filterable queries against the indexer.</li>
         </ul>
@@ -100,20 +100,20 @@ function ReceiptsPage() {
       </DocSection>
 
       <DocSection id="verify" title="Verifying receipts">
-        <p>Receipts can be verified locally from any Ethereum RPC, with no Meridian dependency. The verifier checks the EIP-712 digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
-        <Code lang="ts" code={`import { verifyReceipt } from "@meridian/sdk";
+        <p>Receipts can be verified locally from any Ethereum RPC, with no Astro dependency. The verifier checks the EIP-712 digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
+        <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {
   rpc: "https://mainnet.base.org",
 });
 
 if (!ok) throw new Error("Invalid receipt");`} />
-        <p>Verification is pure — no network calls beyond the RPC, no Meridian endpoint involved. You can run it inside a CI pipeline, a customer's audit script, or a partner's reconciliation job, with zero coupling to Meridian's hosted services.</p>
+        <p>Verification is pure — no network calls beyond the RPC, no Astro endpoint involved. You can run it inside a CI pipeline, a customer's audit script, or a partner's reconciliation job, with zero coupling to Astro's hosted services.</p>
       </DocSection>
 
       <DocSection id="reconcile" title="Reconciliation">
         <p>The SDK exposes a paginated reconciliation API for accounting and revenue reporting. Filters include resource, scope, payer, payee, chain, time range, and refund status.</p>
-        <Code lang="ts" code={`for await (const r of meridian.receipts.list({
+        <Code lang="ts" code={`for await (const r of astro.receipts.list({
   resource: "/v1/infer",
   since:    "2025-01-01",
   until:    "2025-01-31",
@@ -121,7 +121,7 @@ if (!ok) throw new Error("Invalid receipt");`} />
 })) {
   ledger.record(r.id, r.amount, r.settledAt);
 }`} />
-        <p>For very large datasets, use <Mono>meridian.receipts.export()</Mono> to stream the full set as Parquet or NDJSON. Exports are deterministic — the same filters produce the same byte-identical file on any subsequent run.</p>
+        <p>For very large datasets, use <Mono>astro.receipts.export()</Mono> to stream the full set as Parquet or NDJSON. Exports are deterministic — the same filters produce the same byte-identical file on any subsequent run.</p>
       </DocSection>
 
       <DocSection id="webhooks" title="Settlement webhooks">
@@ -133,7 +133,7 @@ if (!ok) throw new Error("Invalid receipt");`} />
 meridian.webhooks.on("receipt.refunded", async (e) => {
   await crm.recordRefund(e.receipt, e.refundTx);
 });`} />
-        <p>Webhook endpoints can be hosted on Meridian's infrastructure or your own. The signing key is rotatable; old keys remain valid through a grace period to allow zero-downtime rotation.</p>
+        <p>Webhook endpoints can be hosted on Astro's infrastructure or your own. The signing key is rotatable; old keys remain valid through a grace period to allow zero-downtime rotation.</p>
       </DocSection>
 
       <DocSection id="refunds" title="Refunds & disputes">
@@ -150,7 +150,7 @@ meridian.webhooks.on("receipt.refunded", async (e) => {
           Receipts include enough data to drive standard accrual accounting: a stable identifier, a settled timestamp, a counterparty, and an exact amount in a stable asset. The reconciliation API supports the journal-export formats used by major accounting platforms (QuickBooks, Xero, NetSuite) and tax engines (Stripe Tax, Anrok).
         </p>
         <p>
-          For jurisdictions that require invoicing, Meridian provides an optional invoice-generation service that produces tax-compliant invoices from receipts. This is a hosted convenience; the underlying receipts always remain the canonical record.
+          For jurisdictions that require invoicing, Astro provides an optional invoice-generation service that produces tax-compliant invoices from receipts. This is a hosted convenience; the underlying receipts always remain the canonical record.
         </p>
       </DocSection>
 

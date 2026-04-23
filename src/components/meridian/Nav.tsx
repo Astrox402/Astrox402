@@ -9,7 +9,7 @@ export function Nav() {
             <div className="absolute inset-0 rounded-sm border border-accent/60" />
             <div className="absolute inset-1 bg-accent/80 rounded-[2px]" />
           </div>
-          <span className="font-medium tracking-tight text-[15px]">Meridian</span>
+          <span className="font-medium tracking-tight text-[15px]">Astro</span>
           <span className="ml-1 px-1.5 py-0.5 text-[10px] font-mono tracking-wider text-muted-foreground border border-border rounded">
             x402
           </span>

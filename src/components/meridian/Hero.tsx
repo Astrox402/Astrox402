@@ -36,7 +36,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="mt-8 max-w-2xl mx-auto text-center text-[17px] leading-relaxed text-muted-foreground"
         >
-          Meridian is a payment-native protocol layer for the internet. Price requests,
+          Astro is a payment-native protocol layer for the internet. Price requests,
           settle access, and let software transact with software — natively, on Ethereum.
         </motion.p>
 

@@ -10,7 +10,7 @@ const FEATURES = [
   {
     icon: "⬡",
     title: "Endpoint explorer",
-    desc: "Browse every Meridian-enabled endpoint you've deployed. Inspect live pricing functions, scope configs, and settlement settings in one view.",
+    desc: "Browse every Astro-enabled endpoint you've deployed. Inspect live pricing functions, scope configs, and settlement settings in one view.",
   },
   {
     icon: "◈",
@@ -60,7 +60,7 @@ function ConsolePage() {
               Your control plane for the payment-native web.
             </h1>
             <p className="mt-6 text-[17px] leading-relaxed text-muted-foreground max-w-2xl">
-              Meridian Console gives you full visibility into every endpoint, receipt, and revenue stream — across every chain, every caller, and every resource you've deployed.
+              Astro Console gives you full visibility into every endpoint, receipt, and revenue stream — across every chain, every caller, and every resource you've deployed.
             </p>
             <div className="mt-8 flex items-center gap-4">
               <a href="#waitlist" className="inline-flex h-10 items-center px-5 rounded-md bg-foreground text-background text-[13.5px] font-medium hover:bg-foreground/90 transition-colors">

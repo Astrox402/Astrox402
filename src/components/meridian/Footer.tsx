@@ -35,7 +35,7 @@ export function Footer() {
                 <div className="absolute inset-0 rounded-sm border border-accent/60" />
                 <div className="absolute inset-1 bg-accent/80 rounded-[2px]" />
               </div>
-              <span className="font-medium tracking-tight">Meridian</span>
+              <span className="font-medium tracking-tight">Astro</span>
             </div>
             <p className="text-[13px] text-muted-foreground max-w-xs leading-relaxed">
               Payment-native protocol layer for the internet. Programmable access, settled on Ethereum.
@@ -53,7 +53,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-muted-foreground">
-          <div>© {new Date().getFullYear()} Meridian Labs. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} Astro Labs. All rights reserved.</div>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms</a>

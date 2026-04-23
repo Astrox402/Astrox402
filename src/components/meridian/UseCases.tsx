@@ -16,7 +16,7 @@ export function UseCases() {
         <SectionHeader
           eyebrow="Use cases"
           title={<>Anything callable <span className="font-serif italic">becomes priceable.</span></>}
-          intro="Meridian is a substrate, not a product category. These are early shapes of what the payment-native web makes possible."
+          intro="Astro is a substrate, not a product category. These are early shapes of what the payment-native web makes possible."
         />
 
         <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-4">

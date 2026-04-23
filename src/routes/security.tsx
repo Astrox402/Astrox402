@@ -42,7 +42,7 @@ function SecurityPage() {
     <PageLayout
       eyebrow="Security"
       title="Security model & responsible disclosure."
-      intro="Meridian's security posture is built on cryptographic verifiability, public contracts, and an audited protocol. Here's how it works — and how to report a vulnerability."
+      intro="Astro's security posture is built on cryptographic verifiability, public contracts, and an audited protocol. Here's how it works — and how to report a vulnerability."
     >
       <div className="border-t border-border pt-20 mb-20">
         <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground mb-8">Threat model & mitigations</div>
@@ -83,19 +83,19 @@ function SecurityPage() {
           <div>
             <h2 className="text-[22px] font-medium mb-3">Report a vulnerability.</h2>
             <p className="text-[14px] text-muted-foreground leading-relaxed mb-4">
-              If you believe you've found a security vulnerability in the Meridian protocol, SDKs, contracts, or hosted infrastructure — please disclose it responsibly.
+              If you believe you've found a security vulnerability in the Astro protocol, SDKs, contracts, or hosted infrastructure — please disclose it responsibly.
             </p>
             <p className="text-[14px] text-muted-foreground leading-relaxed mb-6">
               We respond to all reports within 48 hours. Critical issues are patched and disclosed within 14 days. We credit researchers by name unless they prefer anonymity.
             </p>
-            <a href="mailto:security@meridian.xyz" className="inline-flex h-10 items-center px-5 rounded-md bg-foreground text-background text-[13.5px] font-medium hover:bg-foreground/90 transition-colors">
-              security@meridian.xyz →
+            <a href="mailto:security@astro.xyz" className="inline-flex h-10 items-center px-5 rounded-md bg-foreground text-background text-[13.5px] font-medium hover:bg-foreground/90 transition-colors">
+              security@astro.xyz →
             </a>
           </div>
           <div className="rounded-2xl border border-border bg-surface/20 p-6">
             <div className="text-[13px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-4">In scope</div>
             <ul className="space-y-2 text-[13.5px] text-muted-foreground">
-              {["Settlement contracts (all chains)", "SDK intent signing and verification", "Quote encoding and signature verification", "Meridian Console and hosted verifier", "Receipt indexer and API"].map((item) => (
+              {["Settlement contracts (all chains)", "SDK intent signing and verification", "Quote encoding and signature verification", "Astro Console and hosted verifier", "Receipt indexer and API"].map((item) => (
                 <li key={item} className="flex gap-2"><span className="text-accent mt-0.5">✓</span>{item}</li>
               ))}
             </ul>

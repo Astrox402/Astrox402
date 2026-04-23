@@ -24,7 +24,7 @@ const ROLES = [
     title: "DevRel Lead",
     team: "Developer Experience",
     type: "Full-time · Remote",
-    desc: "Be the connective tissue between Meridian and the developer community. You'll write guides, run the Discord, speak at conferences, build relationships with API teams and agent developers, and feed real feedback back into the product.",
+    desc: "Be the connective tissue between Astro and the developer community. You'll write guides, run the Discord, speak at conferences, build relationships with API teams and agent developers, and feed real feedback back into the product.",
     reqs: ["Track record building developer communities", "Genuine interest in payment protocols and distributed systems", "Good technical writing", "Comfortable giving talks and running workshops"],
   },
   {
@@ -79,7 +79,7 @@ function CareersPage() {
                     </li>
                   ))}
                 </ul>
-                <a href="mailto:jobs@meridian.xyz" className="inline-flex h-9 items-center px-4 rounded-md bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">
+                <a href="mailto:jobs@astro.xyz" className="inline-flex h-9 items-center px-4 rounded-md bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">
                   Apply for this role →
                 </a>
               </div>
@@ -106,8 +106,8 @@ function CareersPage() {
           <p className="text-[14px] text-muted-foreground mb-6 leading-relaxed">
             We occasionally hire for roles we haven't posted yet. If you're deeply technical and genuinely excited about payment protocols, send us a note — we read everything.
           </p>
-          <a href="mailto:jobs@meridian.xyz" className="inline-flex h-10 items-center px-5 rounded-md border border-border text-[13.5px] text-muted-foreground hover:text-foreground transition-colors">
-            jobs@meridian.xyz →
+          <a href="mailto:jobs@astro.xyz" className="inline-flex h-10 items-center px-5 rounded-md border border-border text-[13.5px] text-muted-foreground hover:text-foreground transition-colors">
+            jobs@astro.xyz →
           </a>
         </div>
       </div>

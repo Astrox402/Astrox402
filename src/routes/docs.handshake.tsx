@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, Callout, Params, PageFooterNav, Mono } fr
 export const Route = createFileRoute("/docs/handshake")({
   head: () => ({
     meta: [
-      { title: "The 402 handshake — Meridian Docs" },
-      { name: "description", content: "How Meridian unifies access and payment into a single HTTP round-trip with the x402-inspired 402 Payment Required handshake." },
-      { property: "og:title", content: "The 402 handshake — Meridian Docs" },
-      { property: "og:description", content: "Access and payment in one request: the x402-inspired protocol handshake powering Meridian." },
+      { title: "The 402 handshake — Astro Docs" },
+      { name: "description", content: "How Astro unifies access and payment into a single HTTP round-trip with the x402-inspired 402 Payment Required handshake." },
+      { property: "og:title", content: "The 402 handshake — Astro Docs" },
+      { property: "og:description", content: "Access and payment in one request: the x402-inspired protocol handshake powering Astro." },
     ],
   }),
   component: HandshakePage,
@@ -32,12 +32,12 @@ function HandshakePage() {
       <PageHeader
         eyebrow="Protocol"
         title="The 402 handshake"
-        intro="Meridian collapses entitlement, metering, and settlement into a single HTTP exchange. This page is the deep specification of the protocol-level handshake that makes that possible — the headers, the intent format, the verification path, and the failure modes."
+        intro="Astro collapses entitlement, metering, and settlement into a single HTTP exchange. This page is the deep specification of the protocol-level handshake that makes that possible — the headers, the intent format, the verification path, and the failure modes."
       />
 
       <DocSection id="overview" title="Overview">
         <p>
-          When a caller requests a Meridian-protected resource without a valid payment, the server responds with <Mono>HTTP 402 Payment Required</Mono>. The response carries the price, scope, settlement chain, and a short-lived nonce. The client signs a payment intent and retries; the server verifies the intent onchain and returns the resource with a receipt. The whole loop typically completes in under 1.2 seconds on L2s, comparable to a normal authenticated API call.
+          When a caller requests a Astro-protected resource without a valid payment, the server responds with <Mono>HTTP 402 Payment Required</Mono>. The response carries the price, scope, settlement chain, and a short-lived nonce. The client signs a payment intent and retries; the server verifies the intent onchain and returns the resource with a receipt. The whole loop typically completes in under 1.2 seconds on L2s, comparable to a normal authenticated API call.
         </p>
         <Callout>
           The handshake is stateless on the server. Every quote is bound to a nonce and TTL, and every receipt is independently verifiable on Ethereum. There is no session, no cookie, and no shared mutable state.
@@ -49,7 +49,7 @@ function HandshakePage() {
           The HTTP/1.1 specification reserved <Mono>402 Payment Required</Mono> in 1997 with a single sentence: "This code is reserved for future use." For the next quarter-century, no standard ever filled it in. Various proposals — micropayments, lightning integrations, custom headers — came and went, but none combined a stable wire format with non-custodial settlement and a deployable runtime.
         </p>
         <p>
-          Meridian operationalizes 402 by treating it as the canonical signal for "this resource exists, but you need to pay to access it." The semantics map cleanly: the response carries the price (like 401 carries the auth challenge), the client constructs a credential (the intent), and the request is retried. Existing intermediaries — proxies, gateways, edge caches — pass 402 through correctly because the spec has always reserved it.
+          Astro operationalizes 402 by treating it as the canonical signal for "this resource exists, but you need to pay to access it." The semantics map cleanly: the response carries the price (like 401 carries the auth challenge), the client constructs a credential (the intent), and the request is retried. Existing intermediaries — proxies, gateways, edge caches — pass 402 through correctly because the spec has always reserved it.
         </p>
       </DocSection>
 
@@ -59,19 +59,19 @@ function HandshakePage() {
      { "prompt": "hello", "tokens": 120 }
 
 2. ← 402 Payment Required
-     X-Meridian-Price:  0.0021 USDC
-     X-Meridian-Scope:  inference.gpt
-     X-Meridian-Settle: base
-     X-Meridian-TTL:    60
-     X-Meridian-Nonce:  0x9f4a…2e1c
+     X-Astro-Price:  0.0021 USDC
+     X-Astro-Scope:  inference.gpt
+     X-Astro-Settle: base
+     X-Astro-TTL:    60
+     X-Astro-Nonce:  0x9f4a…2e1c
 
 3. → POST /v1/infer
-     X-Meridian-Intent: 0x<eip712-signed-intent>
+     X-Astro-Intent: 0x<eip712-signed-intent>
      Content-Type: application/json
      { "prompt": "hello", "tokens": 120 }
 
 4. ← 200 OK
-     X-Meridian-Receipt: 0x<receipt-bytes>
+     X-Astro-Receipt: 0x<receipt-bytes>
      Content-Type: application/json
      { "result": "..." }`} />
         <p>The full round-trip is typically under <strong>1.2 seconds</strong>, including settlement on supported L2s. The settlement transaction is broadcast in parallel with step 3, so verification is already in-flight by the time the server begins parsing the intent.</p>
@@ -80,13 +80,13 @@ function HandshakePage() {
       <DocSection id="headers" title="Response headers">
         <p>The 402 response is fully described by its headers. The body is empty by default, but providers may include a structured JSON body for clients that prefer it (the SDK uses headers exclusively).</p>
         <Params rows={[
-          ["x-meridian-price", "string", "Quoted price as 'amount asset', e.g. '0.0021 USDC'."],
-          ["x-meridian-scope", "string", "Capability namespace (e.g. inference.gpt)."],
-          ["x-meridian-settle", "string", "Settlement target chain (ethereum, base, optimism, arbitrum)."],
-          ["x-meridian-ttl", "number", "Validity window for the quote, in seconds."],
-          ["x-meridian-nonce", "hex", "Single-use nonce binding the quote to this request."],
-          ["x-meridian-domain", "string", "EIP-712 domain hash for signature binding."],
-          ["x-meridian-resource", "string", "Echo of the resource identifier; used for client-side scope routing."],
+          ["x-astro-price", "string", "Quoted price as 'amount asset', e.g. '0.0021 USDC'."],
+          ["x-astro-scope", "string", "Capability namespace (e.g. inference.gpt)."],
+          ["x-astro-settle", "string", "Settlement target chain (ethereum, base, optimism, arbitrum)."],
+          ["x-astro-ttl", "number", "Validity window for the quote, in seconds."],
+          ["x-astro-nonce", "hex", "Single-use nonce binding the quote to this request."],
+          ["x-astro-domain", "string", "EIP-712 domain hash for signature binding."],
+          ["x-astro-resource", "string", "Echo of the resource identifier; used for client-side scope routing."],
         ]} />
         <p>All headers are case-insensitive per HTTP semantics. The SDK reads them with normalization; if you implement your own client, do the same.</p>
       </DocSection>
@@ -95,7 +95,7 @@ function HandshakePage() {
         <p>The client signs an EIP-712 typed-data payload binding the nonce, scope, and price. The intent is opaque to the application layer — your handler never reads it directly; the verifier produces a structured <Mono>ctx.payment</Mono> after validation.</p>
         <Code lang="json" code={`{
   "domain": {
-    "name":              "Meridian",
+    "name":              "Astro",
     "version":           "1",
     "chainId":           8453,
     "verifyingContract": "0x…"
@@ -119,7 +119,7 @@ function HandshakePage() {
     "expires":  1727384981
   }
 }`} />
-        <p>Because the intent is standard EIP-712, every wallet — hardware, mobile, embedded, MPC, or backend KMS — can sign it without Meridian-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.</p>
+        <p>Because the intent is standard EIP-712, every wallet — hardware, mobile, embedded, MPC, or backend KMS — can sign it without Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.</p>
       </DocSection>
 
       <DocSection id="verification" title="Verification & retry">
@@ -148,7 +148,7 @@ const res = await client.fetch("/v1/infer", { method: "POST" });`} />
         <ul className="list-disc pl-5 space-y-2">
           <li><strong>No replay:</strong> nonces are single-use and bound to a specific resource and quote. The settlement contract maintains the canonical nonce registry; off-chain replays are caught at the contract level even if the server is compromised.</li>
           <li><strong>No overpay:</strong> the signed amount is exact; intents cannot be silently reused for higher-value calls. Two-phase pricing uses the quote as a hard ceiling that the commit cannot exceed.</li>
-          <li><strong>No silent settlement:</strong> every successful response carries a receipt the caller can verify independently from any Ethereum RPC, without trusting the server or Meridian.</li>
+          <li><strong>No silent settlement:</strong> every successful response carries a receipt the caller can verify independently from any Ethereum RPC, without trusting the server or Astro.</li>
         </ul>
         <p>The full threat model — including key compromise, network adversaries, and chain-level failures — is documented in <Mono>/docs/security</Mono>.</p>
       </DocSection>
@@ -163,12 +163,12 @@ const res = await client.fetch("/v1/infer", { method: "POST" });`} />
 > {"prompt":"hello","tokens":120}
 
 < HTTP/1.1 402 Payment Required
-< X-Meridian-Price: 0.0021 USDC
-< X-Meridian-Scope: inference.gpt
-< X-Meridian-Settle: base
-< X-Meridian-TTL: 60
-< X-Meridian-Nonce: 0x9f4adc...2e1c
-< X-Meridian-Domain: 0x4f2c...91ab
+< X-Astro-Price: 0.0021 USDC
+< X-Astro-Scope: inference.gpt
+< X-Astro-Settle: base
+< X-Astro-TTL: 60
+< X-Astro-Nonce: 0x9f4adc...2e1c
+< X-Astro-Domain: 0x4f2c...91ab
 < Content-Length: 0
 
 # client signs intent, broadcasts settlement tx in parallel
@@ -176,13 +176,13 @@ const res = await client.fetch("/v1/infer", { method: "POST" });`} />
 > POST /v1/infer HTTP/1.1
 > Host: api.acme.dev
 > Content-Type: application/json
-> X-Meridian-Intent: 0xeb91...a201
+> X-Astro-Intent: 0xeb91...a201
 > Content-Length: 38
 >
 > {"prompt":"hello","tokens":120}
 
 < HTTP/1.1 200 OK
-< X-Meridian-Receipt: 0x1d4a...8f33
+< X-Astro-Receipt: 0x1d4a...8f33
 < Content-Type: application/json
 <
 < {"result":"hi there"}`} />

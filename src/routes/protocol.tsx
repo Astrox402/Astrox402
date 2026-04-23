@@ -22,14 +22,14 @@ const PILLARS = [
   {
     num: "03",
     title: "Non-custodial settlement",
-    desc: "Meridian's audited settlement contracts execute atomic token transfers between caller and provider. No escrow. No intermediary. If the transfer fails, the handler never runs. If the handler runs, settlement is final.",
+    desc: "Astro's audited settlement contracts execute atomic token transfers between caller and provider. No escrow. No intermediary. If the transfer fails, the handler never runs. If the handler runs, settlement is final.",
     detail: "Deployed on Ethereum mainnet, Base, Optimism, and Arbitrum. USDC, USDT, and native ETH supported.",
   },
   {
     num: "04",
     title: "Onchain receipts",
     desc: "Every settled call produces a verifiable receipt: a transaction hash, a signed attestation from the server, and a merkle proof anchoring the call to the settlement event. Receipts are public and permanent.",
-    detail: "Verifiable by anyone. No trust in Meridian required to audit a payment.",
+    detail: "Verifiable by anyone. No trust in Astro required to audit a payment.",
   },
 ];
 
@@ -57,7 +57,7 @@ function ProtocolPage() {
               The payment layer HTTP forgot.
             </h1>
             <p className="mt-6 text-[17px] leading-relaxed text-muted-foreground max-w-2xl">
-              Meridian is an open protocol built on the long-reserved HTTP 402 status code. It makes access and payment a single, atomic, cryptographically-verified request — with no billing infrastructure required.
+              Astro is an open protocol built on the long-reserved HTTP 402 status code. It makes access and payment a single, atomic, cryptographically-verified request — with no billing infrastructure required.
             </p>
             <div className="mt-8 flex items-center gap-4">
               <Link to="/docs" className="inline-flex h-10 items-center px-5 rounded-md bg-foreground text-background text-[13.5px] font-medium hover:bg-foreground/90 transition-colors">
@@ -97,7 +97,7 @@ function ProtocolPage() {
             <div className="max-w-2xl">
               <h2 className="text-[28px] font-medium mb-4">Open by default.</h2>
               <p className="text-[15px] text-muted-foreground leading-relaxed mb-6">
-                The wire spec is public. The contracts are verified onchain. The SDKs are source-available. No part of the protocol is gated behind Meridian's hosted services — if you want to implement your own client or verifier, everything you need is documented and auditable.
+                The wire spec is public. The contracts are verified onchain. The SDKs are source-available. No part of the protocol is gated behind Astro's hosted services — if you want to implement your own client or verifier, everything you need is documented and auditable.
               </p>
               <div className="flex items-center gap-4 text-[13.5px]">
                 <Link to="/docs/concepts" className="text-accent hover:underline">Core concepts →</Link>

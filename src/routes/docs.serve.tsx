@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, Params, PageFooterNav, Mono, Callout } fr
 export const Route = createFileRoute("/docs/serve")({
   head: () => ({
     meta: [
-      { title: "serve() — Meridian Docs" },
+      { title: "serve() — Astro Docs" },
       { name: "description", content: "The serve() primitive wraps any handler in a payment-aware envelope. Reference for resource, scope, price, settle, ttl, ctx.payment, batching, and refunds." },
-      { property: "og:title", content: "serve() — Meridian Docs" },
-      { property: "og:description", content: "The single primitive that turns any handler into a paid, programmable Meridian endpoint." },
+      { property: "og:title", content: "serve() — Astro Docs" },
+      { property: "og:description", content: "The single primitive that turns any handler into a paid, programmable Astro endpoint." },
     ],
   }),
   component: ServePage,
@@ -32,13 +32,13 @@ function ServePage() {
       <PageHeader
         eyebrow="Protocol"
         title="serve()"
-        intro="serve() is the single primitive that wraps any handler in Meridian's payment-aware envelope. It declares the resource, the price, and the settlement target — and only runs your handler after payment is verified onchain. This page is the complete API reference."
+        intro="serve() is the single primitive that wraps any handler in Astro's payment-aware envelope. It declares the resource, the price, and the settlement target — and only runs your handler after payment is verified onchain. This page is the complete API reference."
       />
 
       <DocSection id="signature" title="Signature">
-        <Code lang="ts" code={`import { meridian } from "@meridian/sdk";
+        <Code lang="ts" code={`import { astro } from "@astro/sdk";
 
-export const POST = meridian.serve({
+export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004 + 0.001,
@@ -104,7 +104,7 @@ export const POST = meridian.serve({
       </DocSection>
 
       <DocSection id="refunds" title="Refunds">
-        <p>If your handler throws after payment was verified, Meridian automatically issues an onchain refund and surfaces the original error to the caller as a <Mono>MeridianHandlerError</Mono>. You can also issue refunds explicitly for partial-failure or quality-of-service reasons:</p>
+        <p>If your handler throws after payment was verified, Astro automatically issues an onchain refund and surfaces the original error to the caller as a <Mono>AstroHandlerError</Mono>. You can also issue refunds explicitly for partial-failure or quality-of-service reasons:</p>
         <Code lang="ts" code={`async handler(req, ctx) {
   const result = await model.infer(await req.json());
   if (result.confidence < 0.5) {
@@ -117,7 +117,7 @@ export const POST = meridian.serve({
       </DocSection>
 
       <DocSection id="batching" title="Batched settlement">
-        <p>For high-volume endpoints (thousands of calls per second), per-call settlement on Ethereum mainnet is wasteful. Meridian supports batched settlement that aggregates many intents into a single onchain transaction:</p>
+        <p>For high-volume endpoints (thousands of calls per second), per-call settlement on Ethereum mainnet is wasteful. Astro supports batched settlement that aggregates many intents into a single onchain transaction:</p>
         <Code lang="ts" code={`batch: {
   windowMs:   2000,        // flush at most every 2s
   maxIntents: 500,         // or when 500 intents accumulate
@@ -129,22 +129,22 @@ export const POST = meridian.serve({
       <DocSection id="frameworks" title="Frameworks">
         <p><Mono>serve()</Mono> returns a standard fetch handler. Drop it into anything that speaks the Web Fetch API.</p>
         <Code lang="ts" code={`// Hono
-app.post("/v1/infer", meridian.serve({ /* ... */ }));
+app.post("/v1/infer", astro.serve({ /* ... */ }));
 
 // Next.js Route Handlers
-export const POST = meridian.serve({ /* ... */ });
+export const POST = astro.serve({ /* ... */ });
 
 // TanStack Start server route
 export const Route = createFileRoute("/api/infer")({
-  server: { handlers: { POST: meridian.serve({ /* ... */ }) } },
+  server: { handlers: { POST: astro.serve({ /* ... */ }) } },
 });
 
 // Cloudflare Workers
-export default { fetch: meridian.serve({ /* ... */ }) };
+export default { fetch: astro.serve({ /* ... */ }) };
 
 // Deno
-Deno.serve(meridian.serve({ /* ... */ }));`} />
-        <p>For Express and other Node-only frameworks that don't speak fetch natively, the SDK provides an adapter (<Mono>meridian.express()</Mono>) that converts between the two interfaces.</p>
+Deno.serve(astro.serve({ /* ... */ }));`} />
+        <p>For Express and other Node-only frameworks that don't speak fetch natively, the SDK provides an adapter (<Mono>astro.express()</Mono>) that converts between the two interfaces.</p>
       </DocSection>
 
       <DocSection id="lifecycle" title="Internal lifecycle">
@@ -156,16 +156,16 @@ Deno.serve(meridian.serve({ /* ... */ }));`} />
           <li><strong>Verify settlement.</strong> Wait for the chain transaction to confirm (or accept a signed pre-confirmation in optimistic mode).</li>
           <li><strong>Build context.</strong> Construct <Mono>ctx</Mono> from the verified payment.</li>
           <li><strong>Run handler.</strong> Catch any error; trigger refund if <Mono>refundOn</Mono> matches.</li>
-          <li><strong>Attach receipt.</strong> Inject <Mono>X-Meridian-Receipt</Mono> into the response.</li>
+          <li><strong>Attach receipt.</strong> Inject <Mono>X-Astro-Receipt</Mono> into the response.</li>
         </ol>
       </DocSection>
 
       <DocSection id="errors" title="Errors">
         <Params rows={[
-          ["MeridianQuoteError", "Price function threw or returned invalid Money."],
-          ["MeridianHandlerError", "User handler threw after payment was verified. Refund triggered automatically."],
-          ["MeridianSettleError", "Settlement check failed onchain (revert, timeout, RPC failure)."],
-          ["MeridianIntentError", "Intent signature invalid or doesn't match the quote."],
+          ["AstroQuoteError", "Price function threw or returned invalid Money."],
+          ["AstroHandlerError", "User handler threw after payment was verified. Refund triggered automatically."],
+          ["AstroSettleError", "Settlement check failed onchain (revert, timeout, RPC failure)."],
+          ["AstroIntentError", "Intent signature invalid or doesn't match the quote."],
         ]} />
         <p>All errors are typed and serialized into a structured response. The caller can act programmatically without parsing strings. See <Mono>/docs/errors</Mono> for the full reference.</p>
       </DocSection>

@@ -15,7 +15,7 @@ const COLORS = [
 ];
 
 const RULES = [
-  ["Do", "Use 'Meridian' with a capital M."],
+  ["Do", "Use 'Astro' with a capital M."],
   ["Do", "Use the wordmark on dark backgrounds."],
   ["Do", "Maintain clear space equal to the M-height around the logo."],
   ["Don't", "Abbreviate to 'Mer' or use initialisms like 'MRD'."],
@@ -28,8 +28,8 @@ function BrandPage() {
   return (
     <PageLayout
       eyebrow="Brand"
-      title="Meridian brand assets & guidelines."
-      intro="Official logos, color palette, typography, and usage guidelines for Meridian. Please read the rules before using our brand assets in public."
+      title="Astro brand assets & guidelines."
+      intro="Official logos, color palette, typography, and usage guidelines for Astro. Please read the rules before using our brand assets in public."
     >
       <div className="border-t border-border pt-20 mb-20">
         <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground mb-10">Logo</div>
@@ -44,7 +44,7 @@ function BrandPage() {
                   <div className={`absolute inset-0 rounded-sm border ${variant.label.includes("Dark") ? "border-accent/60" : "border-teal-500/60"}`} />
                   <div className={`absolute inset-1.5 rounded-[2px] ${variant.label.includes("Dark") ? "bg-accent/80" : "bg-teal-500"}`} />
                 </div>
-                <span className={`font-medium tracking-tight text-[20px] ${variant.text}`}>Meridian</span>
+                <span className={`font-medium tracking-tight text-[20px] ${variant.text}`}>Astro</span>
               </div>
               <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">{variant.label}</div>
             </div>
@@ -79,7 +79,7 @@ function BrandPage() {
           {[
             { label: "Display / Headings", font: "Inter, sans-serif", weight: "500", sample: "Payment-native protocol.", size: "text-[3rem]" },
             { label: "Italic accent", font: "Playfair Display, serif", weight: "400 italic", sample: "Ethereum.", size: "text-[3rem] italic font-serif" },
-            { label: "Body", font: "Inter, sans-serif", weight: "400", sample: "Meridian turns any endpoint into a programmable, monetizable primitive.", size: "text-[17px]" },
+            { label: "Body", font: "Inter, sans-serif", weight: "400", sample: "Astro turns any endpoint into a programmable, monetizable primitive.", size: "text-[17px]" },
             { label: "Mono / Labels", font: "JetBrains Mono, monospace", weight: "400", sample: "X-Payment-Quote · v0.402 · USDC", size: "text-[14px] font-mono" },
           ].map((t) => (
             <div key={t.label} className="rounded-2xl border border-border bg-surface/20 p-7">

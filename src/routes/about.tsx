@@ -16,11 +16,11 @@ const VALUES = [
   },
   {
     title: "Receipts, not promises",
-    desc: "Every settled call produces a publicly verifiable onchain receipt. Our users don't have to trust Meridian — they can verify every payment independently.",
+    desc: "Every settled call produces a publicly verifiable onchain receipt. Our users don't have to trust Astro — they can verify every payment independently.",
   },
   {
     title: "Protocol first",
-    desc: "Meridian's value lives in the open spec and the onchain contracts, not in our managed infrastructure. If we disappeared tomorrow, every endpoint built on Meridian would still work.",
+    desc: "Astro's value lives in the open spec and the onchain contracts, not in our managed infrastructure. If we disappeared tomorrow, every endpoint built on Astro would still work.",
   },
 ];
 
@@ -38,7 +38,7 @@ function AboutPage() {
     <PageLayout
       eyebrow="About"
       title="We're building the payment layer the internet was always missing."
-      intro="Meridian Labs is a small, technical team that believes programmable, verifiable, open payment infrastructure should be a primitive — not a product feature."
+      intro="Astro Labs is a small, technical team that believes programmable, verifiable, open payment infrastructure should be a primitive — not a product feature."
     >
       <div className="border-t border-border pt-20 mb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
@@ -46,13 +46,13 @@ function AboutPage() {
             <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground mb-6">Our story</div>
             <div className="space-y-5 text-[15px] text-muted-foreground leading-relaxed">
               <p>
-                Meridian grew out of a frustration we shared across too many teams: every API that needed to charge money ended up with the same bespoke billing stack — API keys, Stripe integrations, entitlement tables, reconciliation pipelines. Weeks of engineering for infrastructure that has nothing to do with the actual product.
+                Astro grew out of a frustration we shared across too many teams: every API that needed to charge money ended up with the same bespoke billing stack — API keys, Stripe integrations, entitlement tables, reconciliation pipelines. Weeks of engineering for infrastructure that has nothing to do with the actual product.
               </p>
               <p>
                 The HTTP 402 status code has been reserved for "Payment Required" since 1991. Nobody ever shipped a real implementation because there was no programmable settlement layer to back it. Ethereum changed that. We spent a year figuring out what a correct, minimal, open implementation actually looks like.
               </p>
               <p>
-                The result is Meridian: a protocol that makes access and payment the same request, with cryptographic proof that the payment happened, and no infrastructure beyond the chain.
+                The result is Astro: a protocol that makes access and payment the same request, with cryptographic proof that the payment happened, and no infrastructure beyond the chain.
               </p>
             </div>
           </div>

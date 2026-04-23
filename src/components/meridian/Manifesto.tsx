@@ -17,7 +17,7 @@ export function Manifesto() {
             The next wave of digital business models will not be designed in spreadsheets. They will be <span className="text-foreground">programmed</span>.
           </p>
           <p className="text-foreground">
-            Meridian is the protocol layer where that begins.
+            Astro is the protocol layer where that begins.
           </p>
         </div>
       </div>

@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, Callout, PageFooterNav, Mono, Params } fr
 export const Route = createFileRoute("/docs/concepts")({
   head: () => ({
     meta: [
-      { title: "Core concepts — Meridian Docs" },
-      { name: "description", content: "Resources, scopes, quotes, intents, receipts, and policies — the durable objects that make up the Meridian protocol." },
-      { property: "og:title", content: "Core concepts — Meridian Docs" },
-      { property: "og:description", content: "The mental model behind Meridian: resources, scopes, intents, and receipts as first-class objects." },
+      { title: "Core concepts — Astro Docs" },
+      { name: "description", content: "Resources, scopes, quotes, intents, receipts, and policies — the durable objects that make up the Astro protocol." },
+      { property: "og:title", content: "Core concepts — Astro Docs" },
+      { property: "og:description", content: "The mental model behind Astro: resources, scopes, intents, and receipts as first-class objects." },
     ],
   }),
   component: ConceptsPage,
@@ -32,12 +32,12 @@ function ConceptsPage() {
       <PageHeader
         eyebrow="Foundations"
         title="Core concepts"
-        intro="Meridian is built on a small set of durable objects: resources, scopes, quotes, intents, receipts, and policies. Once these click, the rest of the protocol — handshake, settlement, agent commerce — is just orchestration on top."
+        intro="Astro is built on a small set of durable objects: resources, scopes, quotes, intents, receipts, and policies. Once these click, the rest of the protocol — handshake, settlement, agent commerce — is just orchestration on top."
       />
 
       <DocSection id="mental-model" title="Mental model">
         <p>
-          The classic web has two layers: a <strong>request</strong> (what you want) and a <strong>response</strong> (what you got). Authentication, billing, metering, and rate limiting are bolted on as separate systems, each with its own state, its own database, and its own failure modes. Meridian collapses those four systems into the request itself by introducing four protocol-level objects.
+          The classic web has two layers: a <strong>request</strong> (what you want) and a <strong>response</strong> (what you got). Authentication, billing, metering, and rate limiting are bolted on as separate systems, each with its own state, its own database, and its own failure modes. Astro collapses those four systems into the request itself by introducing four protocol-level objects.
         </p>
         <Callout>
           If you remember nothing else: a <strong>quote</strong> is a server's offer, an <strong>intent</strong> is a client's signature, a <strong>receipt</strong> is the public record, and a <strong>scope</strong> is the namespace they all live in.
@@ -49,7 +49,7 @@ function ConceptsPage() {
           A resource is the addressable unit of value. In practice, it's a URL plus a verb — for example, <Mono>POST /v1/infer</Mono>. Resources are durable identifiers: once a resource is live, renaming it invalidates outstanding quotes and breaks caller integrations. Treat them like primary keys.
         </p>
         <p>
-          A single deployment can expose hundreds of resources, each with its own price, scope, and settlement target. Meridian does not impose any structure on resource names — you can mirror REST, RPC, GraphQL operation names, or anything else. The only requirement is stability.
+          A single deployment can expose hundreds of resources, each with its own price, scope, and settlement target. Astro does not impose any structure on resource names — you can mirror REST, RPC, GraphQL operation names, or anything else. The only requirement is stability.
         </p>
       </DocSection>
 
@@ -63,7 +63,7 @@ allow: ["inference.*", "search.web", "data.market.*"]
 // But denies the expensive subscope
 deny:  ["inference.fine-tune"]`} />
         <p>
-          Scopes are also how Meridian enforces server-side spend caps and how the settlement layer aggregates revenue for reporting. Designing them well is one of the highest-leverage decisions when modeling a Meridian-native API.
+          Scopes are also how Astro enforces server-side spend caps and how the settlement layer aggregates revenue for reporting. Designing them well is one of the highest-leverage decisions when modeling a Astro-native API.
         </p>
       </DocSection>
 
@@ -79,7 +79,7 @@ deny:  ["inference.fine-tune"]`} />
           ["expires", "unix", "Hard TTL; expired quotes return 409."],
         ]} />
         <p>
-          Quotes are <strong>not</strong> reservations of inventory. They are deterministic offers that the server commits to honor if presented with a valid intent before expiry. This makes the server stateless from the caller's perspective and lets Meridian scale horizontally without coordination.
+          Quotes are <strong>not</strong> reservations of inventory. They are deterministic offers that the server commits to honor if presented with a valid intent before expiry. This makes the server stateless from the caller's perspective and lets Astro scale horizontally without coordination.
         </p>
       </DocSection>
 
@@ -88,7 +88,7 @@ deny:  ["inference.fine-tune"]`} />
           An intent is the client's signed acceptance of a quote. It's an EIP-712 typed-data structure that binds the payer's wallet to the exact resource, scope, amount, and nonce — and nothing else. Intents are opaque to the application layer; the client SDK signs them, the server verifies them, your handler never sees them.
         </p>
         <Code lang="json" code={`{
-  "domain":  { "name": "Meridian", "chainId": 8453 },
+  "domain":  { "name": "Astro", "chainId": 8453 },
   "scope":   "inference.gpt",
   "amount":  "2100",
   "asset":   "USDC",
@@ -96,13 +96,13 @@ deny:  ["inference.fine-tune"]`} />
   "expires": 1727384981
 }`} />
         <p>
-          Because intents are EIP-712, every wallet — hardware, mobile, embedded, or backend — can sign them with no Meridian-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
+          Because intents are EIP-712, every wallet — hardware, mobile, embedded, or backend — can sign them with no Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
         </p>
       </DocSection>
 
       <DocSection id="receipt" title="Receipt">
         <p>
-          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object that is independently verifiable from any Ethereum RPC. Receipts are what make Meridian auditable without sharing private logs.
+          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object that is independently verifiable from any Ethereum RPC. Receipts are what make Astro auditable without sharing private logs.
         </p>
         <p>
           Receipts are returned inline (in the response body or a header), streamed via webhook, and queryable via the reconciliation API. They are also publicly indexable, which means a customer can verify your revenue claims, a partner can verify a referral payout, and an auditor can reconstruct your books — all without you exposing internal data.
@@ -136,7 +136,7 @@ deny:  ["inference.fine-tune"]`} />
       </DocSection>
 
       <DocSection id="comparison" title="Mental anchors">
-        <p>If it helps, here's how Meridian's objects map to systems you may already know:</p>
+        <p>If it helps, here's how Astro's objects map to systems you may already know:</p>
         <Params rows={[
           ["Resource", "REST endpoint", "Stable URL + verb."],
           ["Scope", "OAuth scope", "Namespace for capabilities."],
@@ -145,7 +145,7 @@ deny:  ["inference.fine-tune"]`} />
           ["Receipt", "Stripe Charge", "Public, verifiable settlement record."],
           ["Policy", "Spend rule", "Local guardrail before signing."],
         ]} />
-        <p>The analogies are loose — Meridian's objects are protocol primitives, not vendor abstractions — but they're useful as a starting point.</p>
+        <p>The analogies are loose — Astro's objects are protocol primitives, not vendor abstractions — but they're useful as a starting point.</p>
       </DocSection>
 
       <PageFooterNav prev={{ to: "/docs/quickstart", label: "Quickstart" }} next={{ to: "/docs/architecture", label: "Architecture" }} />

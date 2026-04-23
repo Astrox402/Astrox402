@@ -4,7 +4,7 @@ const steps = [
   {
     n: "01",
     t: "Define a resource",
-    d: "Declare any endpoint, capability, or asset. Meridian wraps it in a payment-aware envelope.",
+    d: "Declare any endpoint, capability, or asset. Astro wraps it in a payment-aware envelope.",
     code: `meridian.define({\n  id: "translate.v1",\n  kind: "endpoint"\n})`,
   },
   {

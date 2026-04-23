@@ -49,10 +49,10 @@ const ENTRIES = [
     tag: "Protocol",
     title: "Public beta — Base + Optimism live",
     items: [
-      "Meridian protocol enters public beta. Breaking changes will be communicated with ≥ 14 days notice from this release forward.",
+      "Astro protocol enters public beta. Breaking changes will be communicated with ≥ 14 days notice from this release forward.",
       "Base and Optimism settlement contracts deployed and audited. Ethereum mainnet remains live.",
-      "TypeScript SDK `@meridian/sdk` published to npm under a source-available license.",
-      "Python SDK `meridian-sdk` published to PyPI — supports FastAPI, Flask, and Django middleware patterns.",
+      "TypeScript SDK `@astro/sdk` published to npm under a source-available license.",
+      "Python SDK `astro-sdk` published to PyPI — supports FastAPI, Flask, and Django middleware patterns.",
       "Scope system formalized: scopes are now dot-namespaced strings (`inference.gpt`, `data.read.public`). Wildcards supported.",
       "Receipt indexer live — all settled calls are indexed and queryable via the Console API within 2 seconds of finality.",
     ],
@@ -74,8 +74,8 @@ const ENTRIES = [
     tag: "Protocol",
     title: "Agent identity + budget policies",
     items: [
-      "Agent-scoped keys: autonomous callers can now hold a Meridian identity with a per-period spend ceiling enforced at the protocol level.",
-      "Budget policies specified as onchain EIP-712 typed-data. Policies are verifiable without trusting Meridian infrastructure.",
+      "Agent-scoped keys: autonomous callers can now hold a Astro identity with a per-period spend ceiling enforced at the protocol level.",
+      "Budget policies specified as onchain EIP-712 typed-data. Policies are verifiable without trusting Astro infrastructure.",
       "Added `ctx.caller.isAgent` and `ctx.caller.budget` to the server handler context.",
       "New docs section: Agent commerce — covers identity provisioning, budget setting, and policy verification.",
     ],
@@ -99,7 +99,7 @@ function ChangelogPage() {
           <div className="max-w-2xl mb-20">
             <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent mb-5">Changelog</div>
             <h1 className="text-[clamp(2.5rem,5vw,3.75rem)] leading-[1.05] tracking-[-0.03em] font-medium text-gradient">
-              What's new in Meridian.
+              What's new in Astro.
             </h1>
             <p className="mt-5 text-[17px] leading-relaxed text-muted-foreground">
               Protocol updates, SDK releases, and Console improvements — logged here as they ship.

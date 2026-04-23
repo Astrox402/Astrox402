@@ -11,9 +11,9 @@ const EXAMPLES = [
     title: "Per-token inference endpoint",
     desc: "Wrap a language model inference handler with serve(). Price per output token. Settle in USDC on Base.",
     complexity: "Starter",
-    code: `import { meridian } from "@meridian/sdk";
+    code: `import { astro } from "@astro/sdk";
 
-export const POST = meridian.serve({
+export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004,
@@ -31,9 +31,9 @@ export const POST = meridian.serve({
     title: "Tiered data API",
     desc: "Charge different prices based on dataset size or query complexity. Use a pricing function to compute the cost dynamically.",
     complexity: "Intermediate",
-    code: `import { meridian } from "@meridian/sdk";
+    code: `import { astro } from "@astro/sdk";
 
-export const GET = meridian.serve({
+export const GET = astro.serve({
   resource: "/v1/data",
   scope:    "data.read",
   price:    ({ rows, resolution }) => {
@@ -53,7 +53,7 @@ export const GET = meridian.serve({
   {
     tag: "Python",
     title: "FastAPI paid endpoint",
-    desc: "Add Meridian to a FastAPI route with a single decorator. No changes to your existing handler logic.",
+    desc: "Add Astro to a FastAPI route with a single decorator. No changes to your existing handler logic.",
     complexity: "Starter",
     code: `from meridian import serve
 from fastapi import FastAPI
@@ -76,10 +76,10 @@ async def summarize(body: SummarizeRequest, ctx):
     title: "Agent budget policy",
     desc: "Issue a scoped identity to an autonomous agent with a per-period spend ceiling enforced at the protocol level.",
     complexity: "Advanced",
-    code: `import { meridian } from "@meridian/sdk";
+    code: `import { astro } from "@astro/sdk";
 
 // Issue identity with spend cap
-const agentKey = await meridian.agent.create({
+const agentKey = await astro.agent.create({
   scope: ["inference.gpt", "data.read"],
   budget: {
     period: "daily",
@@ -99,9 +99,9 @@ const result = await client.fetch("/v1/infer", {
   {
     tag: "TypeScript",
     title: "Receipt verification",
-    desc: "Independently verify any Meridian receipt onchain — no trust in Meridian infrastructure required.",
+    desc: "Independently verify any Astro receipt onchain — no trust in Astro infrastructure required.",
     complexity: "Intermediate",
-    code: `import { verifyReceipt } from "@meridian/sdk";
+    code: `import { verifyReceipt } from "@astro/sdk";
 
 const receipt = {
   txHash: "0xabc...",
@@ -165,7 +165,7 @@ function ExamplesPage() {
     <PageLayout
       eyebrow="Examples"
       title="Copy-paste starting points."
-      intro="Real code patterns for common Meridian use cases — inference endpoints, tiered APIs, agent identities, and receipt verification."
+      intro="Real code patterns for common Astro use cases — inference endpoints, tiered APIs, agent identities, and receipt verification."
     >
       <div className="flex items-center gap-3 -mt-12 mb-16 flex-wrap">
         {["All", "TypeScript", "Python", "Go"].map((f) => (

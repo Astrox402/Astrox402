@@ -5,9 +5,9 @@ import { PageHeader, DocSection, Code, Callout, PageFooterNav, Mono } from "@/co
 export const Route = createFileRoute("/docs/quickstart")({
   head: () => ({
     meta: [
-      { title: "Quickstart — Meridian Docs" },
-      { name: "description", content: "Ship a paid, programmable endpoint on Meridian in under five minutes. Install the SDK, declare a price, and verify the first onchain receipt." },
-      { property: "og:title", content: "Quickstart — Meridian Docs" },
+      { title: "Quickstart — Astro Docs" },
+      { name: "description", content: "Ship a paid, programmable endpoint on Astro in under five minutes. Install the SDK, declare a price, and verify the first onchain receipt." },
+      { property: "og:title", content: "Quickstart — Astro Docs" },
       { property: "og:description", content: "From npm install to first onchain receipt in five minutes." },
     ],
   }),
@@ -36,29 +36,29 @@ function QuickstartPage() {
 
       <DocSection id="prereqs" title="Prerequisites">
         <p>
-          You'll need a JavaScript runtime (Node 20+, Bun, Deno, or a Worker), a wallet that can sign EIP-712 typed data (any standard EOA works), and a small amount of USDC on a supported chain. For local development, Meridian provides a sandbox network where USDC is freely faucetable — no real funds required.
+          You'll need a JavaScript runtime (Node 20+, Bun, Deno, or a Worker), a wallet that can sign EIP-712 typed data (any standard EOA works), and a small amount of USDC on a supported chain. For local development, Astro provides a sandbox network where USDC is freely faucetable — no real funds required.
         </p>
         <Callout tone="muted">
-          You do <strong>not</strong> need to deploy any smart contracts. Meridian's settlement contracts are already deployed on Ethereum, Base, Optimism, and Arbitrum. Your code only signs and verifies.
+          You do <strong>not</strong> need to deploy any smart contracts. Astro's settlement contracts are already deployed on Ethereum, Base, Optimism, and Arbitrum. Your code only signs and verifies.
         </Callout>
       </DocSection>
 
       <DocSection id="install" title="1. Install the SDK">
-        <p>The SDK is a single package that exposes both the server primitive (<Mono>serve</Mono>) and the client (<Mono>meridianClient</Mono>). It is fully typed, ESM-only, and ships with no native dependencies.</p>
-        <Code lang="bash" code={`npm install @meridian/sdk
-# or: pnpm add @meridian/sdk
-# or: bun add @meridian/sdk`} />
+        <p>The SDK is a single package that exposes both the server primitive (<Mono>serve</Mono>) and the client (<Mono>astroClient</Mono>). It is fully typed, ESM-only, and ships with no native dependencies.</p>
+        <Code lang="bash" code={`npm install @astro/sdk
+# or: pnpm add @astro/sdk
+# or: bun add @astro/sdk`} />
         <p>For Python, Go, and Rust, see <Mono>/docs/clients</Mono>. The wire protocol is identical across languages — what you build with the TypeScript SDK is callable from any other.</p>
       </DocSection>
 
       <DocSection id="endpoint" title="2. Define an endpoint">
         <p>
-          Meridian wraps any handler that returns a <Mono>Response</Mono>. There is no proprietary server, no special runtime, no sidecar. The wrapper produces a fetch-compatible function that you can mount in Hono, Next.js Route Handlers, TanStack Start server routes, Express via an adapter, or a raw Cloudflare Worker.
+          Astro wraps any handler that returns a <Mono>Response</Mono>. There is no proprietary server, no special runtime, no sidecar. The wrapper produces a fetch-compatible function that you can mount in Hono, Next.js Route Handlers, TanStack Start server routes, Express via an adapter, or a raw Cloudflare Worker.
         </p>
         <Code lang="ts" code={`// app/api/infer/route.ts (Next.js example)
-import { meridian } from "@meridian/sdk";
+import { astro } from "@astro/sdk";
 
-export const POST = meridian.serve({
+export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    "0.001 USDC",
@@ -101,15 +101,15 @@ export const POST = meridian.serve({
 // or: { chain: "optimism", asset: "USDC" }
 // or: { chain: "arbitrum", asset: "USDC" }`} />
         <p>
-          Callers do not need to share a chain with you. The Meridian client picks the cheapest path that satisfies your declared target, bridging if necessary, and the receipt records the actual settlement chain. From the caller's point of view, every Meridian endpoint feels chain-agnostic.
+          Callers do not need to share a chain with you. The Astro client picks the cheapest path that satisfies your declared target, bridging if necessary, and the receipt records the actual settlement chain. From the caller's point of view, every Astro endpoint feels chain-agnostic.
         </p>
       </DocSection>
 
       <DocSection id="call" title="5. Make a paid call">
         <p>On the client side, the SDK handles the entire 402 handshake transparently. You write code that looks like a normal fetch:</p>
-        <Code lang="ts" code={`import { meridianClient } from "@meridian/sdk";
+        <Code lang="ts" code={`import { astroClient } from "@astro/sdk";
 
-const client = meridianClient({
+const client = astroClient({
   wallet:   signer,           // any EIP-712-capable signer
   maxSpend: "1 USDC / hour",  // local guardrail
 });
@@ -127,8 +127,8 @@ const receipt = res.receipt; // attached automatically`} />
       </DocSection>
 
       <DocSection id="verify" title="6. Verify the receipt">
-        <p>The response carries a receipt that any party can verify against an Ethereum RPC, with no Meridian dependency:</p>
-        <Code lang="ts" code={`import { verifyReceipt } from "@meridian/sdk";
+        <p>The response carries a receipt that any party can verify against an Ethereum RPC, with no Astro dependency:</p>
+        <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {
   rpc: "https://mainnet.base.org",
@@ -137,7 +137,7 @@ const ok = await verifyReceipt(receipt, {
 if (!ok) throw new Error("Invalid receipt");
 console.log("Settled:", receipt.amount, "tx:", receipt.txHash);`} />
         <p>
-          This is the foundational property of Meridian: <strong>every paid call produces a public, independently verifiable proof.</strong> Your customers don't have to trust your dashboard. Your auditors don't have to ingest your logs. The chain is the source of truth.
+          This is the foundational property of Astro: <strong>every paid call produces a public, independently verifiable proof.</strong> Your customers don't have to trust your dashboard. Your auditors don't have to ingest your logs. The chain is the source of truth.
         </p>
       </DocSection>
 

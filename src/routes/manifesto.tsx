@@ -22,7 +22,7 @@ This is not an accident. It reflects a genuine gap: the internet was built witho
 
 The combination of a standard HTTP status code that reserved the right concept and an onchain settlement layer that makes that concept concrete creates an opportunity that didn't exist before: a real implementation of 402.
 
-Meridian is that implementation.`,
+Astro is that implementation.`,
   },
   {
     num: "III",
@@ -38,7 +38,7 @@ The chain is the source of truth. Receipts are public. Anyone can verify any pay
     title: "Open infrastructure is worth more than closed infrastructure.",
     body: `A payment layer that any company controls is a bottleneck. A payment layer that no company controls is infrastructure.
 
-Meridian's wire spec is public. Its contracts are deployed on open chains and verified onchain. Its SDKs are source-available. No part of the protocol is gated behind Meridian's services. If Meridian disappeared tomorrow, every endpoint built on Meridian would still work. Every receipt would still verify. Every settlement would still settle.
+Astro's wire spec is public. Its contracts are deployed on open chains and verified onchain. Its SDKs are source-available. No part of the protocol is gated behind Astro's services. If Astro disappeared tomorrow, every endpoint built on Astro would still work. Every receipt would still verify. Every settlement would still settle.
 
 This is not altruism. It is the correct engineering decision. Infrastructure that doesn't require trust is more valuable than infrastructure that does.`,
   },
@@ -49,7 +49,7 @@ This is not altruism. It is the correct engineering decision. Infrastructure tha
 
 Autonomous agents can't do any of that. They need identities that carry provable spend authority, budgets that are enforced at the protocol level, and receipts that prove what was purchased and at what price.
 
-Meridian was designed from the start for this future. Agent identities, budget policies, and programmatic receipts are first-class protocol features — not afterthoughts bolted on for the AI use case.`,
+Astro was designed from the start for this future. Agent identities, budget policies, and programmatic receipts are first-class protocol features — not afterthoughts bolted on for the AI use case.`,
   },
   {
     num: "VI",
@@ -67,7 +67,7 @@ function ManifestoPage() {
     <PageLayout
       eyebrow="Manifesto"
       title="The payment-native web."
-      intro="Why we built Meridian, and why we think the internet has been missing something fundamental since 1991."
+      intro="Why we built Astro, and why we think the internet has been missing something fundamental since 1991."
     >
       <div className="max-w-2xl space-y-20">
         {SECTIONS.map((s, i) => (

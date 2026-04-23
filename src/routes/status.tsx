@@ -44,7 +44,7 @@ function StatusPage() {
     <PageLayout
       eyebrow="Status"
       title="System status."
-      intro="Real-time status and uptime for Meridian's protocol infrastructure, settlement chains, and hosted services."
+      intro="Real-time status and uptime for Astro's protocol infrastructure, settlement chains, and hosted services."
     >
       <div className={`-mt-12 mb-16 inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-[13px] ${allOperational ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-amber-500/20 bg-amber-500/10 text-amber-400"}`}>
         <span className={`h-2 w-2 rounded-full ${allOperational ? "bg-emerald-500" : "bg-amber-500"}`} />

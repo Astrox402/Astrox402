@@ -19,7 +19,7 @@ const SECTIONS = [
   {
     id: "quote",
     title: "Quote object",
-    description: "A quote is a short-lived cryptographic offer. It commits the server to a price and a handler behavior for the duration of the TTL. Quotes are EIP-712 typed data and can be verified without trusting Meridian infrastructure.",
+    description: "A quote is a short-lived cryptographic offer. It commits the server to a price and a handler behavior for the duration of the TTL. Quotes are EIP-712 typed data and can be verified without trusting Astro infrastructure.",
     fields: [
       ["resource", "string", "Fully qualified resource path"],
       ["scope", "string", "Required capability (e.g. inference.gpt)"],
@@ -45,7 +45,7 @@ const SECTIONS = [
   {
     id: "receipt",
     title: "Receipt",
-    description: "On successful settlement, the server includes a receipt in the response. Receipts are permanent, publicly verifiable records of the payment and the handler execution. They are indexed by Meridian's receipt indexer but can be verified independently using only the settlement contract.",
+    description: "On successful settlement, the server includes a receipt in the response. Receipts are permanent, publicly verifiable records of the payment and the handler execution. They are indexed by Astro's receipt indexer but can be verified independently using only the settlement contract.",
     fields: [
       ["txHash", "bytes32", "Settlement transaction hash"],
       ["blockNumber", "uint64", "Block in which settlement was confirmed"],
@@ -61,7 +61,7 @@ function SpecificationPage() {
     <PageLayout
       eyebrow="Specification"
       title="Protocol wire spec."
-      intro="The complete wire-level specification for the Meridian 402 protocol — quote format, intent encoding, settlement flow, and receipt schema."
+      intro="The complete wire-level specification for the Astro 402 protocol — quote format, intent encoding, settlement flow, and receipt schema."
     >
       <div className="flex items-center gap-4 -mt-12 mb-16">
         <Link to="/docs/handshake" className="inline-flex h-9 items-center px-4 rounded-md bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors">

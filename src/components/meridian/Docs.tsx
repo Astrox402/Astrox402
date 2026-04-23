@@ -5,10 +5,10 @@ const TABS = [
   {
     id: "ts",
     label: "TypeScript",
-    code: `import { meridian } from "@meridian/sdk";
+    code: `import { astro } from "@astro/sdk";
 
 // Expose any function as a paid, programmable endpoint.
-export const POST = meridian.serve({
+export const POST = astro.serve({
   resource: "/v1/infer",
   scope:    "inference.gpt",
   price:    ({ tokens }) => tokens * 0.000004 + 0.001, // USDC
@@ -49,10 +49,10 @@ async def infer(req, ctx):
     code: `# 1. Caller hits the endpoint without payment
 $ curl -i https://api.acme.dev/v1/infer
 HTTP/1.1 402 Payment Required
-x-meridian-price:  0.0021 USDC
-x-meridian-scope:  inference.gpt
-x-meridian-settle: ethereum
-x-meridian-ttl:    60
+x-astro-price:  0.0021 USDC
+x-astro-scope:  inference.gpt
+x-astro-settle: ethereum
+x-astro-ttl:    60
 
 # 2. Sign + retry — the SDK handles it transparently
 $ meridian call /v1/infer --pay
@@ -80,7 +80,7 @@ export function Docs() {
             <SectionHeader
               eyebrow="Docs preview"
               title={<>Ship a paid endpoint <span className="font-serif italic">in nine lines.</span></>}
-              intro="One function. Programmable price. Verified settlement. Meridian handles the 402 handshake, the receipt, and the onchain proof."
+              intro="One function. Programmable price. Verified settlement. Astro handles the 402 handshake, the receipt, and the onchain proof."
             />
             <div className="mt-10 space-y-4 text-[13.5px] text-muted-foreground">
               {[

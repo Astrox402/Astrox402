@@ -5,10 +5,10 @@ import { PageHeader, DocSection, Code, Params, PageFooterNav, Mono, Callout } fr
 export const Route = createFileRoute("/docs/clients")({
   head: () => ({
     meta: [
-      { title: "SDK clients — Meridian Docs" },
-      { name: "description", content: "Call Meridian endpoints from apps, services, and infrastructure. Wallet config, spend limits, scope allowlists, retries, streaming, and language SDKs." },
-      { property: "og:title", content: "SDK clients — Meridian Docs" },
-      { property: "og:description", content: "Calling Meridian endpoints from apps and services — wallets, spend limits, retries, and language coverage." },
+      { title: "SDK clients — Astro Docs" },
+      { name: "description", content: "Call Astro endpoints from apps, services, and infrastructure. Wallet config, spend limits, scope allowlists, retries, streaming, and language SDKs." },
+      { property: "og:title", content: "SDK clients — Astro Docs" },
+      { property: "og:description", content: "Calling Astro endpoints from apps and services — wallets, spend limits, retries, and language coverage." },
     ],
   }),
   component: ClientsPage,
@@ -42,9 +42,9 @@ function ClientsPage() {
 
       <DocSection id="fetch" title="Web client">
         <p>For human-in-the-loop applications, use a wallet-backed client. The signer can be anything that implements EIP-712 — wagmi, viem, ethers, RainbowKit, embedded wallets like Privy or Turnkey, or a custom MPC service.</p>
-        <Code lang="ts" code={`import { meridianClient } from "@meridian/sdk";
+        <Code lang="ts" code={`import { astroClient } from "@astro/sdk";
 
-const client = meridianClient({
+const client = astroClient({
   wallet:   signer,
   maxSpend: "1 USDC / hour",
 });
@@ -60,13 +60,13 @@ const receipt = res.receipt;        // attached automatically`} />
       </DocSection>
 
       <DocSection id="wallets" title="Wallet integration">
-        <p>Meridian works with any signer that can produce an EIP-712 signature. The SDK ships first-class adapters for the most common stacks:</p>
+        <p>Astro works with any signer that can produce an EIP-712 signature. The SDK ships first-class adapters for the most common stacks:</p>
         <Params rows={[
           ["viem", "WalletClient", "Pass the wallet client directly as the signer."],
-          ["ethers", "Signer", "v5 and v6 supported via meridian.adapters.ethers()."],
+          ["ethers", "Signer", "v5 and v6 supported via astro.adapters.ethers()."],
           ["wagmi", "useAccount + signTypedData", "Use the React hook in browser apps."],
           ["Privy / Turnkey / Dynamic", "Embedded wallet", "Use the SDK's getSigner() helper."],
-          ["KMS (AWS / GCP)", "Backend signer", "Use meridian.adapters.kms() for server-side flows."],
+          ["KMS (AWS / GCP)", "Backend signer", "Use astro.adapters.kms() for server-side flows."],
         ]} />
       </DocSection>
 
@@ -87,7 +87,7 @@ const receipt = res.receipt;        // attached automatically`} />
 
       <DocSection id="policies" title="Approval policies">
         <p>For sensitive flows, attach an approval callback. The client pauses before signing and waits for confirmation. The callback receives the full quote — amount, scope, resource, expiry — so you can render meaningful UI.</p>
-        <Code lang="ts" code={`const client = meridianClient({
+        <Code lang="ts" code={`const client = astroClient({
   wallet: signer,
   approve: async (quote) => {
     if (quote.amountUsd > 0.5) return await ui.confirm(quote);
@@ -118,27 +118,27 @@ while (true) {
           ["503", "Settlement chain congested. Exponential backoff, max 3 attempts."],
           ["LimitExceeded", "Spend or scope policy denied the call locally — no retry."],
         ]} />
-        <p>Every error is a typed class extending <Mono>MeridianError</Mono>. See <Mono>/docs/errors</Mono> for the complete reference and recommended handling patterns.</p>
+        <p>Every error is a typed class extending <Mono>AstroError</Mono>. See <Mono>/docs/errors</Mono> for the complete reference and recommended handling patterns.</p>
       </DocSection>
 
       <DocSection id="languages" title="Languages">
         <p>First-party clients ship for TypeScript, Python, Go, and Rust. The wire protocol is open — additional clients can be implemented against the published specification.</p>
         <Code lang="bash" code={`# TypeScript
-npm install @meridian/sdk
+npm install @astro/sdk
 
 # Python
-pip install meridian-sdk
+pip install astro-sdk
 
 # Go
-go get github.com/meridian/sdk-go
+go get github.com/astro/sdk-go
 
 # Rust
-cargo add meridian-sdk`} />
+cargo add astro-sdk`} />
         <p>All language SDKs implement the same protocol verbatim and produce wire-identical intents and signatures. A TypeScript client and a Rust agent can call the same endpoint, see the same quotes, and produce receipts that are indistinguishable on the chain.</p>
       </DocSection>
 
       <DocSection id="interop" title="Interop & raw HTTP">
-        <p>You don't need an SDK to call a Meridian endpoint. The protocol is plain HTTP plus EIP-712 signatures, both of which are widely supported. Implementing a client from scratch takes around 200 lines of code in any language with an EVM signing library.</p>
+        <p>You don't need an SDK to call a Astro endpoint. The protocol is plain HTTP plus EIP-712 signatures, both of which are widely supported. Implementing a client from scratch takes around 200 lines of code in any language with an EVM signing library.</p>
         <p>The full wire specification is published at the protocol repository, including reference test vectors that any new client implementation can validate against. If you build one, the interop test suite will tell you whether it's protocol-compliant before you ship.</p>
       </DocSection>
 

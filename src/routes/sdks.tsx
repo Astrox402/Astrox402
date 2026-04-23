@@ -8,8 +8,8 @@ export const Route = createFileRoute("/sdks")({
 const SDKS = [
   {
     lang: "TypeScript",
-    pkg: "@meridian/sdk",
-    install: "npm install @meridian/sdk",
+    pkg: "@astro/sdk",
+    install: "npm install @astro/sdk",
     status: "stable",
     runtimes: ["Node 20+", "Bun", "Deno", "Cloudflare Workers"],
     desc: "The reference SDK. Full protocol support, typed context, pricing utilities, and receipt verification built in.",
@@ -17,8 +17,8 @@ const SDKS = [
   },
   {
     lang: "Python",
-    pkg: "meridian-sdk",
-    install: "pip install meridian-sdk",
+    pkg: "astro-sdk",
+    install: "pip install astro-sdk",
     status: "stable",
     runtimes: ["Python 3.11+", "FastAPI", "Flask", "Django"],
     desc: "Native async support for ASGI and WSGI frameworks. Drop-in middleware for FastAPI and Flask.",
@@ -35,8 +35,8 @@ const SDKS = [
   },
   {
     lang: "Rust",
-    pkg: "meridian-sdk",
-    install: "cargo add meridian-sdk",
+    pkg: "astro-sdk",
+    install: "cargo add astro-sdk",
     status: "alpha",
     runtimes: ["Rust stable", "Axum", "Actix-web", "Tower"],
     desc: "Zero-allocation intent verification. Async-first with full Tokio support.",
@@ -55,7 +55,7 @@ function SDKsPage() {
     <PageLayout
       eyebrow="SDKs"
       title="First-party SDKs for every stack."
-      intro="Meridian ships production-ready SDKs in TypeScript, Python, Go, and Rust. Each SDK implements the full 402 protocol — serve(), pricing, settlement, and receipt verification."
+      intro="Astro ships production-ready SDKs in TypeScript, Python, Go, and Rust. Each SDK implements the full 402 protocol — serve(), pricing, settlement, and receipt verification."
     >
       <div className="grid sm:grid-cols-2 gap-5 mb-20">
         {SDKS.map((sdk) => (
@@ -89,7 +89,7 @@ function SDKsPage() {
         <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground mb-8">Community SDKs</div>
         <div className="rounded-2xl border border-border bg-surface/20 p-8">
           <p className="text-[15px] text-muted-foreground leading-relaxed mb-6 max-w-2xl">
-            The protocol spec is public and the wire format is fully documented. Community implementations exist for Ruby, Java, and .NET — maintained by contributors outside the Meridian team.
+            The protocol spec is public and the wire format is fully documented. Community implementations exist for Ruby, Java, and .NET — maintained by contributors outside the Astro team.
           </p>
           <p className="text-[14px] text-muted-foreground">
             Building an SDK for another language?{" "}

@@ -15,9 +15,9 @@ import { Footer } from "@/components/meridian/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Meridian — Payment-native protocol layer for the internet" },
+      { title: "Astro — Payment-native protocol layer for the internet" },
       { name: "description", content: "Make every API, agent, and digital resource monetizable. Programmable access and settlement, built on Ethereum." },
-      { property: "og:title", content: "Meridian — Payment-native protocol layer for the internet" },
+      { property: "og:title", content: "Astro — Payment-native protocol layer for the internet" },
       { property: "og:description", content: "Programmable access and settlement for APIs, agents, and digital resources. Launching on Ethereum." },
     ],
   }),
