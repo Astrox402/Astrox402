@@ -10,12 +10,12 @@ export function Hero() {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0.18 }}
+        style={{ opacity: 0.45 }}
       >
         <source src="https://res.cloudinary.com/dvfrmhk5z/video/upload/q_auto/f_auto/v1776950209/14544289_1920_1080_24fps_jk8fun.mp4" type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
-      <div className="absolute inset-0 grid-bg radial-fade opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      <div className="absolute inset-0 grid-bg radial-fade opacity-15" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <motion.div
