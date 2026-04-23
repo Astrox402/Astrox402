@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Astro</title>
+  <script>
+    var l = window.location;
+    sessionStorage.setItem(
+      'spaRedirect',
+      l.pathname.slice(1) + (l.search || '') + (l.hash || '')
+    );
+    l.replace(l.protocol + '//' + l.host + '/');
+  </script>
+</head>
+<body></body>
+</html>

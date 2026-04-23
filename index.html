@@ -6,6 +6,15 @@
     <title>Astro</title>
   </head>
   <body>
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('spaRedirect');
+        if (redirect) {
+          sessionStorage.removeItem('spaRedirect');
+          window.history.replaceState(null, null, '/' + redirect);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
