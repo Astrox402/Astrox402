@@ -8,21 +8,21 @@ export function Footer() {
     ]},
     { t: "Developers", l: [
       { label: "Documentation", href: "/docs" },
-      { label: "Specification", href: "#" },
-      { label: "SDKs", href: "#" },
-      { label: "Examples", href: "#" },
+      { label: "Specification", href: "/specification" },
+      { label: "SDKs", href: "/sdks" },
+      { label: "Examples", href: "/examples" },
     ]},
     { t: "Company", l: [
-      { label: "About", href: "#" },
-      { label: "Manifesto", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Careers", href: "#" },
+      { label: "About", href: "/about" },
+      { label: "Manifesto", href: "/manifesto" },
+      { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
     ]},
     { t: "Resources", l: [
-      { label: "Security", href: "#" },
-      { label: "Brand", href: "#" },
-      { label: "Status", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Security", href: "/security" },
+      { label: "Brand", href: "/brand" },
+      { label: "Status", href: "/status" },
+      { label: "Contact", href: "/contact" },
     ]},
   ];
   return (

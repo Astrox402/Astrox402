@@ -9,11 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StatusRouteImport } from './routes/status'
+import { Route as SpecificationRouteImport } from './routes/specification'
+import { Route as SecurityRouteImport } from './routes/security'
+import { Route as SdksRouteImport } from './routes/sdks'
 import { Route as ProtocolRouteImport } from './routes/protocol'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as ManifestoRouteImport } from './routes/manifesto'
+import { Route as ExamplesRouteImport } from './routes/examples'
 import { Route as DocsRouteImport } from './routes/docs'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as ChangelogRouteImport } from './routes/changelog'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as BrandRouteImport } from './routes/brand'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsServeRouteImport } from './routes/docs.serve'
@@ -29,6 +40,26 @@ import { Route as DocsClientsRouteImport } from './routes/docs.clients'
 import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
 
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpecificationRoute = SpecificationRouteImport.update({
+  id: '/specification',
+  path: '/specification',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityRoute = SecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SdksRoute = SdksRouteImport.update({
+  id: '/sdks',
+  path: '/sdks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtocolRoute = ProtocolRouteImport.update({
   id: '/protocol',
   path: '/protocol',
@@ -39,9 +70,24 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManifestoRoute = ManifestoRouteImport.update({
+  id: '/manifesto',
+  path: '/manifesto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesRoute = ExamplesRouteImport.update({
+  id: '/examples',
+  path: '/examples',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsoleRoute = ConsoleRouteImport.update({
@@ -52,6 +98,26 @@ const ConsoleRoute = ConsoleRouteImport.update({
 const ChangelogRoute = ChangelogRouteImport.update({
   id: '/changelog',
   path: '/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -127,11 +193,22 @@ const DocsAgentsRoute = DocsAgentsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/brand': typeof BrandRoute
+  '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
+  '/contact': typeof ContactRoute
   '/docs': typeof DocsRouteWithChildren
+  '/examples': typeof ExamplesRoute
+  '/manifesto': typeof ManifestoRoute
   '/pricing': typeof PricingRoute
   '/protocol': typeof ProtocolRoute
+  '/sdks': typeof SdksRoute
+  '/security': typeof SecurityRoute
+  '/specification': typeof SpecificationRoute
+  '/status': typeof StatusRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -148,10 +225,21 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/brand': typeof BrandRoute
+  '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
+  '/contact': typeof ContactRoute
+  '/examples': typeof ExamplesRoute
+  '/manifesto': typeof ManifestoRoute
   '/pricing': typeof PricingRoute
   '/protocol': typeof ProtocolRoute
+  '/sdks': typeof SdksRoute
+  '/security': typeof SecurityRoute
+  '/specification': typeof SpecificationRoute
+  '/status': typeof StatusRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -169,11 +257,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/brand': typeof BrandRoute
+  '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
+  '/contact': typeof ContactRoute
   '/docs': typeof DocsRouteWithChildren
+  '/examples': typeof ExamplesRoute
+  '/manifesto': typeof ManifestoRoute
   '/pricing': typeof PricingRoute
   '/protocol': typeof ProtocolRoute
+  '/sdks': typeof SdksRoute
+  '/security': typeof SecurityRoute
+  '/specification': typeof SpecificationRoute
+  '/status': typeof StatusRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -192,11 +291,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/blog'
+    | '/brand'
+    | '/careers'
     | '/changelog'
     | '/console'
+    | '/contact'
     | '/docs'
+    | '/examples'
+    | '/manifesto'
     | '/pricing'
     | '/protocol'
+    | '/sdks'
+    | '/security'
+    | '/specification'
+    | '/status'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -213,10 +323,21 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/blog'
+    | '/brand'
+    | '/careers'
     | '/changelog'
     | '/console'
+    | '/contact'
+    | '/examples'
+    | '/manifesto'
     | '/pricing'
     | '/protocol'
+    | '/sdks'
+    | '/security'
+    | '/specification'
+    | '/status'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -233,11 +354,22 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/blog'
+    | '/brand'
+    | '/careers'
     | '/changelog'
     | '/console'
+    | '/contact'
     | '/docs'
+    | '/examples'
+    | '/manifesto'
     | '/pricing'
     | '/protocol'
+    | '/sdks'
+    | '/security'
+    | '/specification'
+    | '/status'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -255,15 +387,54 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  BlogRoute: typeof BlogRoute
+  BrandRoute: typeof BrandRoute
+  CareersRoute: typeof CareersRoute
   ChangelogRoute: typeof ChangelogRoute
   ConsoleRoute: typeof ConsoleRoute
+  ContactRoute: typeof ContactRoute
   DocsRoute: typeof DocsRouteWithChildren
+  ExamplesRoute: typeof ExamplesRoute
+  ManifestoRoute: typeof ManifestoRoute
   PricingRoute: typeof PricingRoute
   ProtocolRoute: typeof ProtocolRoute
+  SdksRoute: typeof SdksRoute
+  SecurityRoute: typeof SecurityRoute
+  SpecificationRoute: typeof SpecificationRoute
+  StatusRoute: typeof StatusRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/specification': {
+      id: '/specification'
+      path: '/specification'
+      fullPath: '/specification'
+      preLoaderRoute: typeof SpecificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security': {
+      id: '/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sdks': {
+      id: '/sdks'
+      path: '/sdks'
+      fullPath: '/sdks'
+      preLoaderRoute: typeof SdksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/protocol': {
       id: '/protocol'
       path: '/protocol'
@@ -278,11 +449,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manifesto': {
+      id: '/manifesto'
+      path: '/manifesto'
+      fullPath: '/manifesto'
+      preLoaderRoute: typeof ManifestoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples': {
+      id: '/examples'
+      path: '/examples'
+      fullPath: '/examples'
+      preLoaderRoute: typeof ExamplesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs': {
       id: '/docs'
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/console': {
@@ -297,6 +489,34 @@ declare module '@tanstack/react-router' {
       path: '/changelog'
       fullPath: '/changelog'
       preLoaderRoute: typeof ChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -436,11 +656,22 @@ const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  BlogRoute: BlogRoute,
+  BrandRoute: BrandRoute,
+  CareersRoute: CareersRoute,
   ChangelogRoute: ChangelogRoute,
   ConsoleRoute: ConsoleRoute,
+  ContactRoute: ContactRoute,
   DocsRoute: DocsRouteWithChildren,
+  ExamplesRoute: ExamplesRoute,
+  ManifestoRoute: ManifestoRoute,
   PricingRoute: PricingRoute,
   ProtocolRoute: ProtocolRoute,
+  SdksRoute: SdksRoute,
+  SecurityRoute: SecurityRoute,
+  SpecificationRoute: SpecificationRoute,
+  StatusRoute: StatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
