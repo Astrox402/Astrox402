@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getUser } from "@/lib/auth";
+import { api, type ApiKey } from "@/lib/api";
 
 export const Route = createFileRoute("/dashboard/developer")({
   component: DeveloperPage,
@@ -67,9 +68,17 @@ const FLOW_STEPS = [
 
 function DeveloperPage() {
   const user = getUser()!;
-  const apiKey = `astro_live_${user.id.slice(0, 8)}xxxxxxxxxxxx`;
+  const [apiKeyRecord, setApiKeyRecord] = useState<ApiKey | null>(null);
   const [showKey, setShowKey] = useState(false);
-  const maskedKey = apiKey.slice(0, 16) + "••••••••••••";
+
+  useEffect(() => {
+    api.getApiKey().then((k) => k && setApiKeyRecord(k));
+  }, [user.id]);
+
+  const apiKey = apiKeyRecord?.key_value ?? `astro_live_${"·".repeat(32)}`;
+  const maskedKey = apiKey.startsWith("astro_live_·")
+    ? apiKey
+    : apiKey.slice(0, 20) + "••••••••••••••••";
 
   const installCode = `npm install @astro/x402-sdk`;
 

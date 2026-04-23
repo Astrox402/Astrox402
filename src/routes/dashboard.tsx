@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation, redirect } from "@tanstack/react-router";
 import { usePrivy, useLogout, useWallets } from "@privy-io/react-auth";
 import { getUser, buildUserFromPrivy, setUser, clearUser } from "@/lib/auth";
+import { resourceStore } from "@/lib/resourceStore";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/dashboard")({
@@ -174,12 +175,14 @@ function DashboardLayout() {
     if (!ready) return;
     if (!authenticated) {
       clearUser();
+      resourceStore.setUserId(null);
       navigate({ to: "/sign-in" });
       return;
     }
     if (user) {
       const localUser = buildUserFromPrivy(user as any);
       setUser(localUser);
+      resourceStore.setUserId(user.id);
     }
   }, [ready, authenticated, user, navigate]);
 

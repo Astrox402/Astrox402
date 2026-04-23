@@ -1,12 +1,35 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getUser, setUser, signOut } from "@/lib/auth";
+import { useWallets } from "@privy-io/react-auth";
 
 export const Route = createFileRoute("/dashboard/settings")({
   component: SettingsPage,
 });
 
 const SECTIONS = ["Profile", "Wallet", "Network", "Team"] as const;
+
+async function fetchSolBalance(address: string): Promise<number | null> {
+  try {
+    const res = await fetch("https://api.mainnet-beta.solana.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "getBalance",
+        params: [address],
+      }),
+    });
+    const data = await res.json() as { result?: { value?: number } };
+    if (data.result?.value !== undefined) {
+      return data.result.value / 1e9;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 function SettingsPage() {
   const navigate = useNavigate();
@@ -16,6 +39,27 @@ function SettingsPage() {
   const [email] = useState(user.email);
   const [workspace, setWorkspace] = useState(user.workspace);
   const [saved, setSaved] = useState(false);
+
+  const { wallets } = useWallets();
+  const solanaWallet = wallets.find((w) =>
+    w.walletClientType?.toLowerCase().includes("solana") ||
+    w.type === "solana" ||
+    w.walletClientType === "phantom" ||
+    w.walletClientType === "solflare"
+  ) ?? wallets[0];
+  const walletAddress = solanaWallet?.address ?? null;
+
+  const [solBalance, setSolBalance] = useState<number | null>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
+
+  useEffect(() => {
+    if (!walletAddress) return;
+    setBalanceLoading(true);
+    fetchSolBalance(walletAddress).then((b) => {
+      setSolBalance(b);
+      setBalanceLoading(false);
+    });
+  }, [walletAddress]);
 
   function save() {
     setUser({ ...user, name, workspace });
@@ -27,6 +71,10 @@ function SettingsPage() {
     signOut();
     navigate({ to: "/" });
   }
+
+  const shortAddr = walletAddress
+    ? `${walletAddress.slice(0, 6)}…${walletAddress.slice(-6)}`
+    : null;
 
   return (
     <div className="p-6 max-w-[900px]">
@@ -112,30 +160,44 @@ function SettingsPage() {
           {section === "Wallet" && (
             <div className="rounded-xl border border-border bg-surface/50 p-5 space-y-5">
               <div className="text-[13px] font-medium">Solana wallet</div>
-              <div className="flex items-center gap-3 p-4 rounded-lg border border-border bg-background/60">
-                <div className="h-9 w-9 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[11px] font-mono text-accent">SOL</div>
-                <div>
-                  <div className="text-[12px] font-mono text-foreground">8xMHk…rV2Qw</div>
-                  <div className="text-[11px] text-muted-foreground">Connected · Solana Mainnet</div>
-                </div>
-                <div className="ml-auto flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/>
-                  <span className="text-[11px] font-mono text-emerald-400">Active</span>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-[12px] font-mono">
-                {[
-                  { k: "Balance", v: "12.40 SOL" },
-                  { k: "USDC balance", v: "842.07 USDC" },
-                  { k: "Settled this month", v: "176.84 USDC" },
-                  { k: "Pending", v: "0.00 USDC" },
-                ].map(({ k, v }) => (
-                  <div key={k} className="p-3 rounded-lg border border-border bg-background/40">
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{k}</div>
-                    <div className="mt-1 text-foreground">{v}</div>
+              {walletAddress ? (
+                <>
+                  <div className="flex items-center gap-3 p-4 rounded-lg border border-border bg-background/60">
+                    <div className="h-9 w-9 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[11px] font-mono text-accent">SOL</div>
+                    <div>
+                      <div className="text-[12px] font-mono text-foreground">{shortAddr}</div>
+                      <div className="text-[11px] text-muted-foreground">{solanaWallet?.walletClientType ?? "Wallet"} · Solana Mainnet</div>
+                    </div>
+                    <div className="ml-auto flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/>
+                      <span className="text-[11px] font-mono text-emerald-400">Connected</span>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <div className="grid grid-cols-2 gap-3 text-[12px] font-mono">
+                    <div className="p-3 rounded-lg border border-border bg-background/40">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Balance</div>
+                      <div className="mt-1 text-foreground">
+                        {balanceLoading ? (
+                          <span className="animate-pulse text-muted-foreground">…</span>
+                        ) : solBalance !== null ? (
+                          `${solBalance.toFixed(4)} SOL`
+                        ) : (
+                          "Unavailable"
+                        )}
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg border border-border bg-background/40">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Full address</div>
+                      <div className="mt-1 text-[10px] text-foreground break-all leading-relaxed">{walletAddress}</div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="py-8 text-center space-y-2">
+                  <div className="text-[13px] text-muted-foreground">No wallet connected</div>
+                  <div className="text-[11px] text-muted-foreground/60">Connect a Solana wallet to see your balance</div>
+                </div>
+              )}
               <button className="h-9 px-4 rounded-lg border border-border text-[13px] text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors opacity-60 cursor-not-allowed">
                 Change wallet — coming soon
               </button>

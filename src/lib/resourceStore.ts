@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { setApiUserId } from "./api";
 
 export type ResourceType =
   | "API Endpoint"
@@ -42,166 +43,101 @@ export interface Resource {
   payments: Array<{ time: string; tx: string; slot: string; amount: string; status: string }>;
 }
 
-const SEED: Resource[] = [
-  {
-    id: "r1", name: "GPT Inference API", type: "API Endpoint",
-    description: "Run GPT-4-class inference. Charged per request, settled instantly.",
-    url: "https://api.astro.x402/v1/infer", method: "POST", version: "v1", environment: "Production",
-    pricingModel: "fixed per request", amount: "0.0021", asset: "USDC", scope: "inference.gpt", ttl: "60s",
-    visibility: "public", status: "active", network: "Solana", requests: 12840, revenue: "$26.96",
-    lastActivity: "2s ago", createdAt: "2026-04-01",
-    logs: [
-      { time: "2s ago",  method: "POST", path: "/v1/infer", status: 200, amount: "0.0021", tx: "5JhkL…q9Rv" },
-      { time: "18s ago", method: "POST", path: "/v1/infer", status: 402, amount: "—",      tx: "—"          },
-      { time: "22s ago", method: "POST", path: "/v1/infer", status: 200, amount: "0.0021", tx: "8KmNP…x3Tz" },
-      { time: "1m ago",  method: "POST", path: "/v1/infer", status: 200, amount: "0.0021", tx: "2QrST…n7Wv" },
-      { time: "2m ago",  method: "POST", path: "/v1/infer", status: 200, amount: "0.0021", tx: "9LpFK…m2Yx" },
-    ],
-    payments: [
-      { time: "2s ago",  tx: "5JhkL…q9Rv", slot: "281,492,120", amount: "0.0021 USDC", status: "settled" },
-      { time: "22s ago", tx: "8KmNP…x3Tz", slot: "281,492,088", amount: "0.0021 USDC", status: "settled" },
-      { time: "1m ago",  tx: "2QrST…n7Wv", slot: "281,492,010", amount: "0.0021 USDC", status: "settled" },
-      { time: "2m ago",  tx: "9LpFK…m2Yx", slot: "281,491,980", amount: "0.0021 USDC", status: "settled" },
-    ],
-  },
-  {
-    id: "r2", name: "Image Generation", type: "API Endpoint",
-    description: "Stable Diffusion XL image generation endpoint. Priced per image.",
-    url: "https://api.astro.x402/v1/image", method: "POST", version: "v1", environment: "Production",
-    pricingModel: "fixed per request", amount: "0.015", asset: "USDC", scope: "image.gen", ttl: "120s",
-    visibility: "public", status: "active", network: "Solana", requests: 4291, revenue: "$64.37",
-    lastActivity: "14s ago", createdAt: "2026-04-02",
-    logs: [
-      { time: "14s ago", method: "POST", path: "/v1/image", status: 200, amount: "0.015",  tx: "2QrST…n7Wv" },
-      { time: "1m ago",  method: "POST", path: "/v1/image", status: 200, amount: "0.015",  tx: "7TmKL…p8Qq" },
-      { time: "4m ago",  method: "POST", path: "/v1/image", status: 402, amount: "—",      tx: "—"          },
-      { time: "6m ago",  method: "POST", path: "/v1/image", status: 200, amount: "0.015",  tx: "3BnJF…x1Vt" },
-      { time: "12m ago", method: "POST", path: "/v1/image", status: 200, amount: "0.015",  tx: "1MpXN…c7Tv" },
-    ],
-    payments: [
-      { time: "14s ago", tx: "2QrST…n7Wv", slot: "281,492,100", amount: "0.015 USDC", status: "settled" },
-      { time: "1m ago",  tx: "7TmKL…p8Qq", slot: "281,492,040", amount: "0.015 USDC", status: "settled" },
-      { time: "6m ago",  tx: "3BnJF…x1Vt", slot: "281,491,820", amount: "0.015 USDC", status: "settled" },
-      { time: "12m ago", tx: "1MpXN…c7Tv", slot: "281,491,780", amount: "0.015 USDC", status: "settled" },
-    ],
-  },
-  {
-    id: "r3", name: "Embeddings v2", type: "API Endpoint",
-    description: "High-throughput text embedding endpoint. Sub-cent per batch.",
-    url: "https://api.astro.x402/v1/embed", method: "POST", version: "v2", environment: "Production",
-    pricingModel: "fixed per request", amount: "0.0004", asset: "USDC", scope: "embed.v2", ttl: "60s",
-    visibility: "public", status: "active", network: "Solana", requests: 22100, revenue: "$8.84",
-    lastActivity: "1m ago", createdAt: "2026-04-03",
-    logs: [
-      { time: "1m ago",  method: "POST", path: "/v1/embed", status: 200, amount: "0.0004", tx: "9LpFK…m2Yx" },
-      { time: "3m ago",  method: "POST", path: "/v1/embed", status: 200, amount: "0.0004", tx: "7TmKL…p8Qq" },
-      { time: "3m ago",  method: "POST", path: "/v1/embed", status: 200, amount: "0.0004", tx: "4KvNT…b6Pz" },
-      { time: "5m ago",  method: "POST", path: "/v1/embed", status: 200, amount: "0.0004", tx: "6RqPM…z4Uw" },
-      { time: "8m ago",  method: "POST", path: "/v1/embed", status: 402, amount: "—",      tx: "—"          },
-    ],
-    payments: [
-      { time: "1m ago",  tx: "9LpFK…m2Yx", slot: "281,492,000", amount: "0.0004 USDC", status: "settled" },
-      { time: "3m ago",  tx: "7TmKL…p8Qq", slot: "281,491,920", amount: "0.0004 USDC", status: "settled" },
-      { time: "3m ago",  tx: "4KvNT…b6Pz", slot: "281,491,900", amount: "0.0004 USDC", status: "settled" },
-      { time: "5m ago",  tx: "6RqPM…z4Uw", slot: "281,491,860", amount: "0.0004 USDC", status: "settled" },
-    ],
-  },
-  {
-    id: "r4", name: "Dataset Access", type: "Dataset Access",
-    description: "Curated training dataset. One-time access per payment.",
-    url: "https://api.astro.x402/v1/datasets/curated-v1", method: "GET", version: "v1", environment: "Production",
-    pricingModel: "fixed per access", amount: "0.50", asset: "USDC", scope: "dataset.curated", ttl: "300s",
-    visibility: "gated", status: "paused", network: "Solana", requests: 88, revenue: "$44.00",
-    lastActivity: "2h ago", createdAt: "2026-04-05",
-    logs: [
-      { time: "2h ago",  method: "GET",  path: "/v1/datasets/curated-v1", status: 200, amount: "0.50",  tx: "8nWQ…L1Fx" },
-      { time: "4h ago",  method: "GET",  path: "/v1/datasets/curated-v1", status: 200, amount: "0.50",  tx: "5zWS…F2Lk" },
-      { time: "6h ago",  method: "GET",  path: "/v1/datasets/curated-v1", status: 402, amount: "—",     tx: "—"          },
-      { time: "8h ago",  method: "GET",  path: "/v1/datasets/curated-v1", status: 200, amount: "0.50",  tx: "1aXH…G9Mn" },
-    ],
-    payments: [
-      { time: "2h ago",  tx: "8nWQ…L1Fx", slot: "281,480,050", amount: "0.50 USDC", status: "settled" },
-      { time: "4h ago",  tx: "5zWS…F2Lk", slot: "281,471,340", amount: "0.50 USDC", status: "settled" },
-      { time: "8h ago",  tx: "1aXH…G9Mn", slot: "281,453,820", amount: "0.50 USDC", status: "settled" },
-    ],
-  },
-  {
-    id: "r5", name: "Audio Transcription", type: "API Endpoint",
-    description: "Whisper-based audio-to-text API. Charged per transcription job.",
-    url: "https://api.astro.x402/v1/transcribe", method: "POST", version: "v1", environment: "Production",
-    pricingModel: "fixed per execution", amount: "0.008", asset: "USDC", scope: "audio.transcribe", ttl: "60s",
-    visibility: "public", status: "active", network: "Solana", requests: 2014, revenue: "$16.11",
-    lastActivity: "4m ago", createdAt: "2026-04-06",
-    logs: [
-      { time: "4m ago",  method: "POST", path: "/v1/transcribe", status: 200, amount: "0.008", tx: "3BnJF…x1Vt" },
-      { time: "9m ago",  method: "POST", path: "/v1/transcribe", status: 200, amount: "0.008", tx: "6RqPM…z4Uw" },
-      { time: "14m ago", method: "POST", path: "/v1/transcribe", status: 402, amount: "—",     tx: "—"          },
-      { time: "21m ago", method: "POST", path: "/v1/transcribe", status: 200, amount: "0.008", tx: "9kTR…S7Wy" },
-    ],
-    payments: [
-      { time: "4m ago",  tx: "3BnJF…x1Vt", slot: "281,491,940", amount: "0.008 USDC", status: "settled" },
-      { time: "9m ago",  tx: "6RqPM…z4Uw", slot: "281,491,660", amount: "0.008 USDC", status: "settled" },
-      { time: "21m ago", tx: "9kTR…S7Wy",  slot: "281,491,180", amount: "0.008 USDC", status: "settled" },
-    ],
-  },
-  {
-    id: "r6", name: "Research Archive", type: "Content / Digital Asset",
-    description: "Paid access to a curated research paper archive.",
-    url: "https://api.astro.x402/v1/archive/research", method: "GET", version: "v1", environment: "Staging",
-    pricingModel: "fixed per access", amount: "1.00", asset: "USDC", scope: "archive.research", ttl: "600s",
-    visibility: "gated", status: "draft", network: "Solana", requests: 0, revenue: "$0.00",
-    lastActivity: "3d ago", createdAt: "2026-04-07", logs: [], payments: [],
-  },
-  {
-    id: "r7", name: "Code Review API", type: "Agent Capability",
-    description: "AI-powered code review agent. Runs on PR diffs via Solana-native payment.",
-    url: "https://api.astro.x402/v1/review", method: "POST", version: "v1", environment: "Production",
-    pricingModel: "fixed per execution", amount: "0.003", asset: "USDC", scope: "agent.codereview", ttl: "90s",
-    visibility: "private", status: "active", network: "Solana", requests: 5521, revenue: "$16.56",
-    lastActivity: "8m ago", createdAt: "2026-04-08",
-    logs: [
-      { time: "8m ago",  method: "POST", path: "/v1/review", status: 200, amount: "0.003", tx: "6RqPM…z4Uw" },
-      { time: "22m ago", method: "POST", path: "/v1/review", status: 200, amount: "0.003", tx: "2hYL…M6Rp"  },
-      { time: "35m ago", method: "POST", path: "/v1/review", status: 402, amount: "—",     tx: "—"          },
-      { time: "1h ago",  method: "POST", path: "/v1/review", status: 200, amount: "0.003", tx: "4vKS…H3Qz"  },
-    ],
-    payments: [
-      { time: "8m ago",  tx: "6RqPM…z4Uw", slot: "281,491,880", amount: "0.003 USDC", status: "settled" },
-      { time: "22m ago", tx: "2hYL…M6Rp",  slot: "281,491,200", amount: "0.003 USDC", status: "settled" },
-      { time: "1h ago",  tx: "4vKS…H3Qz",  slot: "281,488,460", amount: "0.003 USDC", status: "settled" },
-    ],
-  },
-];
-
-const STORE_KEY = "astro_x402_resources";
-
-function loadResources(): Resource[] {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return SEED;
-    const saved: Resource[] = JSON.parse(raw);
-    const savedIds = new Set(saved.map((r) => r.id));
-    const merged = [
-      ...SEED.filter((r) => !savedIds.has(r.id)),
-      ...saved,
-    ];
-    return merged.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-  } catch {
-    return SEED;
-  }
-}
-
-function persistAll(resources: Resource[]) {
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(resources));
-  } catch {}
-}
-
-let _resources: Resource[] = loadResources();
+let _userId: string | null = null;
+let _resources: Resource[] = [];
+let _loaded = false;
 const _listeners = new Set<() => void>();
 
 function notify() {
   _listeners.forEach((fn) => fn());
+}
+
+function resourceToDbPayload(r: Resource) {
+  const priceNum = parseFloat(r.amount) || 0;
+  const lamports = r.asset === "SOL"
+    ? Math.round(priceNum * 1e9)
+    : Math.round(priceNum * 1e6);
+  return {
+    id: r.id,
+    name: r.name,
+    endpoint: r.url,
+    description: r.description,
+    price_lamports: lamports,
+    price_token: r.asset,
+    status: r.status,
+    category: r.type,
+    network: "mainnet",
+    metadata: r,
+  };
+}
+
+function dbRowToResource(row: Record<string, unknown>): Resource {
+  if (row.metadata && typeof row.metadata === "object" && !Array.isArray(row.metadata)) {
+    const meta = row.metadata as Partial<Resource>;
+    const revLam = Number(row.revenue_lamports ?? 0);
+    const token = (row.price_token as string) ?? "USDC";
+    const revDisplay = token === "SOL"
+      ? `${(revLam / 1e9).toFixed(4)} SOL`
+      : `$${(revLam / 1e6).toFixed(2)}`;
+    return {
+      ...meta,
+      id: row.id as string,
+      name: (row.name as string) || meta.name || "Untitled",
+      status: (row.status as ResourceStatus) || meta.status || "active",
+      requests: Number(row.requests ?? 0),
+      revenue: revDisplay,
+    } as Resource;
+  }
+  const priceToken = (row.price_token as string) ?? "USDC";
+  const priceLam = Number(row.price_lamports ?? 0);
+  const priceDisplay = priceToken === "SOL"
+    ? String(priceLam / 1e9)
+    : String(priceLam / 1e6);
+  const revLam = Number(row.revenue_lamports ?? 0);
+  const revDisplay = priceToken === "SOL"
+    ? `${(revLam / 1e9).toFixed(4)} SOL`
+    : `$${(revLam / 1e6).toFixed(2)}`;
+  return {
+    id: row.id as string,
+    name: (row.name as string) ?? "Untitled",
+    type: ((row.category as ResourceType) ?? "API Endpoint"),
+    description: (row.description as string) ?? "",
+    url: (row.endpoint as string) ?? "",
+    method: "POST",
+    version: "v1",
+    environment: "Production",
+    pricingModel: "fixed per request",
+    amount: priceDisplay,
+    asset: priceToken as "USDC" | "SOL",
+    scope: "",
+    ttl: "60s",
+    visibility: "public",
+    status: (row.status as ResourceStatus) ?? "active",
+    network: "Solana",
+    requests: Number(row.requests ?? 0),
+    revenue: revDisplay,
+    lastActivity: "just now",
+    createdAt: (row.created_at as string)?.slice(0, 10) ?? "",
+    logs: [],
+    payments: [],
+  };
+}
+
+async function fetchFromDb() {
+  if (!_userId) return;
+  try {
+    const r = await fetch("/api/resources", {
+      headers: { "X-User-Id": _userId, "Content-Type": "application/json" },
+    });
+    if (!r.ok) return;
+    const rows = (await r.json()) as Record<string, unknown>[];
+    _resources = rows.map(dbRowToResource);
+    _loaded = true;
+    notify();
+  } catch {
+    _loaded = true;
+    notify();
+  }
 }
 
 export const resourceStore = {
@@ -214,22 +150,67 @@ export const resourceStore = {
     return () => _listeners.delete(fn);
   },
 
-  add(resource: Resource): void {
-    _resources = [..._resources, resource];
-    persistAll(_resources);
-    notify();
+  setUserId(id: string | null) {
+    if (_userId === id) return;
+    _userId = id;
+    setApiUserId(id);
+    _resources = [];
+    _loaded = false;
+    if (id) fetchFromDb();
+    else notify();
   },
 
-  update(id: string, changes: Partial<Resource>): void {
+  async add(resource: Resource): Promise<void> {
+    _resources = [..._resources, resource];
+    notify();
+    if (!_userId) return;
+    try {
+      await fetch("/api/resources", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-User-Id": _userId },
+        body: JSON.stringify(resourceToDbPayload(resource)),
+      });
+    } catch {}
+  },
+
+  async update(id: string, changes: Partial<Resource>): Promise<void> {
     _resources = _resources.map((r) =>
       r.id === id ? { ...r, ...changes } : r
     );
-    persistAll(_resources);
     notify();
+    if (!_userId) return;
+    const updated = _resources.find((r) => r.id === id);
+    if (!updated) return;
+    try {
+      await fetch(`/api/resources/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "X-User-Id": _userId },
+        body: JSON.stringify({
+          ...resourceToDbPayload(updated),
+          metadata: updated,
+        }),
+      });
+    } catch {}
+  },
+
+  async delete(id: string): Promise<void> {
+    _resources = _resources.filter((r) => r.id !== id);
+    notify();
+    if (!_userId) return;
+    try {
+      await fetch(`/api/resources/${id}`, {
+        method: "DELETE",
+        headers: { "X-User-Id": _userId },
+      });
+    } catch {}
   },
 
   getById(id: string): Resource | undefined {
     return _resources.find((r) => r.id === id);
+  },
+
+  isLoaded(): boolean {
+    return _loaded;
   },
 };
 

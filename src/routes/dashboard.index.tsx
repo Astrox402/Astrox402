@@ -1,22 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { useResources } from "@/lib/resourceStore";
+import { api, type ApiPayment, type ApiStats, lamportsToDisplay, timeAgo } from "@/lib/api";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardOverview,
 });
-
-const RECENT_ACTIVITY = [
-  { time: "just now", event: "Payment settled",    resource: "GPT Inference API",  amount: "+$0.0021", type: "paid"   },
-  { time: "12s ago",  event: "Payment settled",    resource: "Image Generation",   amount: "+$0.015",  type: "paid"   },
-  { time: "34s ago",  event: "402 issued",         resource: "Embeddings v2",      amount: "0.0004",   type: "quote"  },
-  { time: "1m ago",   event: "Payment settled",    resource: "GPT Inference API",  amount: "+$0.0021", type: "paid"   },
-  { time: "2m ago",   event: "Intent failed",      resource: "Dataset Access",     amount: "0.50",     type: "failed" },
-  { time: "3m ago",   event: "Payment settled",    resource: "Embeddings v2",      amount: "+$0.0004", type: "paid"   },
-  { time: "5m ago",   event: "Payment settled",    resource: "Audio Transcription",amount: "+$0.008",  type: "paid"   },
-  { time: "8m ago",   event: "Payment settled",    resource: "Code Review API",    amount: "+$0.003",  type: "paid"   },
-];
-
-const CHART_BARS = [42, 67, 53, 88, 71, 95, 60, 78, 84, 92, 70, 100];
 
 const ONBOARDING_STEPS = [
   {
@@ -38,21 +27,73 @@ const ONBOARDING_STEPS = [
 
 function DashboardOverview() {
   const resources = useResources();
+  const [stats, setStats]       = useState<ApiStats | null>(null);
+  const [payments, setPayments] = useState<ApiPayment[]>([]);
+  const [loading, setLoading]   = useState(true);
 
-  const totalRevenue  = resources.reduce((s, r) => s + (parseFloat(r.revenue.replace("$", "")) || 0), 0);
-  const totalRequests = resources.reduce((s, r) => s + r.requests, 0);
-  const activeCount   = resources.filter((r) => r.status === "active").length;
-  const paidRate      = totalRequests > 0 ? "96.3%" : "—";
-  const isEmpty       = resources.length === 0;
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([api.getStats(), api.getPayments()]).then(([s, p]) => {
+      if (!cancelled) {
+        setStats(s);
+        setPayments(p);
+        setLoading(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const isEmpty = resources.length === 0;
+
+  const totalRevenueLamports  = stats ? Number(stats.resources.total_revenue_lamports) : 0;
+  const totalRequests         = stats ? Number(stats.resources.total_requests) : 0;
+  const activeResources       = stats ? Number(stats.resources.active_resources) : 0;
+  const totalResources        = stats ? Number(stats.resources.total_resources) : 0;
+  const settledCount          = stats ? Number(stats.payments.settled_count) : 0;
+  const failedCount           = stats ? Number(stats.payments.failed_count) : 0;
+  const totalPayments         = settledCount + (stats ? Number(stats.payments.pending_count) : 0) + failedCount;
+  const paidRate              = totalPayments > 0 ? `${((settledCount / totalPayments) * 100).toFixed(1)}%` : "—";
+
+  const revenueDisplay = totalRevenueLamports > 0
+    ? lamportsToDisplay(totalRevenueLamports, "SOL")
+    : "0 SOL";
 
   const STATS = [
-    { label: "Total Revenue",    value: isEmpty ? "$0.00" : `$${totalRevenue.toFixed(2)}`,  sub: isEmpty ? "No activity yet"   : "+12.4% this week",   color: "accent"  },
-    { label: "Total Requests",   value: isEmpty ? "0"     : totalRequests.toLocaleString(),  sub: isEmpty ? "No requests yet"   : "+2,103 today",        color: "blue"    },
-    { label: "Active Resources", value: isEmpty ? "0"     : activeCount.toString(),          sub: isEmpty ? "Create one below"  : `${resources.length} total`,          color: "purple"  },
-    { label: "Paid Requests",    value: isEmpty ? "—"     : paidRate,                        sub: isEmpty ? "—"                 : "34 failed (0.07%)",  color: "green"   },
+    {
+      label: "Total Revenue",
+      value: loading ? "…" : revenueDisplay,
+      sub: loading ? "" : isEmpty ? "No activity yet" : `${settledCount} settled payment${settledCount !== 1 ? "s" : ""}`,
+      color: "accent",
+    },
+    {
+      label: "Total Requests",
+      value: loading ? "…" : totalRequests.toLocaleString(),
+      sub: loading ? "" : isEmpty ? "No requests yet" : `across ${totalResources} resource${totalResources !== 1 ? "s" : ""}`,
+      color: "blue",
+    },
+    {
+      label: "Active Resources",
+      value: loading ? "…" : activeResources.toString(),
+      sub: loading ? "" : isEmpty ? "Create one below" : `${totalResources} total`,
+      color: "purple",
+    },
+    {
+      label: "Paid Rate",
+      value: loading ? "…" : (isEmpty ? "—" : paidRate),
+      sub: loading ? "" : isEmpty ? "—" : failedCount > 0 ? `${failedCount} failed` : "No failures",
+      color: "green",
+    },
   ];
 
   const recentResources = [...resources].reverse().slice(0, 5);
+  const recentActivity  = payments.slice(0, 8);
+
+  const chartBars = recentActivity.length > 0
+    ? (() => {
+        const max = Math.max(...recentActivity.map(p => p.amount_lamports), 1);
+        return recentActivity.map(p => Math.max(8, Math.round((p.amount_lamports / max) * 100)));
+      })()
+    : [42, 67, 53, 88, 71, 95, 60, 78, 84, 92, 70, 100];
 
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
@@ -78,7 +119,7 @@ function DashboardOverview() {
       </div>
 
       {/* Empty state — onboarding */}
-      {isEmpty && (
+      {isEmpty && !loading && (
         <div className="rounded-xl border border-border bg-surface/50 p-8">
           <div className="max-w-lg mx-auto text-center mb-8">
             <div className="inline-flex h-12 w-12 rounded-2xl border border-border bg-surface/60 items-center justify-center text-muted-foreground mb-5">
@@ -121,8 +162,10 @@ function DashboardOverview() {
           <div className="xl:col-span-2 rounded-xl border border-border bg-surface/50 p-5">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <div className="text-[13px] font-medium">Request volume</div>
-                <div className="text-[11px] font-mono text-muted-foreground mt-0.5">Last 12 hours</div>
+                <div className="text-[13px] font-medium">Payment volume</div>
+                <div className="text-[11px] font-mono text-muted-foreground mt-0.5">
+                  {recentActivity.length > 0 ? `Last ${recentActivity.length} payments` : "No payments yet"}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse"/>
@@ -130,41 +173,67 @@ function DashboardOverview() {
               </div>
             </div>
             <div className="flex items-end gap-1.5 h-28">
-              {CHART_BARS.map((h, i) => (
+              {chartBars.map((h, i) => (
                 <div key={i} className="flex-1 rounded-t-sm bg-accent/20 hover:bg-accent/40 transition-colors relative group" style={{ height: `${h}%` }}>
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    {Math.round(h * 40)}
-                  </div>
+                  {recentActivity[i] && (
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-mono text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      {lamportsToDisplay(recentActivity[i].amount_lamports, recentActivity[i].token)}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
             <div className="flex justify-between mt-2 text-[10px] font-mono text-muted-foreground/50">
-              <span>12h ago</span><span>6h ago</span><span>now</span>
+              <span>{recentActivity.length > 0 ? timeAgo(recentActivity[recentActivity.length - 1]?.created_at ?? "") : "oldest"}</span>
+              <span>now</span>
             </div>
           </div>
 
           <div className="rounded-xl border border-border bg-surface/50 p-5">
             <div className="text-[13px] font-medium mb-1">Recent activity</div>
             <div className="text-[11px] font-mono text-muted-foreground mb-4">Real-time payment stream</div>
-            <div className="space-y-3">
-              {RECENT_ACTIVITY.map((a, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className={`mt-0.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
-                    a.type === "paid" ? "bg-emerald-400" : a.type === "failed" ? "bg-red-400" : "bg-accent"
-                  }`}/>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-medium truncate">{a.event}</div>
-                    <div className="text-[10px] text-muted-foreground truncate">{a.resource}</div>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <div className={`text-[11px] font-mono ${a.type === "paid" ? "text-emerald-400" : a.type === "failed" ? "text-red-400" : "text-muted-foreground"}`}>
-                      {a.amount}
+            {loading ? (
+              <div className="space-y-3">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex items-start gap-3 animate-pulse">
+                    <div className="mt-0.5 h-1.5 w-1.5 rounded-full bg-border flex-shrink-0"/>
+                    <div className="flex-1 space-y-1">
+                      <div className="h-2.5 w-24 bg-border/50 rounded"/>
+                      <div className="h-2 w-16 bg-border/30 rounded"/>
                     </div>
-                    <div className="text-[10px] text-muted-foreground">{a.time}</div>
+                    <div className="h-2.5 w-12 bg-border/50 rounded"/>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : recentActivity.length === 0 ? (
+              <div className="py-6 text-center text-[11px] text-muted-foreground font-mono">
+                No payments yet
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentActivity.map((p) => (
+                  <div key={p.id} className="flex items-start gap-3">
+                    <div className={`mt-0.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
+                      p.status === "settled" ? "bg-emerald-400" : p.status === "failed" ? "bg-red-400" : "bg-accent"
+                    }`}/>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[11px] font-medium truncate">
+                        {p.status === "settled" ? "Payment settled" : p.status === "failed" ? "Payment failed" : "Payment pending"}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground truncate">{p.resource_name || "Unknown resource"}</div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className={`text-[11px] font-mono ${
+                        p.status === "settled" ? "text-emerald-400" : p.status === "failed" ? "text-red-400" : "text-muted-foreground"
+                      }`}>
+                        {p.status === "settled" ? "+" : ""}{lamportsToDisplay(p.amount_lamports, p.token)}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground">{timeAgo(p.created_at)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
