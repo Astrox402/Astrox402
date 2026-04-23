@@ -4,8 +4,18 @@ import { FlowDiagram } from "./FlowDiagram";
 export function Hero() {
   return (
     <section className="relative pt-40 pb-32 overflow-hidden">
-      <div className="absolute inset-0 grid-bg radial-fade opacity-60" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-accent/10 blur-[120px] pointer-events-none" />
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.18 }}
+      >
+        <source src="https://res.cloudinary.com/dvfrmhk5z/video/upload/v1776859224/13161041_1920_1080_30fps_me4dzq.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
+      <div className="absolute inset-0 grid-bg radial-fade opacity-30" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <motion.div
