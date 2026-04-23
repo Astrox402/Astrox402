@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsServeRouteImport } from './routes/docs.serve'
 import { Route as DocsSecurityRouteImport } from './routes/docs.security'
 import { Route as DocsReceiptsRouteImport } from './routes/docs.receipts'
@@ -33,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DocsRoute,
 } as any)
 const DocsServeRoute = DocsServeRouteImport.update({
   id: '/serve',
@@ -110,10 +116,10 @@ export interface FileRoutesByFullPath {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/docs/': typeof DocsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/docs': typeof DocsRouteWithChildren
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -126,6 +132,7 @@ export interface FileRoutesByTo {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/docs': typeof DocsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +150,7 @@ export interface FileRoutesById {
   '/docs/receipts': typeof DocsReceiptsRoute
   '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
+  '/docs/': typeof DocsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,10 +169,10 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/docs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/docs'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -177,6 +185,7 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/docs'
   id:
     | '__root__'
     | '/'
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
     | '/docs/receipts'
     | '/docs/security'
     | '/docs/serve'
+    | '/docs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,6 +225,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/docs/': {
+      id: '/docs/'
+      path: '/'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof DocsRoute
     }
     '/docs/serve': {
       id: '/docs/serve'
@@ -316,6 +333,7 @@ interface DocsRouteChildren {
   DocsReceiptsRoute: typeof DocsReceiptsRoute
   DocsSecurityRoute: typeof DocsSecurityRoute
   DocsServeRoute: typeof DocsServeRoute
+  DocsIndexRoute: typeof DocsIndexRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
@@ -331,6 +349,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsReceiptsRoute: DocsReceiptsRoute,
   DocsSecurityRoute: DocsSecurityRoute,
   DocsServeRoute: DocsServeRoute,
+  DocsIndexRoute: DocsIndexRoute,
 }
 
 const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
