@@ -12,10 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsServeRouteImport } from './routes/docs.serve'
+import { Route as DocsSecurityRouteImport } from './routes/docs.security'
 import { Route as DocsReceiptsRouteImport } from './routes/docs.receipts'
+import { Route as DocsQuickstartRouteImport } from './routes/docs.quickstart'
 import { Route as DocsPricingRouteImport } from './routes/docs.pricing'
 import { Route as DocsHandshakeRouteImport } from './routes/docs.handshake'
+import { Route as DocsFaqRouteImport } from './routes/docs.faq'
+import { Route as DocsErrorsRouteImport } from './routes/docs.errors'
+import { Route as DocsConceptsRouteImport } from './routes/docs.concepts'
 import { Route as DocsClientsRouteImport } from './routes/docs.clients'
+import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
+import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
 
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
@@ -32,9 +39,19 @@ const DocsServeRoute = DocsServeRouteImport.update({
   path: '/serve',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsSecurityRoute = DocsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsReceiptsRoute = DocsReceiptsRouteImport.update({
   id: '/receipts',
   path: '/receipts',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsQuickstartRoute = DocsQuickstartRouteImport.update({
+  id: '/quickstart',
+  path: '/quickstart',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsPricingRoute = DocsPricingRouteImport.update({
@@ -47,38 +64,84 @@ const DocsHandshakeRoute = DocsHandshakeRouteImport.update({
   path: '/handshake',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsFaqRoute = DocsFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsErrorsRoute = DocsErrorsRouteImport.update({
+  id: '/errors',
+  path: '/errors',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsConceptsRoute = DocsConceptsRouteImport.update({
+  id: '/concepts',
+  path: '/concepts',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsClientsRoute = DocsClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsArchitectureRoute = DocsArchitectureRouteImport.update({
+  id: '/architecture',
+  path: '/architecture',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsAgentsRoute = DocsAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
   getParentRoute: () => DocsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
+  '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
+  '/docs/concepts': typeof DocsConceptsRoute
+  '/docs/errors': typeof DocsErrorsRoute
+  '/docs/faq': typeof DocsFaqRoute
   '/docs/handshake': typeof DocsHandshakeRoute
   '/docs/pricing': typeof DocsPricingRoute
+  '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
+  '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
+  '/docs/concepts': typeof DocsConceptsRoute
+  '/docs/errors': typeof DocsErrorsRoute
+  '/docs/faq': typeof DocsFaqRoute
   '/docs/handshake': typeof DocsHandshakeRoute
   '/docs/pricing': typeof DocsPricingRoute
+  '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
+  '/docs/agents': typeof DocsAgentsRoute
+  '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
+  '/docs/concepts': typeof DocsConceptsRoute
+  '/docs/errors': typeof DocsErrorsRoute
+  '/docs/faq': typeof DocsFaqRoute
   '/docs/handshake': typeof DocsHandshakeRoute
   '/docs/pricing': typeof DocsPricingRoute
+  '/docs/quickstart': typeof DocsQuickstartRoute
   '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/security': typeof DocsSecurityRoute
   '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRouteTypes {
@@ -86,28 +149,49 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/docs'
+    | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/clients'
+    | '/docs/concepts'
+    | '/docs/errors'
+    | '/docs/faq'
     | '/docs/handshake'
     | '/docs/pricing'
+    | '/docs/quickstart'
     | '/docs/receipts'
+    | '/docs/security'
     | '/docs/serve'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/docs'
+    | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/clients'
+    | '/docs/concepts'
+    | '/docs/errors'
+    | '/docs/faq'
     | '/docs/handshake'
     | '/docs/pricing'
+    | '/docs/quickstart'
     | '/docs/receipts'
+    | '/docs/security'
     | '/docs/serve'
   id:
     | '__root__'
     | '/'
     | '/docs'
+    | '/docs/agents'
+    | '/docs/architecture'
     | '/docs/clients'
+    | '/docs/concepts'
+    | '/docs/errors'
+    | '/docs/faq'
     | '/docs/handshake'
     | '/docs/pricing'
+    | '/docs/quickstart'
     | '/docs/receipts'
+    | '/docs/security'
     | '/docs/serve'
   fileRoutesById: FileRoutesById
 }
@@ -139,11 +223,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsServeRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/security': {
+      id: '/docs/security'
+      path: '/security'
+      fullPath: '/docs/security'
+      preLoaderRoute: typeof DocsSecurityRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/receipts': {
       id: '/docs/receipts'
       path: '/receipts'
       fullPath: '/docs/receipts'
       preLoaderRoute: typeof DocsReceiptsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/quickstart': {
+      id: '/docs/quickstart'
+      path: '/quickstart'
+      fullPath: '/docs/quickstart'
+      preLoaderRoute: typeof DocsQuickstartRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/pricing': {
@@ -160,6 +258,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsHandshakeRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/faq': {
+      id: '/docs/faq'
+      path: '/faq'
+      fullPath: '/docs/faq'
+      preLoaderRoute: typeof DocsFaqRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/errors': {
+      id: '/docs/errors'
+      path: '/errors'
+      fullPath: '/docs/errors'
+      preLoaderRoute: typeof DocsErrorsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/concepts': {
+      id: '/docs/concepts'
+      path: '/concepts'
+      fullPath: '/docs/concepts'
+      preLoaderRoute: typeof DocsConceptsRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/clients': {
       id: '/docs/clients'
       path: '/clients'
@@ -167,22 +286,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsClientsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/architecture': {
+      id: '/docs/architecture'
+      path: '/architecture'
+      fullPath: '/docs/architecture'
+      preLoaderRoute: typeof DocsArchitectureRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/agents': {
+      id: '/docs/agents'
+      path: '/agents'
+      fullPath: '/docs/agents'
+      preLoaderRoute: typeof DocsAgentsRouteImport
+      parentRoute: typeof DocsRoute
+    }
   }
 }
 
 interface DocsRouteChildren {
+  DocsAgentsRoute: typeof DocsAgentsRoute
+  DocsArchitectureRoute: typeof DocsArchitectureRoute
   DocsClientsRoute: typeof DocsClientsRoute
+  DocsConceptsRoute: typeof DocsConceptsRoute
+  DocsErrorsRoute: typeof DocsErrorsRoute
+  DocsFaqRoute: typeof DocsFaqRoute
   DocsHandshakeRoute: typeof DocsHandshakeRoute
   DocsPricingRoute: typeof DocsPricingRoute
+  DocsQuickstartRoute: typeof DocsQuickstartRoute
   DocsReceiptsRoute: typeof DocsReceiptsRoute
+  DocsSecurityRoute: typeof DocsSecurityRoute
   DocsServeRoute: typeof DocsServeRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
+  DocsAgentsRoute: DocsAgentsRoute,
+  DocsArchitectureRoute: DocsArchitectureRoute,
   DocsClientsRoute: DocsClientsRoute,
+  DocsConceptsRoute: DocsConceptsRoute,
+  DocsErrorsRoute: DocsErrorsRoute,
+  DocsFaqRoute: DocsFaqRoute,
   DocsHandshakeRoute: DocsHandshakeRoute,
   DocsPricingRoute: DocsPricingRoute,
+  DocsQuickstartRoute: DocsQuickstartRoute,
   DocsReceiptsRoute: DocsReceiptsRoute,
+  DocsSecurityRoute: DocsSecurityRoute,
   DocsServeRoute: DocsServeRoute,
 }
 

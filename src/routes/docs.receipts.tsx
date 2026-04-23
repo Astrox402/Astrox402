@@ -6,7 +6,7 @@ export const Route = createFileRoute("/docs/receipts")({
   head: () => ({
     meta: [
       { title: "Receipts & settlement — Meridian Docs" },
-      { name: "description", content: "Onchain receipts, supported chains, settlement timing, and reconciliation. Every Meridian call produces a verifiable proof on Ethereum." },
+      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Meridian call produces a verifiable proof on Ethereum." },
       { property: "og:title", content: "Receipts & settlement — Meridian Docs" },
       { property: "og:description", content: "Verifiable onchain proofs for every paid endpoint call. Receipts, chains, and reconciliation." },
     ],
@@ -17,10 +17,14 @@ export const Route = createFileRoute("/docs/receipts")({
 const TOC = [
   { id: "what", label: "What is a receipt" },
   { id: "shape", label: "Receipt shape" },
+  { id: "delivery", label: "How receipts are delivered" },
   { id: "chains", label: "Supported chains" },
+  { id: "timing", label: "Settlement timing" },
   { id: "verify", label: "Verifying receipts" },
   { id: "reconcile", label: "Reconciliation" },
   { id: "webhooks", label: "Settlement webhooks" },
+  { id: "refunds", label: "Refunds & disputes" },
+  { id: "tax", label: "Accounting & tax" },
 ];
 
 function ReceiptsPage() {
@@ -29,15 +33,18 @@ function ReceiptsPage() {
       <PageHeader
         eyebrow="Protocol"
         title="Receipts & settlement"
-        intro="Every successful Meridian call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Ethereum."
+        intro="Every successful Meridian call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Ethereum. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
       />
 
       <DocSection id="what" title="What is a receipt">
         <p>
-          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, and the settlement transaction into a single object. Receipts are what make Meridian auditable without sharing private logs.
+          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object. Receipts are what make Meridian auditable without sharing private logs — anyone with the receipt ID can independently confirm that the payment occurred, on which chain, between which parties, and for which exact amount.
+        </p>
+        <p>
+          Crucially, a receipt is not a database row in Meridian's infrastructure. It is a derived view over public chain data. The hosted indexer makes receipts convenient to query, but the canonical record lives onchain and any party can reconstruct the same view from a public RPC.
         </p>
         <Callout>
-          You don't have to use Meridian's database to trust the data — every receipt is independently verifiable from any Ethereum RPC.
+          You don't have to use Meridian's database to trust the data — every receipt is independently verifiable from any Ethereum RPC. The chain is the source of truth.
         </Callout>
       </DocSection>
 
@@ -47,13 +54,28 @@ function ReceiptsPage() {
   resource:    string;            // "/v1/infer"
   scope:       string;            // "inference.gpt"
   amount:      string;            // "0.0021 USDC"
+  amountRaw:   bigint;            // 2100n (base units)
+  asset:       \`0x\${string}\`;     // ERC-20 contract
   payer:       \`0x\${string}\`;
   payee:       \`0x\${string}\`;
   chain:       "ethereum" | "base" | "optimism" | "arbitrum";
   txHash:      \`0x\${string}\`;
+  blockNumber: number;
   settledAt:   number;            // unix seconds
   proof:       \`0x\${string}\`;     // EIP-712 digest
+  refunded:    boolean;
+  refundTx?:   \`0x\${string}\`;
 };`} />
+      </DocSection>
+
+      <DocSection id="delivery" title="How receipts are delivered">
+        <p>Receipts arrive through three independent channels — pick whichever fits your operational shape:</p>
+        <ul className="list-disc pl-5 space-y-2">
+          <li><strong>Inline:</strong> the <Mono>X-Meridian-Receipt</Mono> response header carries the receipt bytes; the SDK exposes them as <Mono>res.receipt</Mono>.</li>
+          <li><strong>Webhook:</strong> subscribe to <Mono>receipt.settled</Mono> events for asynchronous, signed delivery. Best for backend reconciliation pipelines.</li>
+          <li><strong>Pull:</strong> the reconciliation API exposes paginated, filterable queries against the indexer.</li>
+        </ul>
+        <p>All three channels return the same canonical receipt — there is no "summary vs full" split, no eventually-consistent variant, no privileged data only available through one channel.</p>
       </DocSection>
 
       <DocSection id="chains" title="Supported chains">
@@ -63,11 +85,22 @@ function ReceiptsPage() {
           ["optimism", "L2", "~1.5s, broad ecosystem support."],
           ["arbitrum", "L2", "~1.5s, low fees, broad tooling."],
         ]} />
-        <p>Settlement target is declared per-resource in <Mono>serve()</Mono>. The same payer wallet works across all supported chains.</p>
+        <p>Settlement target is declared per-resource in <Mono>serve()</Mono>. The same payer wallet works across all supported chains — the client SDK selects the cheapest path that satisfies the declared target, bridging if necessary.</p>
+      </DocSection>
+
+      <DocSection id="timing" title="Settlement timing">
+        <p>The settlement transaction is broadcast in parallel with the intent submission, so verification is already in-flight by the time the server begins parsing the intent. End-to-end timing typically looks like:</p>
+        <Params rows={[
+          ["L2 (Base, Optimism, Arbitrum)", "~1.2s", "Includes pre-confirmation and one block."],
+          ["Ethereum mainnet", "~13s", "One block; faster with optimistic mode + pre-confirmation."],
+          ["Optimistic mode", "~50ms", "Server proceeds on signed pre-confirmation; settlement finalizes in background."],
+          ["Batched mode", "~2s window", "Many intents settle in one transaction, amortizing cost."],
+        ]} />
+        <p>For latency-sensitive workloads (interactive APIs, real-time agents), prefer L2s with optimistic mode. For high-value settlements (enterprise contracts, bulk transfers), prefer Ethereum mainnet with pessimistic mode.</p>
       </DocSection>
 
       <DocSection id="verify" title="Verifying receipts">
-        <p>Receipts can be verified locally from any Ethereum RPC, with no Meridian dependency.</p>
+        <p>Receipts can be verified locally from any Ethereum RPC, with no Meridian dependency. The verifier checks the EIP-712 digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
         <Code lang="ts" code={`import { verifyReceipt } from "@meridian/sdk";
 
 const ok = await verifyReceipt(receipt, {
@@ -75,26 +108,53 @@ const ok = await verifyReceipt(receipt, {
 });
 
 if (!ok) throw new Error("Invalid receipt");`} />
+        <p>Verification is pure — no network calls beyond the RPC, no Meridian endpoint involved. You can run it inside a CI pipeline, a customer's audit script, or a partner's reconciliation job, with zero coupling to Meridian's hosted services.</p>
       </DocSection>
 
       <DocSection id="reconcile" title="Reconciliation">
-        <p>The SDK exposes a paginated reconciliation API for accounting and revenue reporting.</p>
+        <p>The SDK exposes a paginated reconciliation API for accounting and revenue reporting. Filters include resource, scope, payer, payee, chain, time range, and refund status.</p>
         <Code lang="ts" code={`for await (const r of meridian.receipts.list({
   resource: "/v1/infer",
   since:    "2025-01-01",
+  until:    "2025-01-31",
+  refunded: false,
 })) {
   ledger.record(r.id, r.amount, r.settledAt);
 }`} />
+        <p>For very large datasets, use <Mono>meridian.receipts.export()</Mono> to stream the full set as Parquet or NDJSON. Exports are deterministic — the same filters produce the same byte-identical file on any subsequent run.</p>
       </DocSection>
 
       <DocSection id="webhooks" title="Settlement webhooks">
-        <p>Subscribe to receipt events via signed webhooks. Payloads are HMAC-signed; replay-protected with a 5-minute window.</p>
+        <p>Subscribe to receipt events via signed webhooks. Payloads are HMAC-signed; replay-protected with a 5-minute window; delivered with at-least-once semantics and exponential backoff on failure.</p>
         <Code lang="ts" code={`meridian.webhooks.on("receipt.settled", async (e) => {
   await crm.recordRevenue(e.receipt);
+});
+
+meridian.webhooks.on("receipt.refunded", async (e) => {
+  await crm.recordRefund(e.receipt, e.refundTx);
 });`} />
+        <p>Webhook endpoints can be hosted on Meridian's infrastructure or your own. The signing key is rotatable; old keys remain valid through a grace period to allow zero-downtime rotation.</p>
       </DocSection>
 
-      <PageFooterNav prev={{ to: "/docs/pricing", label: "Pricing functions" }} next={{ to: "/docs/clients", label: "SDK clients" }} />
+      <DocSection id="refunds" title="Refunds & disputes">
+        <p>
+          Refunds are issued either automatically (when a handler throws after payment was verified) or explicitly (via <Mono>ctx.refund()</Mono> for partial-failure cases). Both produce a refund receipt that links back to the original by ID, so the full transaction history is reconstructable.
+        </p>
+        <p>
+          Disputes are handled at the application layer, not the protocol layer. Because every call has a public proof, "did this charge happen?" is never a dispute — only "should this charge stand?" is. That dramatically reduces the surface area for chargebacks compared to classic payment systems.
+        </p>
+      </DocSection>
+
+      <DocSection id="tax" title="Accounting & tax">
+        <p>
+          Receipts include enough data to drive standard accrual accounting: a stable identifier, a settled timestamp, a counterparty, and an exact amount in a stable asset. The reconciliation API supports the journal-export formats used by major accounting platforms (QuickBooks, Xero, NetSuite) and tax engines (Stripe Tax, Anrok).
+        </p>
+        <p>
+          For jurisdictions that require invoicing, Meridian provides an optional invoice-generation service that produces tax-compliant invoices from receipts. This is a hosted convenience; the underlying receipts always remain the canonical record.
+        </p>
+      </DocSection>
+
+      <PageFooterNav prev={{ to: "/docs/pricing", label: "Pricing functions" }} next={{ to: "/docs/security", label: "Security model" }} />
     </DocsLayout>
   );
 }
