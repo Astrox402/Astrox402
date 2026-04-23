@@ -20,7 +20,6 @@ export function Footer() {
     ]},
     { t: "Resources", l: [
       { label: "Security", href: "/security" },
-      { label: "Brand", href: "/brand" },
       { label: "Status", href: "/status" },
       { label: "Contact", href: "/contact" },
     ]},

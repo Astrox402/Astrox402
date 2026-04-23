@@ -24,7 +24,6 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsoleRouteImport } from './routes/console'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as CareersRouteImport } from './routes/careers'
-import { Route as BrandRouteImport } from './routes/brand'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -126,11 +125,6 @@ const ChangelogRoute = ChangelogRouteImport.update({
 const CareersRoute = CareersRouteImport.update({
   id: '/careers',
   path: '/careers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandRoute = BrandRouteImport.update({
-  id: '/brand',
-  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -275,7 +269,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blog': typeof BlogRoute
-  '/brand': typeof BrandRoute
   '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
@@ -320,7 +313,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blog': typeof BlogRoute
-  '/brand': typeof BrandRoute
   '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
@@ -362,7 +354,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blog': typeof BlogRoute
-  '/brand': typeof BrandRoute
   '/careers': typeof CareersRoute
   '/changelog': typeof ChangelogRoute
   '/console': typeof ConsoleRoute
@@ -409,7 +400,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blog'
-    | '/brand'
     | '/careers'
     | '/changelog'
     | '/console'
@@ -454,7 +444,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blog'
-    | '/brand'
     | '/careers'
     | '/changelog'
     | '/console'
@@ -495,7 +484,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blog'
-    | '/brand'
     | '/careers'
     | '/changelog'
     | '/console'
@@ -541,7 +529,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BlogRoute: typeof BlogRoute
-  BrandRoute: typeof BrandRoute
   CareersRoute: typeof CareersRoute
   ChangelogRoute: typeof ChangelogRoute
   ConsoleRoute: typeof ConsoleRoute
@@ -664,13 +651,6 @@ declare module '@tanstack/react-router' {
       path: '/careers'
       fullPath: '/careers'
       preLoaderRoute: typeof CareersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brand': {
-      id: '/brand'
-      path: '/brand'
-      fullPath: '/brand'
-      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -953,7 +933,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BlogRoute: BlogRoute,
-  BrandRoute: BrandRoute,
   CareersRoute: CareersRoute,
   ChangelogRoute: ChangelogRoute,
   ConsoleRoute: ConsoleRoute,
