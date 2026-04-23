@@ -73,7 +73,7 @@ export function Docs() {
   };
 
   return (
-    <section id="docs" className="relative py-32 border-t border-border">
+    <section id="docs-preview" className="relative py-32 border-t border-border">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
           <div>
@@ -95,7 +95,7 @@ export function Docs() {
                 </div>
               ))}
             </div>
-            <a href="#" className="mt-10 inline-flex items-center gap-2 text-[13.5px] text-foreground hover:text-accent transition-colors">
+            <a href="/docs" className="mt-10 inline-flex items-center gap-2 text-[13.5px] text-foreground hover:text-accent transition-colors">
               Read the full specification
               <span aria-hidden>→</span>
             </a>
