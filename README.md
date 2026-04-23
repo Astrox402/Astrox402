@@ -21,10 +21,14 @@ A marketing landing page, technical documentation site, and authenticated contro
   - `sign-in.tsx` — Login page (any email + password; localStorage auth)
   - `dashboard.tsx` — Dashboard layout (sidebar + topbar); auth-guarded via `beforeLoad`
   - `dashboard.index.tsx` — Dashboard overview (stats, chart, activity, resource table)
-  - `dashboard.resources.tsx` — Resources list with filter tabs
-  - `dashboard.resources.$id.tsx` — Resource detail (config, logs, settlement events)
+  - `dashboard.resources.tsx` — Resources layout (Outlet)
+  - `dashboard.resources.index.tsx` — Resources list with filter tabs
+  - `dashboard.resources.new.tsx` — Create resource form (4-section, inline validation)
+  - `dashboard.resources.$id.tsx` — Resource layout (Outlet)
+  - `dashboard.resources.$id.index.tsx` — Resource detail (config, logs, settlement events, lifecycle controls)
+  - `dashboard.resources.$id.edit.tsx` — Edit resource form
   - `dashboard.payments.tsx` — Payment history with filter tabs
-  - `dashboard.developer.tsx` — API keys, SDK snippets, webhook config
+  - `dashboard.developer.tsx` — API keys, SDK snippets, x402 flow, webhook config
   - `dashboard.settings.tsx` — Profile, wallet, network, team sections
   - `docs.tsx` + `docs/` — Documentation section with nested routes
 - `src/components/meridian/` — Landing page feature components
@@ -32,6 +36,7 @@ A marketing landing page, technical documentation site, and authenticated contro
   - `Solana.tsx` — Animated settlement mesh (SVG animateMotion)
   - `FlowDiagram.tsx` — Animated 4-phase 402 protocol flow (Framer Motion)
 - `src/lib/auth.ts` — localStorage-based auth utilities (getUser, signIn, signOut)
+- `src/lib/resourceStore.ts` — Shared resource store (useSyncExternalStore + localStorage); supports add(), update(), getById()
 - `src/components/ui/` — Reusable Shadcn UI components
 - `src/router.tsx` — Router configuration
 - `src/routeTree.gen.ts` — Auto-generated route tree (do not edit manually)
