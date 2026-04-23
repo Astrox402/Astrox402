@@ -1,0 +1,55 @@
+Yang belum benar / belum konsisten                                              
+                                                                                
+1. Header dan flow masih bukan x402 yang proper                                 
+                                                                                
+Di repo kamu ada bahasa seperti:                                                
+- X-Payment-Price                                                               
+- X-Payment-Scope                                                               
+- X-Payment-TL                                                                  
+- X-Payment-Receipt                                                             
+                                                                                
+Padahal repo x402 foundation menjelaskan flow yang lebih spesifik:              
+- server return 402                                                             
+- header utama: PAYMENT-REQUIRED                                                
+- client pilih requirement                                                      
+- kirim PAYMENT-SIGNATURE                                                       
+- server verify / settle                                                        
+- lalu response bisa bawa PAYMENT-RESPONSE                                      
+                                                                                
+Jadi kalau kamu mau lebih akurat ke x402, kamu perlu berhenti pakai             
+header-header custom yang terlalu “product invented”.                           
+                                                                                
+### Saran:                                                                      
+                                                                                
+Pilih salah satu:                                                               
+- A. jujur bilang ini x402-inspired                                             
+- B. refactor wire semantics supaya lebih dekat ke spec x402                    
+                                                                                
+Sekarang repo kamu masih di tengah-tengah.                                      
+                                                                                
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+2. Kamu masih mencampur “protocol”, “product”, dan “fictional infra”            
+                                                                                
+Beberapa copy terdengar seperti kamu sedang membuat:                            
+- protocol baru                                                                 
+- settlement contracts sendiri                                                  
+- SDK sendiri                                                                   
+- wire standard sendiri                                                         
+                                                                                
+Contoh yang bikin rawan:                                                        
+- @astro/x402-sdk                                                               
+- “audited settlement contracts”                                                
+- “onchain receipts”                                                            
+- “server verifies on-chain”                                                    
+- “no Astro dependency”                                                         
+- “open protocol”                                                               
+                                                                                
+Kalau semua itu belum nyata, kesannya jadi terlalu klaim-heavy.                 
+                                                                                
+### Saran:                                                                      
+                                                                                
+Untuk sekarang, positioning paling aman:                                        
+- Astro is a control plane and developer experience layer for x402-style        
+monetized resources                                                             
+- bukan “kami sudah jadi protocol standard baru”

@@ -1,0 +1,53 @@
+3. Docs kamu masih banyak contradiction                                         
+                                                                                
+Ini bagian yang paling perlu dibersihkan.                                       
+                                                                                
+Aku lihat ada beberapa copy yang campur aduk:                                   
+- kadang bilang Solana-only                                                     
+- tapi docs quickstart/protocol masih menyebut multi-chain                      
+- bahkan ada kalimat kacau seperti:                                             
+    - “Solana are typical defaults”                                             
+    - “deployed on Solana, Solana”                                              
+    - “Settlement chains: Solana, Base, Optimism, Arbitrum”                     
+    - “Settlement assets: SPL + native SOL, USDC, USDT, ETH”                    
+                                                                                
+Ini bikin positioning pecah.                                                    
+                                                                                
+### Kalau product kamu Solana-only:                                             
+                                                                                
+maka semua docs harus konsisten:                                                
+- settlement rail: Solana                                                       
+- assets: SOL / USDC on Solana                                                  
+- signatures: Ed25519 jika memang itu design kamu                               
+- jangan mention Base/Optimism/Arbitrum/EVM kecuali memang roadmap              
+                                                                                
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+4. Nama “Astro” vs repo “programmable-internet” masih belum terkunci            
+                                                                                
+Di README dan copy, kamu pakai Astro.                                           
+Repo namanya programmable-internet.                                             
+                                                                                
+Ini bukan masalah teknis, tapi secara brand strategy kamu harus putuskan:       
+- nama product: Astro                                                           
+- narasi kategori: programmable internet                                        
+- repo boleh apa adanya                                                         
+                                                                                
+Tapi jangan sampai user bingung:                                                
+“ini Astro, x402, atau programmable internet?”                                  
+                                                                                
+────────────────────────────────────────────────────────────────────────────────
+                                                                                
+Jadi, apakah konsep x402-nya sudah benar?                                       
+                                                                                
+Jawaban paling presisi:                                                         
+                                                                                
+Secara narasi: ya, cukup benar.                                                 
+                                                                                
+Secara implementasi/spec fidelity: belum.                                       
+                                                                                
+Lebih tepatnya:                                                                 
+ini bukan x402 implementation yang strict, ini x402-inspired Solana-native      
+product concept.                                                                
+                                                                                
+Dan menurutku itu bukan kelemahan, asal kamu jujur dan rapih.  

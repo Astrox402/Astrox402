@@ -33,7 +33,7 @@ const THREAT_MODEL = [
 ];
 
 const DISCLOSURES = [
-  { date: "Mar 2026", title: "No vulnerabilities found", detail: "Initial protocol audit completed by Trail of Bits. Settlement contracts on Solana, Base, and Optimism covered." },
+  { date: "Mar 2026", title: "Internal security review", detail: "Initial internal review of the settlement program logic and intent verification flow on Solana mainnet. No critical issues found. External audit planned." },
   { date: "Jan 2026", title: "Informational: Gas estimation edge case", detail: "Under extreme network congestion, gas estimates in quote responses could be stale by the time of settlement. Resolved by adding a gas buffer and a client-side retry on gas estimation failure." },
 ];
 
@@ -42,7 +42,7 @@ function SecurityPage() {
     <PageLayout
       eyebrow="Security"
       title="Security model & responsible disclosure."
-      intro="Astro's security posture is built on cryptographic verifiability, public contracts, and an audited protocol. Here's how it works — and how to report a vulnerability."
+      intro="Astro's security posture is built on cryptographic verifiability, public Solana programs, and a conservative implementation philosophy. Here's how it works — and how to report a vulnerability."
     >
       <div className="border-t border-border pt-20 mb-20">
         <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted-foreground mb-8">Threat model & mitigations</div>
@@ -95,7 +95,7 @@ function SecurityPage() {
           <div className="rounded-2xl border border-border bg-surface/20 p-6">
             <div className="text-[13px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-4">In scope</div>
             <ul className="space-y-2 text-[13.5px] text-muted-foreground">
-              {["Settlement contracts (all chains)", "SDK intent signing and verification", "Quote encoding and signature verification", "Astro Console and hosted verifier", "Receipt indexer and API"].map((item) => (
+              {["Solana settlement programs", "SDK intent signing and verification", "Quote encoding and signature verification", "Astro Console and hosted verifier", "Receipt indexer and API"].map((item) => (
                 <li key={item} className="flex gap-2"><span className="text-accent mt-0.5">✓</span>{item}</li>
               ))}
             </ul>

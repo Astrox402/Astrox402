@@ -1,0 +1,40 @@
+Tasks                                                                           
+                                                                                
+1. audit all landing page copy, protocol pages, docs pages, dashboard copy, and 
+developer pages                                                                 
+2. remove Ethereum, EVM, Base, Optimism, Arbitrum, and generic multi-chain      
+references                                                                      
+3. make all network/payment language Solana-only                                
+4. replace any protocol-overclaiming language with more accurate x402-inspired  
+product language                                                                
+5. ensure the distinction between:                                              
+    - product layer                                                             
+    - developer experience                                                      
+    - payment flow                                                              
+is clear and consistent                                                         
+6. unify terminology across the app:                                            
+    - programmable access                                                       
+    - monetized resource                                                        
+    - paid endpoint                                                             
+    - settlement                                                                
+    - verification                                                              
+    - Solana-native payment flow                                                
+7. clean up broken or awkward copy in docs and protocol pages                   
+8. preserve the premium tone and strong narrative, but make it more precise and 
+believable                                                                      
+                                                                                
+Positioning to maintain                                                         
+                                                                                
+This should read like:                                                          
+“A Solana-native, x402-inspired platform for monetizing internet resources      
+through programmable access and payment-aware request flows.”                   
+                                                                                
+Deliverables                                                                    
+                                                                                
+- updated landing page copy where needed                                        
+- cleaned protocol page                                                         
+- cleaned quickstart/docs pages                                                 
+- cleaned developer page                                                        
+- consistent terminology across dashboard and docs                              
+                                                                                
+Favor clarity, truthfulness, and strategic positioning over hype

@@ -63,18 +63,18 @@ allow: ["inference.*", "search.web", "data.market.*"]
 // But denies the expensive subscope
 deny:  ["inference.fine-tune"]`} />
         <p>
-          Scopes are also how Astro enforces server-side spend caps and how the settlement layer aggregates revenue for reporting. Designing them well is one of the highest-leverage decisions when modeling a Astro-native API.
+          Scopes are also how Astro enforces server-side spend caps and how the settlement layer aggregates revenue for reporting. Designing them well is one of the highest-leverage decisions when modeling an Astro-native API.
         </p>
       </DocSection>
 
       <DocSection id="quote" title="Quote">
         <p>
-          A quote is the server's offer for a specific request: an exact amount, an asset, a settlement chain, and a single-use nonce — all bound to a TTL. Quotes are returned in the 402 response and live entirely in headers. They carry no state on the server beyond the nonce reservation.
+          A quote is the server's offer for a specific request: an exact amount, an asset, a settlement target, and a single-use nonce — all bound to a TTL. Quotes are returned in the 402 response and live entirely in headers. They carry no state on the server beyond the nonce reservation.
         </p>
         <Params rows={[
           ["amount", "string", "Exact price; not a range, not an estimate."],
           ["asset", "string", "Settlement asset — typically USDC."],
-          ["chain", "string", "Settlement chain target."],
+          ["chain", "string", "Settlement target — 'solana' or 'solana-devnet'."],
           ["nonce", "hex", "Single-use, bound to this resource and quote."],
           ["expires", "unix", "Hard TTL; expired quotes return 409."],
         ]} />
@@ -85,27 +85,27 @@ deny:  ["inference.fine-tune"]`} />
 
       <DocSection id="intent" title="Intent">
         <p>
-          An intent is the client's signed acceptance of a quote. It's an signed message structure that binds the payer's wallet to the exact resource, scope, amount, and nonce — and nothing else. Intents are opaque to the application layer; the client SDK signs them, the server verifies them, your handler never sees them.
+          An intent is the client's signed acceptance of a quote. It's a signed message structure that binds the payer's Solana wallet to the exact resource, scope, amount, and nonce — and nothing else. Intents are opaque to the application layer; the client SDK signs them, the server verifies them, your handler never sees them.
         </p>
         <Code lang="json" code={`{
-  "domain":  { "name": "Astro", "chainId": 8453 },
+  "domain":  { "name": "Astro", "version": "1", "cluster": "mainnet-beta" },
   "scope":   "inference.gpt",
   "amount":  "2100",
   "asset":   "USDC",
-  "nonce":   "0x9f4a…2e1c",
+  "nonce":   "9f4a…2e1c",
   "expires": 1727384981
 }`} />
         <p>
-          Because intents are off-chain signing, every wallet — hardware, mobile, embedded, or backend — can sign them with no Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
+          Because intents use standard Ed25519 signing, every Solana wallet — hardware, mobile, embedded, or backend MPC — can sign them with no Astro-specific tooling. The signature alone proves authorization; replay is prevented by the nonce; overpay is prevented by the exact amount.
         </p>
       </DocSection>
 
       <DocSection id="receipt" title="Receipt">
         <p>
-          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object that is independently verifiable from any Solana RPC. Receipts are what make Astro auditable without sharing private logs.
+          A receipt is the public record of one settled call. It binds the resource, the scope, the amount, the payer, the payee, and the Solana transaction signature into a single object that is independently verifiable from any Solana RPC. Receipts are what make Astro auditable without sharing private logs.
         </p>
         <p>
-          Receipts are returned inline (in the response body or a header), streamed via webhook, and queryable via the reconciliation API. They are also publicly indexable, which means a customer can verify your revenue claims, a partner can verify a referral payout, and an auditor can reconstruct your books — all without you exposing internal data.
+          Receipts are returned inline (in the response body or a header), streamed via webhook, and queryable via the reconciliation API. They are also publicly verifiable on Solana — a customer can confirm your revenue claims, a partner can verify a referral payout, and an auditor can reconstruct your books — all without you exposing internal data.
         </p>
       </DocSection>
 
@@ -127,7 +127,7 @@ deny:  ["inference.fine-tune"]`} />
           <li>The price function evaluates and produces a <strong>quote</strong>.</li>
           <li>The server returns 402 with the quote in headers.</li>
           <li>The client checks <strong>policy</strong>, signs an <strong>intent</strong>, retries.</li>
-          <li>The server verifies the intent, settles onchain, runs the handler.</li>
+          <li>The server verifies the intent on Solana, runs the handler.</li>
           <li>The response carries a <strong>receipt</strong>.</li>
         </ol>
         <p>
@@ -142,7 +142,7 @@ deny:  ["inference.fine-tune"]`} />
           ["Scope", "OAuth scope", "Namespace for capabilities."],
           ["Quote", "Stripe PaymentIntent", "Server-issued offer with TTL."],
           ["Intent", "Ed25519 signature", "Client's signed acceptance."],
-          ["Receipt", "Stripe Charge", "Public, verifiable settlement record."],
+          ["Receipt", "Stripe Charge", "Public, verifiable settlement record on Solana."],
           ["Policy", "Spend rule", "Local guardrail before signing."],
         ]} />
         <p>The analogies are loose — Astro's objects are protocol primitives, not vendor abstractions — but they're useful as a starting point.</p>

@@ -7,9 +7,9 @@ export const Route = createFileRoute("/docs/")({
   head: () => ({
     meta: [
       { title: "Docs — Astro Protocol" },
-      { name: "description", content: "Build paid endpoints, agents, and machine-commerce flows on Astro. Reference, guides, and the x402-inspired specification." },
+      { name: "description", content: "Build paid endpoints, agents, and machine-commerce flows on Astro. Reference, guides, and the x402-inspired specification for Solana." },
       { property: "og:title", content: "Docs — Astro Protocol" },
-      { property: "og:description", content: "Reference, guides, and the x402-inspired specification for the payment-native protocol layer." },
+      { property: "og:description", content: "Reference, guides, and the x402-inspired specification for the Solana-native payment control plane." },
     ],
   }),
   component: DocsIndex,
@@ -33,7 +33,7 @@ function DocsIndex() {
       <PageHeader
         eyebrow="Documentation"
         title="Build on the payment-native internet."
-        intro="Astro turns any endpoint, capability, or digital resource into a programmable, monetizable primitive — settled on Solana. These docs walk through the protocol, the SDKs, the production patterns, and the operational posture in depth."
+        intro="Astro is an x402-inspired control plane that turns any endpoint, capability, or digital resource into a programmable, monetizable primitive — settled on Solana. These docs walk through the protocol, the SDK, the production patterns, and the operational posture in depth."
       />
 
       <DocSection id="introduction" title="Introduction">
@@ -41,28 +41,28 @@ function DocsIndex() {
           The internet was built without a payment layer. Every monetizable interaction — every API call, every paywall, every metered service, every agent action — gets bolted on later through a custom stack of API keys, billing systems, entitlement services, and reconciliation pipelines. The result is a tax that every team pays: weeks of engineering for a flow that should be one HTTP request, opaque revenue that customers can't verify, and brittle integration paths that fail silently when something drifts.
         </p>
         <p>
-          Astro replaces that stack with a single protocol-level idea: <strong>access and payment are the same request</strong>. A caller hits a resource, the server returns a price, the caller signs an intent, the server runs the handler. Settlement is onchain. Receipts are public. There is no separate billing system because there is no separate billing.
+          Astro replaces that stack with a single protocol-level idea: <strong>access and payment are the same request</strong>. A caller hits a resource, the server returns a price, the caller signs an intent, the server runs the handler. Settlement is on Solana. Receipts are public. There is no separate billing system because there is no separate billing.
         </p>
         <Callout>
-          You can ship a paid endpoint in <Mono>~9 lines</Mono> of code. No billing stack, no metering pipeline, no entitlement service. The chain is the source of truth.
+          You can ship a paid endpoint in <Mono>~9 lines</Mono> of code. No billing stack, no metering pipeline, no entitlement service. Solana is the source of truth.
         </Callout>
       </DocSection>
 
       <DocSection id="what" title="What Astro is">
         <p>
-          Astro is an open protocol — built on the long-reserved HTTP <Mono>402 Payment Required</Mono> status code — for declaring, settling, and proving payment for any digital resource. It's also a set of SDKs (TypeScript, Python, Go, Rust) that implement the protocol, and a small set of audited programs on Solana, Solana that handle non-custodial settlement.
+          Astro is an x402-inspired control plane — built on the long-reserved HTTP <Mono>402 Payment Required</Mono> status code — for declaring, settling, and proving payment for any digital resource on Solana. It's a TypeScript SDK that implements the x402-inspired handshake, and a developer dashboard for managing monetized resources, API keys, and payment history.
         </p>
         <p>
-          A Astro endpoint is a normal fetch handler with one extra wrapper. A Astro client is a normal HTTP client with one extra retry rule. The interesting work — pricing logic, settlement chain selection, scope enforcement, receipt generation — happens in the protocol layer, not in your application code.
+          An Astro endpoint is a normal fetch handler with one extra wrapper. An Astro client is a normal HTTP client with one extra retry rule. The interesting work — pricing logic, Solana settlement, scope enforcement, receipt generation — happens in the protocol layer, not in your application code.
         </p>
       </DocSection>
 
       <DocSection id="what-not" title="What Astro isn't">
         <p>
-          Astro is <strong>not</strong> a payment processor in the Stripe sense. There is no merchant account, no acquirer, no chargeback system. It is also not a wallet, not a custodian, and not a token. It does not require your customers to "buy crypto" — modern wallets and embedded MPC services handle that transparently.
+          Astro is <strong>not</strong> a payment processor in the Stripe sense. There is no merchant account, no acquirer, no chargeback system. It is also not a wallet, not a custodian, and not a token. It does not require your customers to "buy crypto" — modern Solana wallets and embedded MPC services handle that transparently.
         </p>
         <p>
-          Most importantly, Astro is not a closed network. The protocol is open, the contracts are public, the SDKs are source-available, and the wire format is documented. If Astro's hosted services disappeared tomorrow, every endpoint built on Astro would still work and every receipt would still verify.
+          Astro is not a full canonical implementation of any published x402 standard — it's an x402-inspired product layer built with the spirit of that protocol. The settlement rail is Solana-only. The positioning is honest: a practical control plane for programmable access and payment, not a universal protocol specification.
         </p>
       </DocSection>
 
@@ -83,9 +83,9 @@ function DocsIndex() {
         <ul className="list-disc pl-5 space-y-2">
           <li><strong>One request.</strong> Access and payment are inseparable. There is no flow where you authenticate first and pay later.</li>
           <li><strong>Stateless servers.</strong> Quotes are cryptographic offers, not reservations. The server never holds session state.</li>
-          <li><strong>Public proofs.</strong> Every paid call produces a receipt anyone can verify. Trust is replaced by math.</li>
-          <li><strong>Open by default.</strong> Open spec, open contracts, source-available SDKs. No part of the protocol is gated by Astro.</li>
-          <li><strong>Boring cryptography.</strong> Ed25519, SPL tokens, Solana programs. No exotic primitives.</li>
+          <li><strong>Public proofs.</strong> Every paid call produces a receipt anyone can verify on Solana. Trust is replaced by math.</li>
+          <li><strong>Solana-native.</strong> SOL and USDC. Ed25519. Sub-second finality. No exotic dependencies.</li>
+          <li><strong>Honest positioning.</strong> x402-inspired, product-first, Solana-only. No overclaiming.</li>
         </ul>
       </DocSection>
 
@@ -98,11 +98,11 @@ pnpm add @astro/sdk
 
 # bun
 bun add @astro/sdk`} />
-        <p>The SDK ships as ESM with full TypeScript types. Server runtimes: Node 20+, Bun, Deno, Cloudflare Workers. First-party SDKs are also available for Python, Go, and Rust — see <Mono>/docs/clients</Mono>.</p>
+        <p>The SDK ships as ESM with full TypeScript types. Supported runtimes: Node 20+, Bun, Deno, Cloudflare Workers.</p>
       </DocSection>
 
       <DocSection id="quickstart" title="Five-minute quickstart">
-        <p>Wrap any handler with <Mono>serve()</Mono>. Define a price. Done.</p>
+        <p>Wrap any handler with <Mono>serve()</Mono>. Define a price in SOL or USDC. Done.</p>
         <Code lang="ts" code={`import { astro } from "@astro/sdk";
 
 export const POST = astro.serve({
@@ -140,11 +140,11 @@ export const POST = astro.serve({
           {[
             ["/docs/quickstart", "Quickstart", "Ship your first paid endpoint in five minutes."],
             ["/docs/concepts", "Core concepts", "Resources, scopes, intents, receipts, and policies."],
-            ["/docs/architecture", "Architecture", "How the SDK, verifier, contracts, and indexer fit together."],
+            ["/docs/architecture", "Architecture", "How the SDK, verifier, programs, and dashboard fit together."],
             ["/docs/handshake", "The 402 handshake", "How access and payment merge into one request."],
             ["/docs/serve", "serve()", "The single primitive that wraps any handler."],
             ["/docs/pricing", "Pricing functions", "Programmable price functions, tiers, and outcomes."],
-            ["/docs/receipts", "Receipts & settlement", "Onchain proofs, chains, and reconciliation."],
+            ["/docs/receipts", "Receipts & settlement", "Onchain proofs and Solana reconciliation."],
             ["/docs/security", "Security model", "Threat model, replay protection, key management."],
             ["/docs/errors", "Errors & status codes", "HTTP codes, typed classes, retry semantics."],
             ["/docs/clients", "SDK clients", "Calling Astro endpoints from apps and agents."],

@@ -6,9 +6,9 @@ export const Route = createFileRoute("/docs/receipts")({
   head: () => ({
     meta: [
       { title: "Receipts & settlement — Astro Docs" },
-      { name: "description", content: "Onchain receipts, supported chains, settlement timing, reconciliation, and webhooks. Every Astro call produces a verifiable proof on Solana." },
+      { name: "description", content: "Onchain receipts, settlement timing, reconciliation, and webhooks on Solana. Every Astro call produces a verifiable proof." },
       { property: "og:title", content: "Receipts & settlement — Astro Docs" },
-      { property: "og:description", content: "Verifiable onchain proofs for every paid endpoint call. Receipts, chains, and reconciliation." },
+      { property: "og:description", content: "Verifiable onchain proofs for every paid endpoint call on Solana. Receipts, timing, and reconciliation." },
     ],
   }),
   component: ReceiptsPage,
@@ -18,7 +18,7 @@ const TOC = [
   { id: "what", label: "What is a receipt" },
   { id: "shape", label: "Receipt shape" },
   { id: "delivery", label: "How receipts are delivered" },
-  { id: "chains", label: "Supported chains" },
+  { id: "chains", label: "Settlement target" },
   { id: "timing", label: "Settlement timing" },
   { id: "verify", label: "Verifying receipts" },
   { id: "reconcile", label: "Reconciliation" },
@@ -33,15 +33,15 @@ function ReceiptsPage() {
       <PageHeader
         eyebrow="Protocol"
         title="Receipts & settlement"
-        intro="Every successful Astro call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled. Receipts are queryable from the SDK, the console, and directly from Solana. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
+        intro="Every successful Astro call produces a receipt — a verifiable, onchain proof that the resource was delivered and the payment was settled on Solana. Receipts are queryable from the SDK, the console, and directly from any Solana RPC. This page covers their shape, delivery mechanisms, verification, and the operational patterns built on top."
       />
 
       <DocSection id="what" title="What is a receipt">
         <p>
-          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, the payee, and the settlement transaction into a single object. Receipts are what make Astro auditable without sharing private logs — anyone with the receipt ID can independently confirm that the payment occurred, on which chain, between which parties, and for which exact amount.
+          A receipt is the public record of one paid request. It binds the resource, the scope, the amount, the payer, the payee, and the Solana transaction signature into a single object. Receipts are what make Astro auditable without sharing private logs — anyone with the receipt ID can independently confirm that the payment occurred, on Solana, between which parties, and for which exact amount.
         </p>
         <p>
-          Crucially, a receipt is not a database row in Astro's infrastructure. It is a derived view over public chain data. The hosted indexer makes receipts convenient to query, but the canonical record lives onchain and any party can reconstruct the same view from a public RPC.
+          Crucially, a receipt is not a database row in Astro's infrastructure. It is a derived view over public Solana data. The hosted dashboard makes receipts convenient to query, but the canonical record lives on Solana and any party can reconstruct the same view from a public RPC.
         </p>
         <Callout>
           You don't have to use Astro's database to trust the data — every receipt is independently verifiable from any Solana RPC. The chain is the source of truth.
@@ -50,21 +50,21 @@ function ReceiptsPage() {
 
       <DocSection id="shape" title="Receipt shape">
         <Code lang="ts" code={`type Receipt = {
-  id:          string;            // "rcp_2NfA…"
-  resource:    string;            // "/v1/infer"
-  scope:       string;            // "inference.gpt"
-  amount:      string;            // "0.0021 USDC"
-  amountRaw:   bigint;            // 2100n (base units)
-  asset:       \`0x\${string}\`;     // SPL token
-  payer:       \`0x\${string}\`;
-  payee:       \`0x\${string}\`;
+  id:          string;          // "rcp_2NfA…"
+  resource:    string;          // "/v1/infer"
+  scope:       string;          // "inference.gpt"
+  amount:      string;          // "0.0021 USDC"
+  amountRaw:   bigint;          // 2100n (base units)
+  asset:       string;          // SPL token mint address
+  payer:       string;          // Solana public key (base58)
+  payee:       string;          // Solana public key (base58)
   chain:       "solana" | "solana-devnet";
-  txHash:      \`0x\${string}\`;
-  blockNumber: number;
-  settledAt:   number;            // unix seconds
-  proof:       \`0x\${string}\`;     // message digest
+  txHash:      string;          // Solana transaction signature
+  blockNumber: number;          // Solana slot number
+  settledAt:   number;          // unix seconds
+  proof:       string;          // message digest
   refunded:    boolean;
-  refundTx?:   \`0x\${string}\`;
+  refundTx?:   string;          // Solana refund transaction signature
 };`} />
       </DocSection>
 
@@ -78,33 +78,30 @@ function ReceiptsPage() {
         <p>All three channels return the same canonical receipt — there is no "summary vs full" split, no eventually-consistent variant, no privileged data only available through one channel.</p>
       </DocSection>
 
-      <DocSection id="chains" title="Supported chains">
+      <DocSection id="chains" title="Settlement target">
         <Params rows={[
-          ["solana", "L1", "~400ms finality, highest assurance, suited for large settlements."],
-          ["base", "Solana", "~1.2s, low fees, default for high-volume API endpoints."],
-          ["optimism", "Solana", "~1.5s, broad ecosystem support."],
-          ["arbitrum", "Solana", "~1.5s, low fees, broad tooling."],
+          ["solana", "Mainnet", "~400ms finality, sub-cent fees, high throughput."],
+          ["solana-devnet", "Devnet", "For development and testing — no real funds required."],
         ]} />
-        <p>Settlement target is declared per-resource in <Mono>serve()</Mono>. The same payer wallet works across all supported chains — the client SDK selects the cheapest path that satisfies the declared target, bridging if necessary.</p>
+        <p>Settlement target is declared per-resource in <Mono>serve()</Mono> as <Mono>{`{ chain: "solana", asset: "USDC" }`}</Mono>. Astro settles exclusively on Solana. The caller's wallet signs the intent and the SDK handles broadcasting the transaction.</p>
       </DocSection>
 
       <DocSection id="timing" title="Settlement timing">
         <p>The settlement transaction is broadcast in parallel with the intent submission, so verification is already in-flight by the time the server begins parsing the intent. End-to-end timing typically looks like:</p>
         <Params rows={[
-          ["Solana (Base, Optimism, Arbitrum)", "~1.2s", "Includes pre-confirmation and one block."],
-          ["Solana", "~13s", "One slot (~400ms)."],
-          ["Optimistic mode", "~50ms", "Server proceeds on signed pre-confirmation; settlement finalizes in background."],
-          ["Batched mode", "~2s window", "Many intents settle in one transaction, amortizing cost."],
+          ["Solana mainnet (pessimistic)", "~400–800ms", "Wait for slot inclusion."],
+          ["Solana mainnet (optimistic)", "~50–100ms", "Proceed on pre-confirmation; finalizes in background."],
+          ["Batched mode", "~1–2s window", "Many intents settle in one transaction, amortizing fee cost."],
         ]} />
-        <p>For latency-sensitive workloads (interactive APIs, real-time agents), prefer Solana with optimistic mode. For high-value settlements (enterprise contracts, bulk transfers), prefer Solana with pessimistic mode.</p>
+        <p>For latency-sensitive workloads (interactive APIs, real-time agents), use optimistic mode. For high-value settlements, pessimistic mode provides stronger finality guarantees before the handler runs.</p>
       </DocSection>
 
       <DocSection id="verify" title="Verifying receipts">
-        <p>Receipts can be verified locally from any Solana RPC, with no Astro dependency. The verifier checks the message digest, confirms the settlement transaction is included on the declared chain, and validates the payer/payee/amount match the receipt.</p>
+        <p>Receipts can be verified locally from any Solana RPC, with no Astro dependency. The verifier checks the message digest, confirms the settlement transaction is included on Solana, and validates the payer/payee/amount match the receipt.</p>
         <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {
-  rpc: "https://mainnet.base.org",
+  rpc: "https://api.mainnet-beta.solana.com",
 });
 
 if (!ok) throw new Error("Invalid receipt");`} />
@@ -112,7 +109,7 @@ if (!ok) throw new Error("Invalid receipt");`} />
       </DocSection>
 
       <DocSection id="reconcile" title="Reconciliation">
-        <p>The SDK exposes a paginated reconciliation API for accounting and revenue reporting. Filters include resource, scope, payer, payee, chain, time range, and refund status.</p>
+        <p>The SDK exposes a paginated reconciliation API for accounting and revenue reporting. Filters include resource, scope, payer, payee, time range, and refund status.</p>
         <Code lang="ts" code={`for await (const r of astro.receipts.list({
   resource: "/v1/infer",
   since:    "2025-01-01",
@@ -141,16 +138,16 @@ meridian.webhooks.on("receipt.refunded", async (e) => {
           Refunds are issued either automatically (when a handler throws after payment was verified) or explicitly (via <Mono>ctx.refund()</Mono> for partial-failure cases). Both produce a refund receipt that links back to the original by ID, so the full transaction history is reconstructable.
         </p>
         <p>
-          Disputes are handled at the application layer, not the protocol layer. Because every call has a public proof, "did this charge happen?" is never a dispute — only "should this charge stand?" is. That dramatically reduces the surface area for chargebacks compared to classic payment systems.
+          Disputes are handled at the application layer, not the protocol layer. Because every call has a public proof on Solana, "did this charge happen?" is never a dispute — only "should this charge stand?" is. That dramatically reduces the surface area for chargebacks compared to classic payment systems.
         </p>
       </DocSection>
 
       <DocSection id="tax" title="Accounting & tax">
         <p>
-          Receipts include enough data to drive standard accrual accounting: a stable identifier, a settled timestamp, a counterparty, and an exact amount in a stable asset. The reconciliation API supports the journal-export formats used by major accounting platforms (QuickBooks, Xero, NetSuite) and tax engines (Stripe Tax, Anrok).
+          Receipts include enough data to drive standard accrual accounting: a stable identifier, a settled timestamp, a counterparty, and an exact amount in a stable asset. The reconciliation API supports the journal-export formats used by major accounting platforms (QuickBooks, Xero, NetSuite) and tax engines.
         </p>
         <p>
-          For jurisdictions that require invoicing, Astro provides an optional invoice-generation service that produces tax-compliant invoices from receipts. This is a hosted convenience; the underlying receipts always remain the canonical record.
+          For jurisdictions that require invoicing, Astro provides an optional invoice-generation service that produces tax-compliant invoices from receipts. This is a hosted convenience; the underlying receipts on Solana always remain the canonical record.
         </p>
       </DocSection>
 

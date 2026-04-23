@@ -6,7 +6,7 @@ export const Route = createFileRoute("/docs/quickstart")({
   head: () => ({
     meta: [
       { title: "Quickstart — Astro Docs" },
-      { name: "description", content: "Ship a paid, programmable endpoint on Astro in under five minutes. Install the SDK, declare a price, and verify the first onchain receipt." },
+      { name: "description", content: "Ship a paid, programmable endpoint on Astro in under five minutes. Install the SDK, declare a price, and verify the first onchain receipt on Solana." },
       { property: "og:title", content: "Quickstart — Astro Docs" },
       { property: "og:description", content: "From npm install to first onchain receipt in five minutes." },
     ],
@@ -19,7 +19,7 @@ const TOC = [
   { id: "install", label: "1. Install" },
   { id: "endpoint", label: "2. Define an endpoint" },
   { id: "price", label: "3. Price the call" },
-  { id: "settle", label: "4. Choose a chain" },
+  { id: "settle", label: "4. Settlement target" },
   { id: "call", label: "5. Make a paid call" },
   { id: "verify", label: "6. Verify the receipt" },
   { id: "next", label: "Where to next" },
@@ -31,15 +31,15 @@ function QuickstartPage() {
       <PageHeader
         eyebrow="Getting started"
         title="Quickstart"
-        intro="From a blank project to a paid, settled API call in five minutes. This walkthrough builds a minimal inference endpoint, prices it per-token, and verifies the first onchain receipt — end-to-end."
+        intro="From a blank project to a paid, settled API call in five minutes. This walkthrough builds a minimal inference endpoint, prices it per-token, and verifies the first onchain receipt — end-to-end on Solana."
       />
 
       <DocSection id="prereqs" title="Prerequisites">
         <p>
-          You'll need a JavaScript runtime (Node 20+, Bun, Deno, or a Worker), a wallet that can sign off-chain message signing (any standard EOA works), and a small amount of USDC on a supported chain. For local development, Astro provides a sandbox network where USDC is freely faucetable — no real funds required.
+          You'll need a JavaScript runtime (Node 20+, Bun, or Deno), a Solana wallet that can sign off-chain messages (any standard Solana wallet works), and a small amount of SOL or USDC on Solana. For local development, Astro provides a devnet sandbox — no real funds required.
         </p>
         <Callout tone="muted">
-          You do <strong>not</strong> need to deploy any programs. Astro's settlement contracts are already deployed on Solana, Solana. Your code only signs and verifies.
+          You do <strong>not</strong> need to deploy any programs. Astro's settlement programs are already deployed on Solana. Your code only signs and verifies.
         </Callout>
       </DocSection>
 
@@ -48,12 +48,12 @@ function QuickstartPage() {
         <Code lang="bash" code={`npm install @astro/sdk
 # or: pnpm add @astro/sdk
 # or: bun add @astro/sdk`} />
-        <p>For Python, Go, and Rust, see <Mono>/docs/clients</Mono>. The wire protocol is identical across languages — what you build with the TypeScript SDK is callable from any other.</p>
+        <p>The wire protocol is language-agnostic — what you build with the TypeScript SDK is callable from any HTTP client that understands the x402-inspired handshake.</p>
       </DocSection>
 
       <DocSection id="endpoint" title="2. Define an endpoint">
         <p>
-          Astro wraps any handler that returns a <Mono>Response</Mono>. There is no proprietary server, no special runtime, no sidecar. The wrapper produces a fetch-compatible function that you can mount in Hono, Next.js Route Handlers, TanStack Start server routes, Express via an adapter, or a raw Cloudflare Worker.
+          Astro wraps any handler that returns a <Mono>Response</Mono>. There is no proprietary server, no special runtime, no sidecar. The wrapper produces a fetch-compatible function that you can mount in Hono, Next.js Route Handlers, Express via an adapter, or any Node.js HTTP server.
         </p>
         <Code lang="ts" code={`// app/api/infer/route.ts (Next.js example)
 import { astro } from "@astro/sdk";
@@ -72,13 +72,13 @@ export const POST = astro.serve({
   },
 });`} />
         <p>
-          Notice what's <em>not</em> there: no auth check, no rate limit, no usage logging, no billing webhook, no entitlement service. The handler runs only after payment is verified onchain — that single guarantee replaces the entire stack you would otherwise assemble.
+          Notice what's <em>not</em> there: no auth check, no rate limit, no usage logging, no billing webhook, no entitlement service. The handler runs only after payment is verified on Solana — that single guarantee replaces the entire stack you would otherwise assemble.
         </p>
       </DocSection>
 
       <DocSection id="price" title="3. Price the call">
         <p>
-          The flat price above is fine for status endpoints, but most real APIs vary in cost. Replace the string with a function that returns a <Mono>Money</Mono> value derived from the request:
+          The flat price above is fine for simple endpoints, but most real APIs vary in cost. Replace the string with a function that returns a <Mono>Money</Mono> value derived from the request:
         </p>
         <Code lang="ts" code={`price: ({ tokens, model }) => {
   const base = model === "gpt-large" ? 0.002 : 0.0005;
@@ -92,16 +92,16 @@ export const POST = astro.serve({
         </Callout>
       </DocSection>
 
-      <DocSection id="settle" title="4. Choose a settlement chain">
+      <DocSection id="settle" title="4. Settlement target">
         <p>
-          The <Mono>settle</Mono> field declares where the payment lands. For high-frequency API traffic, Solana are typical defaults — sub-2-second finality and fees in the single-digit cents. For high-value, low-frequency settlements (enterprise contracts, large batch jobs), Solana provides the strongest assurance.
+          The <Mono>settle</Mono> field declares where the payment lands. Astro settles on Solana — sub-second finality and fees in the fraction-of-a-cent range. Declare your preferred asset (SOL or USDC) and the SDK handles the rest.
         </p>
         <Code lang="ts" code={`settle: { chain: "solana", asset: "USDC" }
-// or: { chain: "solana", asset: "USDC" }
-// or: { chain: "optimism", asset: "USDC" }
-// or: { chain: "arbitrum", asset: "USDC" }`} />
+// or: { chain: "solana", asset: "SOL" }
+// devnet for testing:
+settle: { chain: "solana-devnet", asset: "USDC" }`} />
         <p>
-          Callers do not need to share a chain with you. The Astro client picks the cheapest path that satisfies your declared target, bridging if necessary, and the receipt records the actual settlement chain. From the caller's point of view, every Astro endpoint feels chain-agnostic.
+          From the caller's point of view, every Astro endpoint declares a price — the SDK handles signing, broadcasting, and attaching the proof to the retry request automatically.
         </p>
       </DocSection>
 
@@ -110,7 +110,7 @@ export const POST = astro.serve({
         <Code lang="ts" code={`import { astroClient } from "@astro/sdk";
 
 const client = astroClient({
-  wallet:   signer,           // any off-chain signing-capable signer
+  wallet:   signer,           // any Solana-compatible signer
   maxSpend: "1 USDC / hour",  // local guardrail
 });
 
@@ -122,22 +122,22 @@ const res = await client.fetch("https://api.acme.dev/v1/infer", {
 const data    = await res.json();
 const receipt = res.receipt; // attached automatically`} />
         <p>
-          Behind the scenes: the first request returns 402 with a quote and nonce, the SDK signs an off-chain signing intent, settles on the declared chain, and replays the request with the proof attached. All of that completes in roughly 1.2 seconds on Solana — comparable to a normal authenticated API call.
+          Behind the scenes: the first request returns 402 with a quote and nonce, the SDK signs a payment intent using Ed25519, settles on Solana, and replays the request with the proof attached. All of that completes in roughly 500ms to 1 second on Solana mainnet.
         </p>
       </DocSection>
 
       <DocSection id="verify" title="6. Verify the receipt">
-        <p>The response carries a receipt that any party can verify against an Solana RPC, with no Astro dependency:</p>
+        <p>The response carries a receipt that any party can verify against a Solana RPC, with no Astro dependency:</p>
         <Code lang="ts" code={`import { verifyReceipt } from "@astro/sdk";
 
 const ok = await verifyReceipt(receipt, {
-  rpc: "https://mainnet.base.org",
+  rpc: "https://api.mainnet-beta.solana.com",
 });
 
 if (!ok) throw new Error("Invalid receipt");
 console.log("Settled:", receipt.amount, "tx:", receipt.txHash);`} />
         <p>
-          This is the foundational property of Astro: <strong>every paid call produces a public, independently verifiable proof.</strong> Your customers don't have to trust your dashboard. Your auditors don't have to ingest your logs. The chain is the source of truth.
+          This is the foundational property of Astro: <strong>every paid call produces a public, independently verifiable proof on Solana.</strong> Your customers don't have to trust your dashboard. Your auditors don't have to ingest your logs. The chain is the source of truth.
         </p>
       </DocSection>
 
@@ -145,7 +145,7 @@ console.log("Settled:", receipt.amount, "tx:", receipt.txHash);`} />
         <p>You now have a working paid endpoint. To go deeper:</p>
         <ul className="list-disc pl-5 space-y-2">
           <li><strong>Concepts:</strong> read <Mono>/docs/concepts</Mono> to understand resources, scopes, intents, and receipts as first-class objects.</li>
-          <li><strong>Architecture:</strong> see <Mono>/docs/architecture</Mono> for how the verifier, settlement contracts, and SDKs fit together.</li>
+          <li><strong>Architecture:</strong> see <Mono>/docs/architecture</Mono> for how the verifier, settlement programs, and SDK fit together.</li>
           <li><strong>Pricing:</strong> tiered, derived, and outcome-based pricing patterns at <Mono>/docs/pricing</Mono>.</li>
           <li><strong>Agents:</strong> autonomous machine commerce with budgets and scope allowlists at <Mono>/docs/agents</Mono>.</li>
         </ul>

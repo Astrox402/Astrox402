@@ -9,7 +9,7 @@ const EXAMPLES = [
   {
     tag: "TypeScript",
     title: "Per-token inference endpoint",
-    desc: "Wrap a language model inference handler with serve(). Price per output token. Settle in USDC on Base.",
+    desc: "Wrap a language model inference handler with serve(). Price per output token. Settle in USDC on Solana.",
     complexity: "Starter",
     code: `import { astro } from "@astro/sdk";
 
