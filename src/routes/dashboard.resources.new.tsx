@@ -391,10 +391,11 @@ function CreateResourcePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 opacity-50">
+          <div className="grid grid-cols-3 gap-4 opacity-50">
             {[
-              { label: "Rate limit", placeholder: "e.g. 100 req / min" },
-              { label: "Payment verification", placeholder: "Ed25519 signature (default)" },
+              { label: "Rate limit",            placeholder: "e.g. 100 req / min" },
+              { label: "Payment verification",  placeholder: "Ed25519 signature (default)" },
+              { label: "Settlement mode",       placeholder: "Instant · on-chain (default)" },
             ].map((f) => (
               <div key={f.label}>
                 <FieldLabel>{f.label}</FieldLabel>
