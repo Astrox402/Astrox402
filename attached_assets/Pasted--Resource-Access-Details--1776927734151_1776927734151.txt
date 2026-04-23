@@ -1,0 +1,38 @@
+#### Resource Access Details                                                    
+                                                                                
+Fields such as:                                                                 
+- endpoint URL or resource identifier                                           
+- method or invocation type                                                     
+- optional version                                                              
+- environment tag                                                               
+                                                                                
+Environment options:                                                            
+- Development                                                                   
+- Staging                                                                       
+- Production                                                                    
+                                                                                
+#### Pricing Configuration                                                      
+                                                                                
+Fields such as:                                                                 
+- pricing model                                                                 
+- amount                                                                        
+- asset                                                                         
+- settlement rail label if needed                                               
+                                                                                
+Pricing model options:                                                          
+- fixed per request                                                             
+- fixed per execution                                                           
+- fixed per access                                                              
+- usage-based placeholder (disabled or marked coming soon)                      
+                                                                                
+Asset examples:                                                                 
+- USDC                                                                          
+- SOL                                                                           
+                                                                                
+Important:                                                                      
+Do not expose a multi-network selector.                                         
+This app is Solana-only.                                                        
+If needed, simply show a subtle label like:                                     
+- Settlement: Solana                                                            
+or                                                                              
+- Payment Rail: Solana                      

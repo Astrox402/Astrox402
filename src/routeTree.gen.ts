@@ -46,6 +46,7 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settin
 import { Route as DashboardResourcesRouteImport } from './routes/dashboard.resources'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard.payments'
 import { Route as DashboardDeveloperRouteImport } from './routes/dashboard.developer'
+import { Route as DashboardResourcesNewRouteImport } from './routes/dashboard.resources.new'
 import { Route as DashboardResourcesIdRouteImport } from './routes/dashboard.resources.$id'
 
 const StatusRoute = StatusRouteImport.update({
@@ -233,6 +234,11 @@ const DashboardDeveloperRoute = DashboardDeveloperRouteImport.update({
   path: '/developer',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardResourcesNewRoute = DashboardResourcesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DashboardResourcesRoute,
+} as any)
 const DashboardResourcesIdRoute = DashboardResourcesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -278,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
+  '/dashboard/resources/new': typeof DashboardResourcesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
   '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
+  '/dashboard/resources/new': typeof DashboardResourcesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -357,6 +365,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/dashboard/resources/$id': typeof DashboardResourcesIdRoute
+  '/dashboard/resources/new': typeof DashboardResourcesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -399,6 +408,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/docs/'
     | '/dashboard/resources/$id'
+    | '/dashboard/resources/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/docs'
     | '/dashboard/resources/$id'
+    | '/dashboard/resources/new'
   id:
     | '__root__'
     | '/'
@@ -477,6 +488,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/docs/'
     | '/dashboard/resources/$id'
+    | '/dashboard/resources/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -762,6 +774,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDeveloperRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/resources/new': {
+      id: '/dashboard/resources/new'
+      path: '/new'
+      fullPath: '/dashboard/resources/new'
+      preLoaderRoute: typeof DashboardResourcesNewRouteImport
+      parentRoute: typeof DashboardResourcesRoute
+    }
     '/dashboard/resources/$id': {
       id: '/dashboard/resources/$id'
       path: '/$id'
@@ -774,10 +793,12 @@ declare module '@tanstack/react-router' {
 
 interface DashboardResourcesRouteChildren {
   DashboardResourcesIdRoute: typeof DashboardResourcesIdRoute
+  DashboardResourcesNewRoute: typeof DashboardResourcesNewRoute
 }
 
 const DashboardResourcesRouteChildren: DashboardResourcesRouteChildren = {
   DashboardResourcesIdRoute: DashboardResourcesIdRoute,
+  DashboardResourcesNewRoute: DashboardResourcesNewRoute,
 }
 
 const DashboardResourcesRouteWithChildren =

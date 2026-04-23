@@ -1,0 +1,240 @@
+The landing page and dashboard already exist.                                   
+Authentication is already in place and users can sign in and access the         
+dashboard.                                                                      
+                                                                                
+This product is an x402-inspired platform for monetizing:                       
+- APIs                                                                          
+- agents                                                                        
+- tools                                                                         
+- datasets                                                                      
+- digital resources                                                             
+                                                                                
+The product narrative is about:                                                 
+- programmable access                                                           
+- payment-native resources                                                      
+- monetized endpoints                                                           
+- usage-native economics                                                        
+                                                                                
+Important:                                                                      
+This version of the product is Solana-focused only.                             
+Do not build this as a multi-chain product.                                     
+Do not emphasize Ethereum, EVM, or generic crypto dashboard patterns.           
+The UX should feel like a modern developer control plane for monetized internet 
+resources using Solana-native payment rails.                                    
+                                                                                
+Goal                                                                            
+                                                                                
+Build a fully designed and coherent Create Resource experience that allows a    
+user to define a monetizable resource inside the dashboard.                     
+                                                                                
+This is the first action that should make the product feel operational.         
+                                                                                
+What to Build                                                                   
+                                                                                
+### 1. New Route                                                                
+                                                                                
+Create a route such as:                                                         
+- /dashboard/resources/new                                                      
+                                                                                
+### 2. Create Resource Page                                                     
+                                                                                
+Build a polished multi-section page or structured form where the user can create
+a new resource.                                                                 
+                                                                                
+The page should include:                                                        
+                                                                                
+#### Basic Information                                                          
+                                                                                
+- Resource name                                                                 
+- Resource type                                                                 
+- Short description                                                             
+                                                                                
+Resource type options:                                                          
+- API Endpoint                                                                  
+- Agent Capability                                                              
+- Tool Action                                                                   
+- Dataset Access                                                                
+- Content / Digital Asset                                                       
+- Webhook / Automation Action                                                   
+                                                                                
+#### Resource Access Details                                                    
+                                                                                
+Fields such as:                                                                 
+- endpoint URL or resource identifier                                           
+- method or invocation type                                                     
+- optional version                                                              
+- environment tag                                                               
+                                                                                
+Environment options:                                                            
+- Development                                                                   
+- Staging                                                                       
+- Production                                                                    
+                                                                                
+#### Pricing Configuration                                                      
+                                                                                
+Fields such as:                                                                 
+- pricing model                                                                 
+- amount                                                                        
+- asset                                                                         
+- settlement rail label if needed                                               
+                                                                                
+Pricing model options:                                                          
+- fixed per request                                                             
+- fixed per execution                                                           
+- fixed per access                                                              
+- usage-based placeholder (disabled or marked coming soon)                      
+                                                                                
+Asset examples:                                                                 
+- USDC                                                                          
+- SOL                                                                           
+                                                                                
+Important:                                                                      
+Do not expose a multi-network selector.                                         
+This app is Solana-only.                                                        
+If needed, simply show a subtle label like:                                     
+- Settlement: Solana                                                            
+or                                                                              
+- Payment Rail: Solana                                                          
+                                                                                
+#### Access Policy                                                              
+                                                                                
+Fields such as:                                                                 
+- visibility (private / public / gated)                                         
+- rate limit placeholder                                                        
+- payment verification mode placeholder                                         
+- settlement mode placeholder                                                   
+                                                                                
+#### Status                                                                     
+                                                                                
+- Draft                                                                         
+- Active                                                                        
+                                                                                
+### 3. UX Requirements                                                          
+                                                                                
+The Create Resource flow should:                                                
+- feel premium and productized                                                  
+- be easy to scan                                                               
+- use grouped cards or sections                                                 
+- include helper text where needed                                              
+- include inline validation                                                     
+- include a strong primary CTA like:                                            
+    - Create Resource                                                           
+    - Save Resource                                                             
+    - Publish Resource                                                          
+                                                                                
+Also include:                                                                   
+- cancel action                                                                 
+- back to resources action                                                      
+- loading state on submit                                                       
+- success state or redirect behavior                                            
+                                                                                
+### 4. Submit Behavior                                                          
+                                                                                
+On successful submit:                                                           
+- create a mock resource object                                                 
+- save it in the existing mock data layer or local state/store                  
+- redirect user to either:                                                      
+    - /dashboard/resources                                                      
+    - or the new resource detail page /dashboard/resources/[id]                 
+                                                                                
+Preferred behavior:                                                             
+redirect to the newly created resource detail page.                             
+                                                                                
+### 5. Resource Detail Compatibility                                            
+                                                                                
+Make sure the newly created resource can be viewed in the Resource Detail page. 
+                                                                                
+The detail page should display:                                                 
+- name                                                                          
+- type                                                                          
+- description                                                                   
+- endpoint/resource identifier                                                  
+- pricing config                                                                
+- asset                                                                         
+- settlement rail: Solana                                                       
+- status                                                                        
+                                                                                
+### 6. Resource List Compatibility                                              
+                                                                                
+Make sure the new resource appears in:                                          
+- /dashboard/resources                                                          
+- recent resources if applicable                                                
+- dashboard overview summaries if applicable                                    
+                                                                                
+### 7. Empty State Improvement                                                  
+                                                                                
+If no resources exist yet, improve the empty state in the resources page to     
+encourage creation:                                                             
+- strong headline                                                               
+- short explanatory copy                                                        
+- CTA button to create first resource                                           
+                                                                                
+Example idea:                                                                   
+“Create your first monetized resource”                                          
+“Define a paid endpoint, capability, or digital asset and start shaping         
+programmable access with Solana-native settlement.”                             
+                                                                                
+Design Direction                                                                
+                                                                                
+Keep the same premium visual language as the rest of the app:                   
+- dark theme                                                                    
+- refined spacing                                                               
+- clean typography                                                              
+- subtle borders                                                                
+- modern cards                                                                  
+- polished inputs                                                               
+- elegant status badges                                                         
+- minimal but rich interface                                                    
+                                                                                
+Avoid:                                                                          
+- generic CRUD form aesthetics                                                  
+- clunky enterprise form layouts                                                
+- cheap web3 visuals                                                            
+- excessive neon/glow                                                           
+- generic multi-chain dashboard language                                        
+                                                                                
+Product Language                                                                
+                                                                                
+Use copy aligned with the x402-inspired narrative:                              
+- programmable access                                                           
+- monetized resource                                                            
+- payment configuration                                                         
+- settlement                                                                    
+- verification                                                                  
+- paid endpoint                                                                 
+- Solana-native payment flow                                                    
+                                                                                
+Do not make it sound like:                                                      
+- a token trading dashboard                                                     
+- a wallet tracker                                                              
+- a DeFi terminal                                                               
+- a multi-chain infrastructure panel                                            
+                                                                                
+Technical Expectations                                                          
+                                                                                
+- keep the implementation modular                                               
+- reuse existing layout/components where possible                               
+- create reusable form sections/components if helpful                           
+- use mock data for now                                                         
+- structure code so a real backend can be connected later                       
+- make the flow production-friendly in architecture even if data is currently   
+mocked                                                                          
+                                                                                
+Deliverables                                                                    
+                                                                                
+Implement:                                                                      
+1. create resource route                                                        
+2. create resource form UI                                                      
+3. form validation                                                              
+4. submit flow                                                                  
+5. mock persistence/state update                                                
+6. redirect after creation                                                      
+7. resource list integration                                                    
+8. resource detail integration                                                  
+9. improved empty state for resources page                                      
+                                                                                
+Additional Instruction                                                          
+                                                                                
+Favor product realism over feature bloat.                                       
+This should feel like the first truly meaningful action inside the app.         
+Keep the payment rail language Solana-native and focused. 
