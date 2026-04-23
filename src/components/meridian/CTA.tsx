@@ -41,7 +41,7 @@ export function CTA() {
             </form>
 
             <div className="mt-6 flex items-center justify-center gap-6 text-[12px] text-muted-foreground">
-              <a href="#docs" className="hover:text-foreground transition-colors">Read the protocol →</a>
+              <a href="/docs" className="hover:text-foreground transition-colors">Read the protocol →</a>
               <span className="opacity-40">·</span>
               <a href="#" className="hover:text-foreground transition-colors">Talk to the team</a>
             </div>
