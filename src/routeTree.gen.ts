@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsServeRouteImport } from './routes/docs.serve'
+import { Route as DocsReceiptsRouteImport } from './routes/docs.receipts'
+import { Route as DocsPricingRouteImport } from './routes/docs.pricing'
+import { Route as DocsHandshakeRouteImport } from './routes/docs.handshake'
+import { Route as DocsClientsRouteImport } from './routes/docs.clients'
 
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
@@ -22,31 +27,93 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocsServeRoute = DocsServeRouteImport.update({
+  id: '/serve',
+  path: '/serve',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsReceiptsRoute = DocsReceiptsRouteImport.update({
+  id: '/receipts',
+  path: '/receipts',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPricingRoute = DocsPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsHandshakeRoute = DocsHandshakeRouteImport.update({
+  id: '/handshake',
+  path: '/handshake',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsClientsRoute = DocsClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => DocsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/docs': typeof DocsRoute
+  '/docs': typeof DocsRouteWithChildren
+  '/docs/clients': typeof DocsClientsRoute
+  '/docs/handshake': typeof DocsHandshakeRoute
+  '/docs/pricing': typeof DocsPricingRoute
+  '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/docs': typeof DocsRoute
+  '/docs': typeof DocsRouteWithChildren
+  '/docs/clients': typeof DocsClientsRoute
+  '/docs/handshake': typeof DocsHandshakeRoute
+  '/docs/pricing': typeof DocsPricingRoute
+  '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/docs': typeof DocsRoute
+  '/docs': typeof DocsRouteWithChildren
+  '/docs/clients': typeof DocsClientsRoute
+  '/docs/handshake': typeof DocsHandshakeRoute
+  '/docs/pricing': typeof DocsPricingRoute
+  '/docs/receipts': typeof DocsReceiptsRoute
+  '/docs/serve': typeof DocsServeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/docs'
+  fullPaths:
+    | '/'
+    | '/docs'
+    | '/docs/clients'
+    | '/docs/handshake'
+    | '/docs/pricing'
+    | '/docs/receipts'
+    | '/docs/serve'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/docs'
-  id: '__root__' | '/' | '/docs'
+  to:
+    | '/'
+    | '/docs'
+    | '/docs/clients'
+    | '/docs/handshake'
+    | '/docs/pricing'
+    | '/docs/receipts'
+    | '/docs/serve'
+  id:
+    | '__root__'
+    | '/'
+    | '/docs'
+    | '/docs/clients'
+    | '/docs/handshake'
+    | '/docs/pricing'
+    | '/docs/receipts'
+    | '/docs/serve'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DocsRoute: typeof DocsRoute
+  DocsRoute: typeof DocsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,13 +132,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs/serve': {
+      id: '/docs/serve'
+      path: '/serve'
+      fullPath: '/docs/serve'
+      preLoaderRoute: typeof DocsServeRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/receipts': {
+      id: '/docs/receipts'
+      path: '/receipts'
+      fullPath: '/docs/receipts'
+      preLoaderRoute: typeof DocsReceiptsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/pricing': {
+      id: '/docs/pricing'
+      path: '/pricing'
+      fullPath: '/docs/pricing'
+      preLoaderRoute: typeof DocsPricingRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/handshake': {
+      id: '/docs/handshake'
+      path: '/handshake'
+      fullPath: '/docs/handshake'
+      preLoaderRoute: typeof DocsHandshakeRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/clients': {
+      id: '/docs/clients'
+      path: '/clients'
+      fullPath: '/docs/clients'
+      preLoaderRoute: typeof DocsClientsRouteImport
+      parentRoute: typeof DocsRoute
+    }
   }
 }
 
+interface DocsRouteChildren {
+  DocsClientsRoute: typeof DocsClientsRoute
+  DocsHandshakeRoute: typeof DocsHandshakeRoute
+  DocsPricingRoute: typeof DocsPricingRoute
+  DocsReceiptsRoute: typeof DocsReceiptsRoute
+  DocsServeRoute: typeof DocsServeRoute
+}
+
+const DocsRouteChildren: DocsRouteChildren = {
+  DocsClientsRoute: DocsClientsRoute,
+  DocsHandshakeRoute: DocsHandshakeRoute,
+  DocsPricingRoute: DocsPricingRoute,
+  DocsReceiptsRoute: DocsReceiptsRoute,
+  DocsServeRoute: DocsServeRoute,
+}
+
+const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DocsRoute: DocsRoute,
+  DocsRoute: DocsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
