@@ -35,86 +35,88 @@
 
 ## Overview
 
-**Astro** is a product and protocol concept for the **programmable internet**: a world where APIs, agents, and digital resources can expose price, payment, authorization, settlement, and receipt verification directly in the request lifecycle.
+**Astro** is a product and protocol concept for the programmable internet, where APIs, agents, and digital resources can expose pricing, authorization, settlement, and receipt verification directly inside the request lifecycle.
 
-This repository currently ships three product layers in one codebase:
+This repository combines three layers in one codebase:
 
-1. **Marketing site** for the Astro narrative and ecosystem positioning
-2. **Developer documentation** for the protocol, concepts, and handshake model
-3. **Authenticated dashboard / console** for managing paid resources, API keys, payment activity, settings, and a handshake playground
+1. **Marketing site** for Astro's positioning and product narrative
+2. **Documentation system** for protocol concepts, architecture, and handshake flows
+3. **Authenticated console** for managing resources, API keys, payments, and developer workflows
 
-It is not just a landing page. It is a working full-stack prototype of a payment-native access layer.
+This is more than a landing page. It is a working prototype of a payment-native access layer.
 
 ---
 
-## Core idea
+## Core thesis
 
-Instead of treating billing as a separate SaaS system, Astro moves monetization closer to the resource itself.
+Traditional internet monetization usually depends on separate billing systems, user accounts, delayed settlement, and workflows designed for humans rather than software.
 
-A request can become:
+Astro explores a different model: access itself becomes programmable.
 
-- discoverable
-- quotable
-- payable
-- verifiable
-- settleable
-- receiptable
+A request can be:
 
-All in one flow.
+- discovered
+- quoted
+- authorized
+- paid
+- verified
+- settled
+- receipted
 
-That unlocks use cases like:
+All within one coherent flow.
+
+This model is well-suited for:
 
 - paid AI inference endpoints
-- metered agent tools
+- monetized agent tools
 - premium datasets
-- document transformation APIs
-- one-shot workflows
-- machine-to-machine payments
-- developer-controlled monetized gateways
+- one-shot compute or transformation APIs
+- machine-to-machine commerce
+- programmable developer platforms
 
 ---
 
-## What this repo includes
+## What this repository includes
 
 ### Product surfaces
 
-- `/` , cinematic landing page with product narrative, protocol framing, ecosystem positioning, and CTA flow
-- `/docs/*` , documentation system for quickstart, concepts, architecture, handshake, receipts, pricing, security, clients, and FAQ
-- `/dashboard/*` , authenticated console for resource operations and developer tooling
-- `/protocol` , protocol philosophy and high-level design
-- `/specification` , wire-spec style presentation of the quote / intent / receipt model
-- `/console`, `/pricing`, `/examples`, `/sdks`, `/security`, `/status`, etc. , additional product and ecosystem pages
+- `/` , marketing homepage with product narrative, protocol framing, ecosystem signaling, and conversion paths
+- `/docs/*` , structured documentation for concepts, quickstart, handshake, receipts, security, pricing, architecture, and FAQ
+- `/dashboard/*` , authenticated console for resource operations and developer workflows
+- `/protocol` , high-level explanation of the protocol model
+- `/specification` , wire-spec style presentation of quote, intent, and receipt semantics
+- `/console`, `/pricing`, `/examples`, `/sdks`, `/security`, `/status`, and additional ecosystem pages
 
 ### Dashboard capabilities
 
-- sign in with **Privy**
-- support for **email, Google, GitHub, and wallet login**
-- manage monetized resources
-- inspect payments and settlement activity
-- retrieve or auto-provision API keys
-- view aggregate stats
-- configure settings and wallet context
-- run a **handshake playground** that simulates the paid request lifecycle step by step
+- authenticate with **Privy**
+- support **email, Google, GitHub, and wallet login**
+- create and manage monetized resources
+- inspect payments and settlement-oriented activity
+- retrieve or provision API keys
+- view aggregate platform statistics
+- configure profile, wallet, and environment settings
+- run a **handshake playground** that simulates the end-to-end paid request lifecycle
 
 ### Backend capabilities
 
-- lightweight API routes served from the app runtime
+- lightweight application-side API routes
 - PostgreSQL-backed resources, payments, and API key records
 - user scoping through `X-User-Id`
 - typed frontend API client
-- local persistence bridge for auth state used by route guards
+- local auth persistence bridge for route guards
 
 ---
 
 ## How it works
 
-### 1. Product-level flow
+### 1. Product flow
 
 ```text
 Visitor lands on Astro
         |
         v
-Reads thesis, docs, and protocol framing
+Reads product and protocol material
         |
         v
 Authenticates with Privy
@@ -122,16 +124,16 @@ Authenticates with Privy
         v
 Enters dashboard
         |
-        +--> creates paid resource
+        +--> creates a resource
         |
-        +--> gets API key
+        +--> retrieves an API key
         |
-        +--> reviews payments / stats
+        +--> reviews payments and stats
         |
-        +--> runs handshake playground
+        +--> runs the handshake playground
 ```
 
-### 2. Payment-native request model
+### 2. Payment-native request flow
 
 ```text
 Client Request
@@ -139,7 +141,7 @@ Client Request
      v
 Protected Resource
      |
-     +--> if payment required
+     +--> payment required
              |
              v
        HTTP 402-style Quote
@@ -148,7 +150,7 @@ Protected Resource
       Client signs intent
              |
              v
-      Server verifies binding
+      Server verifies quote binding
              |
              v
       Solana settlement
@@ -157,7 +159,7 @@ Protected Resource
       Receipt + fulfilled response
 ```
 
-### 3. Current app architecture
+### 3. Current application architecture
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
@@ -183,7 +185,7 @@ Protected Resource
                      resources / api_keys / payments
 ```
 
-### 4. Authentication model
+### 4. Authentication flow
 
 ```text
 Privy login
@@ -210,55 +212,55 @@ setApiUserId(user.id) -> X-User-Id on API calls
 
 ## Feature map
 
-| Area | What exists now |
+| Area | Current scope |
 |---|---|
-| Landing | Hero, manifesto, solution framing, use cases, dashboard previews, docs previews |
-| Docs | Nested docs routes for concepts, architecture, quickstart, handshake, serve, receipts, pricing, security, clients, FAQ |
-| Auth | Privy integration with social + wallet login |
-| Resource management | Create, list, edit, delete, and inspect resources |
-| Payments | Payment history UI and settlement-oriented presentation |
-| Developer tools | API key retrieval, SDK framing, developer onboarding |
-| Playground | Guided handshake simulator with visual step timeline and payload viewer |
+| Landing | Hero, manifesto, use-case framing, dashboard preview, docs preview, protocol narrative |
+| Docs | Nested routes for concepts, architecture, quickstart, handshake, receipts, pricing, security, clients, and FAQ |
+| Auth | Privy-based authentication with social and wallet entry points |
+| Resource management | Create, list, update, delete, and inspect resources |
+| Payments | Payment history views and settlement-oriented presentation |
+| Developer tooling | API key retrieval, onboarding flows, and protocol framing |
+| Playground | Guided handshake simulator with timeline and payload viewer |
 | Data layer | PostgreSQL-backed resources, stats, and API key retrieval |
-| Visual system | High-polish motion, dark theme, branded protocol aesthetic |
+| Visual system | Motion-heavy, polished dark-mode interface with protocol branding |
 
 ---
 
-## Screens and flows
+## User-facing experience
 
-### Landing experience
+### Landing
 
 The homepage combines:
 
 - product positioning
-- protocol narrative
-- animated payment flow visualization
+- protocol storytelling
+- animated payment flow visuals
 - ecosystem trust signaling
-- dashboard preview
-- documentation preview
-- manifesto / thesis framing
+- dashboard previews
+- documentation previews
+- manifesto-driven messaging
 
-### Documentation experience
+### Documentation
 
-The docs section is structured around developer comprehension, not just marketing copy. It covers:
+The docs experience is organized around developer understanding rather than pure marketing copy. It covers:
 
 - protocol concepts
-- handshake model
+- handshake flows
 - architecture
-- pricing mental model
-- errors
+- pricing logic
 - receipts
-- security
-- clients and serving patterns
+- error framing
+- security posture
+- client and serving patterns
 
-### Console experience
+### Console
 
-The dashboard is designed as an operator control plane for paid resources:
+The dashboard acts as an operator control plane for monetized resources:
 
 - overview metrics
 - resource lifecycle management
 - payment activity
-- API key and developer settings
+- API key management
 - wallet-aware settings
 - interactive handshake simulation
 
@@ -287,13 +289,13 @@ The dashboard is designed as an operator control plane for paid resources:
 
 - **PostgreSQL**
 - custom API route layer in `server/routes.ts`
-- user scoping via `X-User-Id`
+- user scoping through `X-User-Id`
 
-### Infra and deployment-oriented pieces
+### Infrastructure-oriented pieces
 
 - **Cloudflare Vite plugin**
-- **Wrangler config** present
-- Vite-based runtime with API middleware pattern
+- **Wrangler configuration**
+- Vite-based runtime with API middleware handling
 
 ---
 
@@ -333,7 +335,7 @@ The dashboard is designed as an operator control plane for paid resources:
 
 ## API surface
 
-Current backend routes observed in the codebase:
+The currently visible backend routes in the codebase are:
 
 ### Resources
 
@@ -353,7 +355,7 @@ Current backend routes observed in the codebase:
 
 ### Auth scope
 
-All API routes are scoped by:
+All API routes are scoped with:
 
 - `X-User-Id: <privy-user-id>`
 
@@ -361,31 +363,31 @@ All API routes are scoped by:
 
 ## Important implementation note
 
-There is currently a **small docs-vs-code gap** worth knowing:
+There is a small but important docs-to-code gap in the current repository state:
 
-- the frontend API client includes `createPayment()`
-- the backend routes shown in `server/routes.ts` expose `GET /api/payments`, but the visible route set does **not** yet include `POST /api/payments`
+- the frontend API client exposes `createPayment()`
+- the visible backend routes in `server/routes.ts` include `GET /api/payments`, but not `POST /api/payments`
 
-So if you are extending this repo, that payment-write path is an obvious next implementation step to fully align the playground and payment history flow.
-
----
-
-## Authentication and identity flow
-
-1. User opens the site
-2. User clicks sign in
-3. Privy opens the auth modal
-4. User authenticates via email, Google, GitHub, or wallet
-5. `buildUserFromPrivy()` normalizes the user model
-6. User state is persisted locally for route guards
-7. Dashboard bootstraps API identity with `setApiUserId(user.id)`
-8. Requests to the backend are scoped to that user
+That makes payment persistence an obvious next implementation step if the goal is full alignment between the playground flow and the backend API surface.
 
 ---
 
-## Integration badges
+## Authentication and identity lifecycle
 
-This project conceptually and technically sits at the intersection of the following systems:
+1. A user opens the site
+2. The user starts sign-in
+3. Privy opens the authentication modal
+4. The user authenticates through email, Google, GitHub, or wallet
+5. `buildUserFromPrivy()` normalizes the application user model
+6. User state is persisted locally for route protection
+7. The dashboard initializes API identity with `setApiUserId(user.id)`
+8. Backend calls are scoped to that authenticated user
+
+---
+
+## Integration stack
+
+This project sits at the intersection of the following technologies:
 
 - ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 - ![TanStack](https://img.shields.io/badge/TanStack-FF6B00?style=flat-square)
@@ -403,23 +405,23 @@ This project conceptually and technically sits at the intersection of the follow
 
 ## Why this project matters
 
-Most internet monetization still assumes:
+Most internet monetization systems still assume:
 
-- human checkout flows
+- human-first checkout flows
 - accounts before access
-- external billing systems
-- delayed settlement
+- external billing layers
+- delayed reconciliation
 - weak machine-to-machine economics
 
 Astro explores the opposite:
 
 - software-native payment flows
 - request-bound access control
-- cryptographic proof of payment intent
+- cryptographic payment intent verification
 - chain-verifiable settlement
-- protocol-grade monetization primitives
+- protocol-level monetization primitives
 
-It is closer to a **financial transport layer for digital access** than a normal SaaS dashboard.
+This makes Astro closer to a **financial transport layer for digital access** than a conventional SaaS dashboard.
 
 ---
 
@@ -429,7 +431,7 @@ It is closer to a **financial transport layer for digital access** than a normal
 
 - Node.js 22+
 - pnpm recommended
-- PostgreSQL database
+- PostgreSQL
 - Privy app id
 
 ### Install
@@ -447,7 +449,7 @@ VITE_PRIVY_APP_ID=your_privy_app_id
 DATABASE_URL=postgresql://user:password@host:5432/dbname
 ```
 
-### Start dev server
+### Start development server
 
 ```bash
 pnpm run dev
@@ -467,43 +469,43 @@ pnpm run preview
 
 ---
 
-## Suggested database entities
+## Inferred data model
 
-The current code implies these primary entities:
+The current codebase implies three primary entities:
 
 - `resources`
 - `api_keys`
 - `payments`
 
-Likely fields include resource identity, endpoint metadata, pricing configuration, network / token selection, request counts, revenue totals, and timestamps.
+The field model appears to include resource identity, endpoint metadata, pricing configuration, token and network selection, request counts, revenue totals, and timestamps.
 
 ---
 
-## Roadmap ideas
+## Logical next steps
 
-If you continue building this repo, the highest-leverage next steps are probably:
+The highest-leverage next improvements are likely:
 
 - implement `POST /api/payments`
-- connect playground settlement simulation to real persisted payment writes
+- connect playground settlement simulation to real payment persistence
 - add receipt verification views
-- expose real quote / intent payload generation endpoints
+- expose real quote and intent generation endpoints
 - add webhook and provider callback support
-- introduce usage analytics per resource
-- add multi-team / workspace support
-- ship real SDK examples for providers and consumers
-- support devnet vs mainnet switching more explicitly
-- generate OpenAPI or protocol reference artifacts from source
+- introduce per-resource usage analytics
+- add multi-team or workspace support
+- ship concrete SDK examples for providers and consumers
+- support clearer devnet and mainnet switching
+- generate formal protocol reference artifacts from source
 
 ---
 
-## Social and project links
+## Project links
 
 - **Repository:** <https://github.com/jennitsme/programmable-internet>
 - **Issues:** <https://github.com/jennitsme/programmable-internet/issues>
 - **Pull Requests:** <https://github.com/jennitsme/programmable-internet/pulls>
 - **Discussions:** <https://github.com/jennitsme/programmable-internet/discussions>
 
-If you have official socials, add them here:
+If official public channels exist, this section can be extended with:
 
 - **Website:** `https://your-domain.com`
 - **X / Twitter:** `https://x.com/yourhandle`
@@ -513,30 +515,23 @@ If you have official socials, add them here:
 
 ---
 
-## Positioning in one sentence
+## One-line positioning
 
-**Astro is a payment-native protocol and console for turning APIs, agents, and digital resources into first-class programmable economic primitives.**
+**Astro is a payment-native protocol and console for turning APIs, agents, and digital resources into programmable economic primitives.**
 
 ---
 
 ## Contributing
 
-If you contribute to this repo:
+When contributing to this repository:
 
-1. keep the protocol language consistent
-2. keep docs aligned with the actual implementation
-3. prefer typed interfaces over ad-hoc payloads
-4. treat README as both product narrative and technical truth source
+1. keep protocol language consistent
+2. keep documentation aligned with the implementation
+3. prefer typed contracts over ad-hoc payloads
+4. treat the README as both product narrative and technical truth source
 
 ---
 
 ## License
 
-Add a license file if you want this repository to be clearly reusable in public contexts.
-
-If you want, I can also help generate:
-
-- a **much more visual README with SVG banners and cards**
-- a **Bahasa Indonesia version**
-- a **GitHub profile-grade social/footer section with real handles and brand assets**
-- a **docs/architecture.md** sourced directly from the codebase
+Add a license file if this repository is intended to be reusable in public or commercial contexts.
