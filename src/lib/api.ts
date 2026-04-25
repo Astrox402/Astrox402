@@ -57,7 +57,8 @@ export interface ApiStats {
     active_resources: string;
     total_resources: string;
     total_requests: string;
-    total_revenue_lamports: string;
+    total_sol_revenue_lamports: string;
+    total_usdc_revenue_lamports: string;
   };
   payments: {
     settled_count: string;
