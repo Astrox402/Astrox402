@@ -1,5 +1,38 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { FlowDiagram } from "./FlowDiagram";
+
+const CA = "4gkCwSATNmZCFWwNjRJyeLhcRjriunrsXAiDV4i4pump";
+
+function ContractAddress() {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(CA);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={copy}
+      className="group inline-flex items-center gap-2.5 px-3.5 py-2 rounded-lg border border-border/60 bg-surface/30 hover:bg-surface/60 hover:border-border transition-all text-[12px] font-mono cursor-pointer"
+    >
+      <span className="text-muted-foreground/60 tracking-wider uppercase text-[10px]">CA</span>
+      <span className="text-foreground/70 tracking-tight hidden sm:inline">{CA}</span>
+      <span className="text-foreground/70 tracking-tight sm:hidden">{CA.slice(0, 8)}…{CA.slice(-6)}</span>
+      <span className="ml-1 text-[10px] tracking-wider uppercase transition-colors" style={{ color: copied ? "oklch(0.72 0.26 355)" : undefined }}>
+        {copied ? (
+          <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-accent">
+            <path fillRule="evenodd" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0z" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors">
+            <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+          </svg>
+        )}
+      </span>
+    </button>
+  );
+}
 
 export function Hero() {
   return (
@@ -62,6 +95,15 @@ export function Hero() {
           <a href="/docs" className="inline-flex h-11 items-center px-5 rounded-md border border-border bg-surface/40 text-[14px] font-medium hover:bg-surface transition-colors">
             Read the protocol →
           </a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
+          className="mt-6 flex justify-center"
+        >
+          <ContractAddress />
         </motion.div>
 
         <motion.div
