@@ -160,7 +160,7 @@ const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: 
     method: "GET", pattern: /^\/api\/stats$/,
     handler(req, res) {
       const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);
-      const r = dbQuery(interpolate(`SELECT COUNT(*) FILTER (WHERE status='active') AS active_resources,COUNT(*) AS total_resources,COALESCE(SUM(requests),0) AS total_requests,COALESCE(SUM(revenue_lamports),0) AS total_revenue_lamports FROM resources WHERE user_id=$1`,[u]));
+      const r = dbQuery(interpolate(`SELECT COUNT(*) FILTER (WHERE status='active') AS active_resources,COUNT(*) AS total_resources,COALESCE(SUM(requests),0) AS total_requests,COALESCE(SUM(revenue_lamports) FILTER (WHERE price_token='SOL'),0) AS total_sol_revenue_lamports,COALESCE(SUM(revenue_lamports) FILTER (WHERE price_token='USDC'),0) AS total_usdc_revenue_lamports FROM resources WHERE user_id=$1`,[u]));
       const p = dbQuery(interpolate(`SELECT COUNT(*) FILTER (WHERE status='settled') AS settled_count,COUNT(*) FILTER (WHERE status='pending') AS pending_count,COUNT(*) FILTER (WHERE status='failed') AS failed_count,COALESCE(SUM(amount_lamports) FILTER (WHERE status='settled'),0) AS total_settled_lamports FROM payments WHERE user_id=$1`,[u]));
       jsonResp(res, { resources: r[0]??{}, payments: p[0]??{} });
     },
