@@ -121,6 +121,28 @@ export interface ApiWebhook {
   failure_count: number;
 }
 
+export interface ApiAlert {
+  id: string;
+  user_id: string;
+  alert_type: "revenue_threshold" | "new_payer" | "payment_count";
+  threshold: number;
+  token: string;
+  email: string;
+  is_active: boolean;
+  last_fired_at: string | null;
+  fire_count: number;
+  created_at: string;
+}
+
+export interface ApiBlocklistEntry {
+  id: string;
+  resource_id: string;
+  user_id: string;
+  wallet: string;
+  note: string;
+  created_at: string;
+}
+
 export interface ApiWebhookDelivery {
   id: string;
   webhook_id: string;
@@ -261,6 +283,41 @@ export const api = {
     const r = await apiFetch(`/api/webhook-deliveries?webhook_id=${encodeURIComponent(webhookId)}`);
     if (!r.ok) return [];
     return r.json();
+  },
+
+  async getAlerts(): Promise<ApiAlert[]> {
+    const r = await apiFetch("/api/alerts");
+    if (!r.ok) return [];
+    return r.json();
+  },
+
+  async createAlert(data: { alert_type: string; threshold: number; token: string; email: string }): Promise<ApiAlert> {
+    const r = await apiFetch("/api/alerts", { method: "POST", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async updateAlert(id: string, data: Partial<ApiAlert>): Promise<ApiAlert> {
+    const r = await apiFetch(`/api/alerts/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async deleteAlert(id: string): Promise<void> {
+    await apiFetch(`/api/alerts/${id}`, { method: "DELETE" });
+  },
+
+  async getBlocklist(resourceId: string): Promise<ApiBlocklistEntry[]> {
+    const r = await apiFetch(`/api/blocklist?resource_id=${encodeURIComponent(resourceId)}`);
+    if (!r.ok) return [];
+    return r.json();
+  },
+
+  async addToBlocklist(data: { resource_id: string; wallet: string; note?: string }): Promise<ApiBlocklistEntry> {
+    const r = await apiFetch("/api/blocklist", { method: "POST", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async removeFromBlocklist(id: string): Promise<void> {
+    await apiFetch(`/api/blocklist/${id}`, { method: "DELETE" });
   },
 
   async createPayment(data: {
