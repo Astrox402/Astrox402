@@ -29,14 +29,54 @@ export interface ApiResource {
   revenue_lamports: number;
   created_at: string;
   updated_at: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ApiKey {
   id: string;
   user_id: string;
+  label: string;
   key_value: string;
   created_at: string;
   last_used_at: string | null;
+  expires_at: string | null;
+  scopes: string;
+  usage_count: number;
+  usage_limit: number;
+}
+
+export interface ApiEvent {
+  id: string;
+  user_id: string;
+  event_type: string;
+  entity_type: string;
+  entity_id: string;
+  entity_name: string;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface ApiRevenue {
+  by_resource: Array<{
+    resource_id: string;
+    resource_name: string;
+    tx_count: string;
+    sol_total: string;
+    usdc_total: string;
+    last_at: string;
+  }>;
+  by_day: Array<{
+    day: string;
+    sol_total: string;
+    usdc_total: string;
+    tx_count: string;
+  }>;
+  totals: {
+    sol_total: string;
+    usdc_total: string;
+    tx_count: string;
+    unique_payers: string;
+  };
 }
 
 export interface ApiPayment {
@@ -68,6 +108,41 @@ export interface ApiStats {
   };
 }
 
+export interface ApiWebhook {
+  id: string;
+  user_id: string;
+  url: string;
+  secret: string;
+  events: string;
+  is_active: boolean;
+  created_at: string;
+  last_ping_at: string | null;
+  delivery_count: number;
+  failure_count: number;
+}
+
+export interface ApiAnalytics {
+  payers: Array<{
+    payer_wallet: string;
+    payment_count: string;
+    sol_total: string;
+    usdc_total: string;
+    last_at: string;
+  }>;
+  daily: Array<{
+    day: string;
+    tx_count: string;
+    sol_vol: string;
+    usdc_vol: string;
+  }>;
+  tokens: Array<{
+    token: string;
+    count: string;
+    total_lamports: string;
+  }>;
+  unique_payers: { count: string };
+}
+
 export const api = {
   async getResources(): Promise<ApiResource[]> {
     const r = await apiFetch("/api/resources");
@@ -95,12 +170,6 @@ export const api = {
     await apiFetch(`/api/resources/${id}`, { method: "DELETE" });
   },
 
-  async getApiKey(): Promise<ApiKey | null> {
-    const r = await apiFetch("/api/api-keys");
-    if (!r.ok) return null;
-    return r.json();
-  },
-
   async getPayments(): Promise<ApiPayment[]> {
     const r = await apiFetch("/api/payments");
     if (!r.ok) return [];
@@ -110,6 +179,69 @@ export const api = {
   async getStats(): Promise<ApiStats | null> {
     const r = await apiFetch("/api/stats");
     if (!r.ok) return null;
+    return r.json();
+  },
+
+  async getRevenue(): Promise<ApiRevenue | null> {
+    const r = await apiFetch("/api/revenue");
+    if (!r.ok) return null;
+    return r.json();
+  },
+
+  async getEvents(): Promise<ApiEvent[]> {
+    const r = await apiFetch("/api/events");
+    if (!r.ok) return [];
+    return r.json();
+  },
+
+  async getApiKeys(): Promise<ApiKey[]> {
+    const r = await apiFetch("/api/api-keys");
+    if (!r.ok) return [];
+    return r.json();
+  },
+
+  async createApiKey(data: { label: string; scopes: string[]; expires_at?: string | null; usage_limit?: number }): Promise<ApiKey> {
+    const r = await apiFetch("/api/api-keys", { method: "POST", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async deleteApiKey(id: string): Promise<void> {
+    await apiFetch(`/api/api-keys/${id}`, { method: "DELETE" });
+  },
+
+  async updateApiKey(id: string, data: Partial<Pick<ApiKey, "label" | "scopes" | "expires_at" | "usage_limit">>): Promise<ApiKey> {
+    const r = await apiFetch(`/api/api-keys/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async getAnalytics(): Promise<ApiAnalytics | null> {
+    const r = await apiFetch("/api/analytics");
+    if (!r.ok) return null;
+    return r.json();
+  },
+
+  async getWebhooks(): Promise<ApiWebhook[]> {
+    const r = await apiFetch("/api/webhooks");
+    if (!r.ok) return [];
+    return r.json();
+  },
+
+  async createWebhook(data: { url: string; events: string[] }): Promise<ApiWebhook> {
+    const r = await apiFetch("/api/webhooks", { method: "POST", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async updateWebhook(id: string, data: Partial<ApiWebhook>): Promise<ApiWebhook> {
+    const r = await apiFetch(`/api/webhooks/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+    return r.json();
+  },
+
+  async deleteWebhook(id: string): Promise<void> {
+    await apiFetch(`/api/webhooks/${id}`, { method: "DELETE" });
+  },
+
+  async pingWebhook(id: string): Promise<{ ok: boolean; sent_at?: string }> {
+    const r = await apiFetch(`/api/webhooks/${id}/ping`, { method: "POST" });
     return r.json();
   },
 
