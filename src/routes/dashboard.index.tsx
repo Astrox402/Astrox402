@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useResources } from "@/lib/resourceStore";
 import { api, type ApiPayment, type ApiStats, lamportsToDisplay, timeAgo } from "@/lib/api";
+import { usePaymentStream } from "@/hooks/usePaymentStream";
+import { getUser } from "@/lib/auth";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardOverview,
@@ -30,6 +32,11 @@ function DashboardOverview() {
   const [stats, setStats]       = useState<ApiStats | null>(null);
   const [payments, setPayments] = useState<ApiPayment[]>([]);
   const [loading, setLoading]   = useState(true);
+  const [livePayment, setLivePayment] = useState<ApiPayment | null>(null);
+  const [liveVisible, setLiveVisible] = useState(false);
+
+  const user = getUser();
+  const userId = user?.id ?? null;
 
   useEffect(() => {
     let cancelled = false;
@@ -43,20 +50,57 @@ function DashboardOverview() {
     return () => { cancelled = true; };
   }, []);
 
+  const handleLivePayment = useCallback((p: ApiPayment) => {
+    setPayments((prev) => [p, ...prev.slice(0, 49)]);
+    setStats((prev) => {
+      if (!prev) return prev;
+      const settled = p.status === "settled" ? 1 : 0;
+      return {
+        ...prev,
+        resources: {
+          ...prev.resources,
+          total_requests: String(Number(prev.resources.total_requests) + 1),
+          total_sol_revenue_lamports: p.token === "SOL" && p.status === "settled"
+            ? String(Number(prev.resources.total_sol_revenue_lamports) + Number(p.amount_lamports))
+            : prev.resources.total_sol_revenue_lamports,
+          total_usdc_revenue_lamports: p.token === "USDC" && p.status === "settled"
+            ? String(Number(prev.resources.total_usdc_revenue_lamports) + Number(p.amount_lamports))
+            : prev.resources.total_usdc_revenue_lamports,
+        },
+        payments: {
+          ...prev.payments,
+          settled_count: String(Number(prev.payments.settled_count) + settled),
+          total_settled_lamports: p.status === "settled"
+            ? String(Number(prev.payments.total_settled_lamports) + Number(p.amount_lamports))
+            : prev.payments.total_settled_lamports,
+        },
+      };
+    });
+    setLivePayment(p);
+    setLiveVisible(true);
+    setTimeout(() => setLiveVisible(false), 5000);
+  }, []);
+
+  usePaymentStream(userId, handleLivePayment);
+
   const isEmpty = resources.length === 0;
 
-  const totalRevenueLamports  = stats ? Number(stats.resources.total_revenue_lamports) : 0;
-  const totalRequests         = stats ? Number(stats.resources.total_requests) : 0;
-  const activeResources       = stats ? Number(stats.resources.active_resources) : 0;
-  const totalResources        = stats ? Number(stats.resources.total_resources) : 0;
-  const settledCount          = stats ? Number(stats.payments.settled_count) : 0;
-  const failedCount           = stats ? Number(stats.payments.failed_count) : 0;
-  const totalPayments         = settledCount + (stats ? Number(stats.payments.pending_count) : 0) + failedCount;
-  const paidRate              = totalPayments > 0 ? `${((settledCount / totalPayments) * 100).toFixed(1)}%` : "—";
+  const totalSolRevLam  = stats ? Number(stats.resources.total_sol_revenue_lamports) : 0;
+  const totalUsdcRevLam = stats ? Number(stats.resources.total_usdc_revenue_lamports) : 0;
+  const totalRequests   = stats ? Number(stats.resources.total_requests) : 0;
+  const activeResources = stats ? Number(stats.resources.active_resources) : 0;
+  const totalResources  = stats ? Number(stats.resources.total_resources) : 0;
+  const settledCount    = stats ? Number(stats.payments.settled_count) : 0;
+  const failedCount     = stats ? Number(stats.payments.failed_count) : 0;
+  const totalPayments   = settledCount + (stats ? Number(stats.payments.pending_count) : 0) + failedCount;
+  const paidRate        = totalPayments > 0 ? `${((settledCount / totalPayments) * 100).toFixed(1)}%` : "—";
 
-  const revenueDisplay = totalRevenueLamports > 0
-    ? lamportsToDisplay(totalRevenueLamports, "SOL")
-    : "0 SOL";
+  const revenueDisplay = (() => {
+    const parts: string[] = [];
+    if (totalSolRevLam > 0)  parts.push(lamportsToDisplay(totalSolRevLam, "SOL"));
+    if (totalUsdcRevLam > 0) parts.push(lamportsToDisplay(totalUsdcRevLam, "USDC"));
+    return parts.length > 0 ? parts.join(" + ") : "—";
+  })();
 
   const STATS = [
     {
@@ -97,9 +141,30 @@ function DashboardOverview() {
 
   return (
     <div className="p-6 space-y-6 max-w-[1400px]">
-      <div>
-        <h1 className="text-xl font-semibold">Overview</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Your x402 control plane</p>
+
+      {/* Live payment toast */}
+      <div className={`fixed top-5 right-5 z-50 transition-all duration-500 ${liveVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3 pointer-events-none"}`}>
+        {livePayment && (
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-accent/30 bg-background/95 backdrop-blur-md shadow-2xl shadow-black/40">
+            <span className="h-2 w-2 rounded-full bg-accent animate-pulse flex-shrink-0" />
+            <div className="text-[12.5px]">
+              <span className="font-medium text-accent">+{lamportsToDisplay(livePayment.amount_lamports, livePayment.token)}</span>
+              <span className="text-muted-foreground"> — {livePayment.resource_name}</span>
+            </div>
+            <span className="text-[10px] font-mono text-muted-foreground/50 flex-shrink-0">live</span>
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">Overview</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Your x402 control plane</p>
+        </div>
+        <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground/50">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+          Live
+        </div>
       </div>
 
       {/* Stat cards */}
@@ -107,12 +172,12 @@ function DashboardOverview() {
         {STATS.map((s) => (
           <div key={s.label} className="rounded-xl border border-border bg-surface/50 p-5 relative overflow-hidden">
             <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-5 ${
-              s.color === "accent" ? "bg-accent" : s.color === "blue" ? "bg-blue-500" : s.color === "purple" ? "bg-purple-500" : "bg-emerald-500"
+              s.color === "accent" ? "bg-accent" : s.color === "blue" ? "bg-blue-500" : s.color === "purple" ? "bg-purple-500" : "bg-accent"
             }`}/>
             <div className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground mb-3">{s.label}</div>
             <div className="text-2xl font-semibold font-mono tracking-tight mb-1">{s.value}</div>
             <div className={`text-[11px] font-mono ${
-              s.color === "accent" ? "text-accent/70" : s.color === "blue" ? "text-blue-400/70" : s.color === "purple" ? "text-purple-400/70" : "text-emerald-400/70"
+              s.color === "accent" ? "text-accent/70" : s.color === "blue" ? "text-blue-400/70" : s.color === "purple" ? "text-purple-400/70" : "text-accent/70"
             }`}>{s.sub}</div>
           </div>
         ))}
@@ -214,7 +279,7 @@ function DashboardOverview() {
                 {recentActivity.map((p) => (
                   <div key={p.id} className="flex items-start gap-3">
                     <div className={`mt-0.5 h-1.5 w-1.5 rounded-full flex-shrink-0 ${
-                      p.status === "settled" ? "bg-emerald-400" : p.status === "failed" ? "bg-red-400" : "bg-accent"
+                      p.status === "settled" ? "bg-accent" : p.status === "failed" ? "bg-red-400" : "bg-muted-foreground/40"
                     }`}/>
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-medium truncate">
@@ -224,7 +289,7 @@ function DashboardOverview() {
                     </div>
                     <div className="text-right flex-shrink-0">
                       <div className={`text-[11px] font-mono ${
-                        p.status === "settled" ? "text-emerald-400" : p.status === "failed" ? "text-red-400" : "text-muted-foreground"
+                        p.status === "settled" ? "text-accent" : p.status === "failed" ? "text-red-400" : "text-muted-foreground"
                       }`}>
                         {p.status === "settled" ? "+" : ""}{lamportsToDisplay(p.amount_lamports, p.token)}
                       </div>
@@ -269,18 +334,18 @@ function DashboardOverview() {
                     <td className="py-3 pr-6 text-muted-foreground font-mono text-[11px]">{r.type}</td>
                     <td className="py-3 pr-6 font-mono text-accent/80">{r.amount} {r.asset}</td>
                     <td className="py-3 pr-6 font-mono">{r.requests.toLocaleString()}</td>
-                    <td className="py-3 pr-6 font-mono text-emerald-400">{r.revenue}</td>
+                    <td className="py-3 pr-6 font-mono text-accent/80">{r.revenue}</td>
                     <td className="py-3">
                       <span className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full border ${
-                        r.status === "active"   ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+                        r.status === "active"   ? "bg-accent/10 border-accent/20 text-accent"               :
                         r.status === "paused"   ? "bg-yellow-500/10  border-yellow-500/20  text-yellow-400"  :
                         r.status === "archived" ? "bg-red-500/10     border-red-500/20     text-red-400"     :
                         "bg-border/30 border-border text-muted-foreground"
                       }`}>
                         <span className={`h-1 w-1 rounded-full ${
-                          r.status === "active"   ? "bg-emerald-400" :
-                          r.status === "paused"   ? "bg-yellow-400"  :
-                          r.status === "archived" ? "bg-red-400"     : "bg-muted-foreground"
+                          r.status === "active"   ? "bg-accent"        :
+                          r.status === "paused"   ? "bg-yellow-400"    :
+                          r.status === "archived" ? "bg-red-400"       : "bg-muted-foreground"
                         }`}/>
                         {r.status}
                       </span>
