@@ -47,11 +47,51 @@ const NAV_ITEMS = [
     ),
   },
   {
+    label: "Analytics",
+    to: "/dashboard/analytics",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M1 13h13M3 13V8m3 5V5m3 8V3m3 10V7"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Revenue",
+    to: "/dashboard/revenue",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <circle cx="7.5" cy="7.5" r="5.5"/>
+        <path d="M7.5 4.5v.5M7.5 10v.5M5.5 9s0 1.5 2 1.5 2-1 2-1-0-1.5-2-1.5-2-1.5-2-1.5 0-1 2-1 2 1.5 2 1.5"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Receipts",
+    to: "/dashboard/receipts",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M3 1h9a1 1 0 0 1 1 1v11l-2-1.5L9 13.5 7.5 12 6 13.5 4 12 2 13.5V2a1 1 0 0 1 1-1z"/>
+        <path d="M5 5h5M5 8h3"/>
+      </svg>
+    ),
+  },
+  {
     label: "Developer",
     to: "/dashboard/developer",
     icon: (
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
         <path d="M4.5 4L1 7.5 4.5 11M10.5 4L14 7.5 10.5 11M8.5 2L6.5 13"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Webhooks",
+    to: "/dashboard/webhooks",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M6 4.5a2.5 2.5 0 1 1 5 0c0 1.5-1 2-2 3.5H7"/>
+        <path d="M5.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+        <path d="M9 8.5c.5 1 1.5 2.5 1.5 2.5"/>
       </svg>
     ),
   },
@@ -63,6 +103,17 @@ const NAV_ITEMS = [
         <path d="M2 4.5h11M2 4.5C2 3.67 2.67 3 3.5 3h8c.83 0 1.5.67 1.5 1.5"/>
         <rect x="2" y="4.5" width="11" height="8" rx="0"/>
         <path d="M5 8l2 2 3-3"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Audit Log",
+    to: "/dashboard/audit",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M2 3h11M2 7h7M2 11h5"/>
+        <circle cx="12" cy="10.5" r="2"/>
+        <path d="M13.5 12l1.5 1.5"/>
       </svg>
     ),
   },
@@ -319,13 +370,13 @@ function DashboardLayout() {
 
           {/* Wallet / network badge */}
           <div className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-border bg-white/4 text-[11px] font-mono text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0 animate-pulse"/>
+            <span className="h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0 animate-pulse"/>
             <span className="hidden sm:inline">Solana Mainnet</span>
             <span className="sm:hidden">SOL</span>
             {walletDisplay && (
               <>
                 <span className="ml-1 text-muted-foreground/40">·</span>
-                <span className="text-emerald-400/80 font-mono">{walletDisplay}</span>
+                <span className="text-accent/80 font-mono">{walletDisplay}</span>
               </>
             )}
           </div>
