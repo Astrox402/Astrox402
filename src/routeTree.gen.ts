@@ -41,15 +41,21 @@ import { Route as DocsConceptsRouteImport } from './routes/docs.concepts'
 import { Route as DocsClientsRouteImport } from './routes/docs.clients'
 import { Route as DocsArchitectureRouteImport } from './routes/docs.architecture'
 import { Route as DocsAgentsRouteImport } from './routes/docs.agents'
+import { Route as DashboardWebhooksRouteImport } from './routes/dashboard.webhooks'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardRevenueRouteImport } from './routes/dashboard.revenue'
 import { Route as DashboardResourcesRouteImport } from './routes/dashboard.resources'
+import { Route as DashboardReceiptsRouteImport } from './routes/dashboard.receipts'
 import { Route as DashboardPlaygroundRouteImport } from './routes/dashboard.playground'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard.payments'
 import { Route as DashboardDeveloperRouteImport } from './routes/dashboard.developer'
+import { Route as DashboardAuditRouteImport } from './routes/dashboard.audit'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard.analytics'
 import { Route as DashboardResourcesIndexRouteImport } from './routes/dashboard.resources.index'
 import { Route as DashboardResourcesNewRouteImport } from './routes/dashboard.resources.new'
 import { Route as DashboardResourcesIdRouteImport } from './routes/dashboard.resources.$id'
 import { Route as DashboardResourcesIdIndexRouteImport } from './routes/dashboard.resources.$id.index'
+import { Route as DashboardResourcesIdPolicyRouteImport } from './routes/dashboard.resources.$id.policy'
 import { Route as DashboardResourcesIdEditRouteImport } from './routes/dashboard.resources.$id.edit'
 
 const StatusRoute = StatusRouteImport.update({
@@ -212,14 +218,29 @@ const DocsAgentsRoute = DocsAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => DocsRoute,
 } as any)
+const DashboardWebhooksRoute = DashboardWebhooksRouteImport.update({
+  id: '/webhooks',
+  path: '/webhooks',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardRevenueRoute = DashboardRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardResourcesRoute = DashboardResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReceiptsRoute = DashboardReceiptsRouteImport.update({
+  id: '/receipts',
+  path: '/receipts',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardPlaygroundRoute = DashboardPlaygroundRouteImport.update({
@@ -235,6 +256,16 @@ const DashboardPaymentsRoute = DashboardPaymentsRouteImport.update({
 const DashboardDeveloperRoute = DashboardDeveloperRouteImport.update({
   id: '/developer',
   path: '/developer',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAuditRoute = DashboardAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardResourcesIndexRoute = DashboardResourcesIndexRouteImport.update({
@@ -256,6 +287,12 @@ const DashboardResourcesIdIndexRoute =
   DashboardResourcesIdIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => DashboardResourcesIdRoute,
+  } as any)
+const DashboardResourcesIdPolicyRoute =
+  DashboardResourcesIdPolicyRouteImport.update({
+    id: '/policy',
+    path: '/policy',
     getParentRoute: () => DashboardResourcesIdRoute,
   } as any)
 const DashboardResourcesIdEditRoute =
@@ -284,11 +321,16 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/playground': typeof DashboardPlaygroundRoute
+  '/dashboard/receipts': typeof DashboardReceiptsRoute
   '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
+  '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/webhooks': typeof DashboardWebhooksRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -307,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources/': typeof DashboardResourcesIndexRoute
   '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id/policy': typeof DashboardResourcesIdPolicyRoute
   '/dashboard/resources/$id/': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -326,10 +369,15 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/playground': typeof DashboardPlaygroundRoute
+  '/dashboard/receipts': typeof DashboardReceiptsRoute
+  '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/webhooks': typeof DashboardWebhooksRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -347,6 +395,7 @@ export interface FileRoutesByTo {
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources': typeof DashboardResourcesIndexRoute
   '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id/policy': typeof DashboardResourcesIdPolicyRoute
   '/dashboard/resources/$id': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRoutesById {
@@ -369,11 +418,16 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/specification': typeof SpecificationRoute
   '/status': typeof StatusRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/developer': typeof DashboardDeveloperRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/playground': typeof DashboardPlaygroundRoute
+  '/dashboard/receipts': typeof DashboardReceiptsRoute
   '/dashboard/resources': typeof DashboardResourcesRouteWithChildren
+  '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/webhooks': typeof DashboardWebhooksRoute
   '/docs/agents': typeof DocsAgentsRoute
   '/docs/architecture': typeof DocsArchitectureRoute
   '/docs/clients': typeof DocsClientsRoute
@@ -392,6 +446,7 @@ export interface FileRoutesById {
   '/dashboard/resources/new': typeof DashboardResourcesNewRoute
   '/dashboard/resources/': typeof DashboardResourcesIndexRoute
   '/dashboard/resources/$id/edit': typeof DashboardResourcesIdEditRoute
+  '/dashboard/resources/$id/policy': typeof DashboardResourcesIdPolicyRoute
   '/dashboard/resources/$id/': typeof DashboardResourcesIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -415,11 +470,16 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/analytics'
+    | '/dashboard/audit'
     | '/dashboard/developer'
     | '/dashboard/payments'
     | '/dashboard/playground'
+    | '/dashboard/receipts'
     | '/dashboard/resources'
+    | '/dashboard/revenue'
     | '/dashboard/settings'
+    | '/dashboard/webhooks'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -438,6 +498,7 @@ export interface FileRouteTypes {
     | '/dashboard/resources/new'
     | '/dashboard/resources/'
     | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id/policy'
     | '/dashboard/resources/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -457,10 +518,15 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/analytics'
+    | '/dashboard/audit'
     | '/dashboard/developer'
     | '/dashboard/payments'
     | '/dashboard/playground'
+    | '/dashboard/receipts'
+    | '/dashboard/revenue'
     | '/dashboard/settings'
+    | '/dashboard/webhooks'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -478,6 +544,7 @@ export interface FileRouteTypes {
     | '/dashboard/resources/new'
     | '/dashboard/resources'
     | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id/policy'
     | '/dashboard/resources/$id'
   id:
     | '__root__'
@@ -499,11 +566,16 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/specification'
     | '/status'
+    | '/dashboard/analytics'
+    | '/dashboard/audit'
     | '/dashboard/developer'
     | '/dashboard/payments'
     | '/dashboard/playground'
+    | '/dashboard/receipts'
     | '/dashboard/resources'
+    | '/dashboard/revenue'
     | '/dashboard/settings'
+    | '/dashboard/webhooks'
     | '/docs/agents'
     | '/docs/architecture'
     | '/docs/clients'
@@ -522,6 +594,7 @@ export interface FileRouteTypes {
     | '/dashboard/resources/new'
     | '/dashboard/resources/'
     | '/dashboard/resources/$id/edit'
+    | '/dashboard/resources/$id/policy'
     | '/dashboard/resources/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -772,6 +845,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsAgentsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/dashboard/webhooks': {
+      id: '/dashboard/webhooks'
+      path: '/webhooks'
+      fullPath: '/dashboard/webhooks'
+      preLoaderRoute: typeof DashboardWebhooksRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -779,11 +859,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSettingsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/revenue': {
+      id: '/dashboard/revenue'
+      path: '/revenue'
+      fullPath: '/dashboard/revenue'
+      preLoaderRoute: typeof DashboardRevenueRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/resources': {
       id: '/dashboard/resources'
       path: '/resources'
       fullPath: '/dashboard/resources'
       preLoaderRoute: typeof DashboardResourcesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/receipts': {
+      id: '/dashboard/receipts'
+      path: '/receipts'
+      fullPath: '/dashboard/receipts'
+      preLoaderRoute: typeof DashboardReceiptsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/playground': {
@@ -805,6 +899,20 @@ declare module '@tanstack/react-router' {
       path: '/developer'
       fullPath: '/dashboard/developer'
       preLoaderRoute: typeof DashboardDeveloperRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/audit': {
+      id: '/dashboard/audit'
+      path: '/audit'
+      fullPath: '/dashboard/audit'
+      preLoaderRoute: typeof DashboardAuditRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/resources/': {
@@ -835,6 +943,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardResourcesIdIndexRouteImport
       parentRoute: typeof DashboardResourcesIdRoute
     }
+    '/dashboard/resources/$id/policy': {
+      id: '/dashboard/resources/$id/policy'
+      path: '/policy'
+      fullPath: '/dashboard/resources/$id/policy'
+      preLoaderRoute: typeof DashboardResourcesIdPolicyRouteImport
+      parentRoute: typeof DashboardResourcesIdRoute
+    }
     '/dashboard/resources/$id/edit': {
       id: '/dashboard/resources/$id/edit'
       path: '/edit'
@@ -847,11 +962,13 @@ declare module '@tanstack/react-router' {
 
 interface DashboardResourcesIdRouteChildren {
   DashboardResourcesIdEditRoute: typeof DashboardResourcesIdEditRoute
+  DashboardResourcesIdPolicyRoute: typeof DashboardResourcesIdPolicyRoute
   DashboardResourcesIdIndexRoute: typeof DashboardResourcesIdIndexRoute
 }
 
 const DashboardResourcesIdRouteChildren: DashboardResourcesIdRouteChildren = {
   DashboardResourcesIdEditRoute: DashboardResourcesIdEditRoute,
+  DashboardResourcesIdPolicyRoute: DashboardResourcesIdPolicyRoute,
   DashboardResourcesIdIndexRoute: DashboardResourcesIdIndexRoute,
 }
 
@@ -874,20 +991,30 @@ const DashboardResourcesRouteWithChildren =
   DashboardResourcesRoute._addFileChildren(DashboardResourcesRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardAuditRoute: typeof DashboardAuditRoute
   DashboardDeveloperRoute: typeof DashboardDeveloperRoute
   DashboardPaymentsRoute: typeof DashboardPaymentsRoute
   DashboardPlaygroundRoute: typeof DashboardPlaygroundRoute
+  DashboardReceiptsRoute: typeof DashboardReceiptsRoute
   DashboardResourcesRoute: typeof DashboardResourcesRouteWithChildren
+  DashboardRevenueRoute: typeof DashboardRevenueRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardWebhooksRoute: typeof DashboardWebhooksRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardAuditRoute: DashboardAuditRoute,
   DashboardDeveloperRoute: DashboardDeveloperRoute,
   DashboardPaymentsRoute: DashboardPaymentsRoute,
   DashboardPlaygroundRoute: DashboardPlaygroundRoute,
+  DashboardReceiptsRoute: DashboardReceiptsRoute,
   DashboardResourcesRoute: DashboardResourcesRouteWithChildren,
+  DashboardRevenueRoute: DashboardRevenueRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardWebhooksRoute: DashboardWebhooksRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
