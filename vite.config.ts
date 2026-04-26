@@ -60,7 +60,50 @@ function jsonResp(res: ServerResponse, data: unknown, status = 200) {
 
 type Req = IncomingMessage & { body?: unknown };
 
-const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: ServerResponse, m: RegExpMatchArray) => void }> = [
+async function deliverWebhook(wh: Record<string, unknown>, paymentId: string, paymentData: Record<string, unknown>) {
+  const url = String(wh.url ?? "");
+  const secret = String(wh.secret ?? "");
+  const ts = Date.now().toString();
+  const payload = JSON.stringify({ event: "payment.settled", created_at: new Date().toISOString(), delivery_id: genId("wd_"), data: paymentData });
+  const sig = crypto.createHmac("sha256", secret).update(`${ts}.${payload}`).digest("hex");
+  const deliveryId = genId("wd_");
+  const start = Date.now();
+  let statusCode = 0;
+  let deliveryStatus = "failed";
+  let errMsg = "";
+  try {
+    const resp = await (globalThis.fetch as typeof fetch)(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Astro-Signature": `sha256=${sig}`,
+        "X-Astro-Timestamp": ts,
+        "X-Astro-Event": "payment.settled",
+        "X-Astro-Delivery": deliveryId,
+      },
+      body: payload,
+      signal: AbortSignal.timeout(10000),
+    });
+    statusCode = resp.status;
+    deliveryStatus = resp.ok ? "success" : "failed";
+  } catch (e) {
+    errMsg = String(e).slice(0, 200);
+  }
+  const dur = Date.now() - start;
+  try {
+    dbExec(interpolate(
+      `INSERT INTO webhook_deliveries (id,webhook_id,payment_id,event_type,status,status_code,duration_ms,error,attempted_at) VALUES ($1,$2,$3,'payment.settled',$4,$5,$6,$7,NOW())`,
+      [deliveryId, wh.id, paymentId, deliveryStatus, statusCode, dur, errMsg]
+    ));
+    if (deliveryStatus === "success") {
+      dbExec(interpolate(`UPDATE webhooks SET delivery_count=delivery_count+1, last_ping_at=NOW() WHERE id=$1`, [wh.id]));
+    } else {
+      dbExec(interpolate(`UPDATE webhooks SET failure_count=failure_count+1 WHERE id=$1`, [wh.id]));
+    }
+  } catch {}
+}
+
+const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: ServerResponse, m: RegExpMatchArray) => void | Promise<void> }> = [
   {
     method: "GET", pattern: /^\/api\/resources$/,
     handler(req, res) {
@@ -177,7 +220,7 @@ const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: 
   },
   {
     method: "POST", pattern: /^\/api\/payments$/,
-    handler(req, res) {
+    async handler(req, res) {
       const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);
       const b = (req as Req).body ?? {};
       const id = genId("pay_"); const now = new Date().toISOString();
@@ -199,8 +242,16 @@ const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: 
         ));
       }
       const rows = dbQuery(interpolate(`SELECT * FROM payments WHERE id = $1`, [id]));
-      if (String(status) === "settled") logEvent(u, "payment.settled", "payment", id, String(resource_name), { amount_lamports, token, payer_wallet, tx_signature });
-      jsonResp(res, rows[0] ?? {}, 201);
+      const paymentRow = rows[0] ?? {};
+      if (String(status) === "settled") {
+        logEvent(u, "payment.settled", "payment", id, String(resource_name), { amount_lamports, token, payer_wallet, tx_signature });
+        const webhooks = dbQuery(interpolate(`SELECT * FROM webhooks WHERE user_id=$1 AND is_active=TRUE AND events LIKE '%payment.settled%'`, [u]));
+        const paymentData = { payment_id: id, resource_id: String(resource_id ?? ""), resource_name: String(resource_name), amount_lamports, token: String(token), payer_wallet: String(payer_wallet), tx_signature: String(tx_signature), status: String(status) };
+        for (const wh of webhooks) {
+          deliverWebhook(wh, id, paymentData).catch(() => {});
+        }
+      }
+      jsonResp(res, paymentRow, 201);
     },
   },
   {
@@ -284,13 +335,57 @@ const ROUTES: Array<{ method: string; pattern: RegExp; handler: (req: Req, res: 
   },
   {
     method: "POST", pattern: /^\/api\/webhooks\/([^/]+)\/ping$/,
-    handler(req, res, m) {
+    async handler(req, res, m) {
       const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);
       const rows = dbQuery(interpolate(`SELECT * FROM webhooks WHERE id=$1 AND user_id=$2`, [m[1], u]));
       if (!rows[0]) return jsonResp(res, { error: "Not found" }, 404);
-      const now = new Date().toISOString();
-      dbExec(interpolate(`UPDATE webhooks SET last_ping_at=$1, delivery_count=delivery_count+1 WHERE id=$2`, [now, m[1]]));
-      jsonResp(res, { ok: true, sent_at: now, event: "ping", webhook_id: m[1] });
+      const wh = rows[0];
+      const url = String(wh.url ?? "");
+      const secret = String(wh.secret ?? "");
+      const ts = Date.now().toString();
+      const deliveryId = genId("wd_");
+      const payload = JSON.stringify({ event: "ping", created_at: new Date().toISOString(), delivery_id: deliveryId, data: { webhook_id: m[1] } });
+      const sig = crypto.createHmac("sha256", secret).update(`${ts}.${payload}`).digest("hex");
+      const start = Date.now();
+      let statusCode = 0;
+      let deliveryStatus = "failed";
+      let errMsg = "";
+      try {
+        const resp = await (globalThis.fetch as typeof fetch)(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Astro-Signature": `sha256=${sig}`, "X-Astro-Timestamp": ts, "X-Astro-Event": "ping", "X-Astro-Delivery": deliveryId },
+          body: payload,
+          signal: AbortSignal.timeout(10000),
+        });
+        statusCode = resp.status;
+        deliveryStatus = resp.ok ? "success" : "failed";
+      } catch (e) {
+        errMsg = String(e).slice(0, 200);
+      }
+      const dur = Date.now() - start;
+      dbExec(interpolate(
+        `INSERT INTO webhook_deliveries (id,webhook_id,payment_id,event_type,status,status_code,duration_ms,error,attempted_at) VALUES ($1,$2,NULL,'ping',$3,$4,$5,$6,NOW())`,
+        [deliveryId, m[1], deliveryStatus, statusCode, dur, errMsg]
+      ));
+      if (deliveryStatus === "success") {
+        dbExec(interpolate(`UPDATE webhooks SET delivery_count=delivery_count+1, last_ping_at=NOW() WHERE id=$1`, [m[1]]));
+      } else {
+        dbExec(interpolate(`UPDATE webhooks SET failure_count=failure_count+1 WHERE id=$1`, [m[1]]));
+      }
+      jsonResp(res, { ok: deliveryStatus === "success", status_code: statusCode, duration_ms: dur, error: errMsg || undefined, event: "ping", webhook_id: m[1] });
+    },
+  },
+  {
+    method: "GET", pattern: /^\/api\/webhook-deliveries$/,
+    handler(req, res) {
+      const u = uid(req); if (!u) return jsonResp(res, { error: "Unauthorized" }, 401);
+      const urlObj = new URL(req.url ?? "/", "http://localhost");
+      const webhookId = urlObj.searchParams.get("webhook_id");
+      if (!webhookId) return jsonResp(res, []);
+      const ownerRows = dbQuery(interpolate(`SELECT id FROM webhooks WHERE id=$1 AND user_id=$2`, [webhookId, u]));
+      if (!ownerRows[0]) return jsonResp(res, []);
+      const rows = dbQuery(interpolate(`SELECT * FROM webhook_deliveries WHERE webhook_id=$1 ORDER BY attempted_at DESC LIMIT 50`, [webhookId]));
+      jsonResp(res, rows);
     },
   },
   {
@@ -309,6 +404,8 @@ function apiMiddleware(): Plugin {
     name: "astro-api",
     configureServer(server) {
       dbExec(`CREATE TABLE IF NOT EXISTS webhooks (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, url TEXT NOT NULL, secret TEXT NOT NULL DEFAULT '', events TEXT NOT NULL DEFAULT '["payment.settled"]', is_active BOOLEAN NOT NULL DEFAULT TRUE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), last_ping_at TIMESTAMPTZ, delivery_count INTEGER NOT NULL DEFAULT 0, failure_count INTEGER NOT NULL DEFAULT 0)`);
+      dbExec(`CREATE TABLE IF NOT EXISTS webhook_deliveries (id TEXT PRIMARY KEY, webhook_id TEXT NOT NULL, payment_id TEXT, event_type TEXT NOT NULL DEFAULT 'payment.settled', status TEXT NOT NULL DEFAULT 'failed', status_code INTEGER NOT NULL DEFAULT 0, duration_ms INTEGER NOT NULL DEFAULT 0, error TEXT NOT NULL DEFAULT '', attempted_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
+      dbExec(`CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_webhook_id ON webhook_deliveries (webhook_id)`);
       dbExec(`CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, event_type TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id TEXT, entity_name TEXT, metadata JSONB DEFAULT '{}', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
       dbExec(`CREATE INDEX IF NOT EXISTS idx_events_user_id ON events (user_id)`);
       dbExec(`ALTER TABLE api_keys ADD COLUMN IF NOT EXISTS label TEXT NOT NULL DEFAULT ''`);
@@ -339,7 +436,7 @@ function apiMiddleware(): Plugin {
           if (route.method !== method) continue;
           const m = url.match(route.pattern);
           if (m) {
-            try { route.handler(reqWithBody, res, m); } catch (e) {
+            try { await route.handler(reqWithBody, res, m); } catch (e) {
               const msg = e instanceof Error ? e.message : "Internal error";
               console.error("[API]", method, url, msg);
               jsonResp(res, { error: msg }, 500);
@@ -362,6 +459,12 @@ export default defineConfig({
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
     apiMiddleware(),
   ],
+  define: {
+    global: "globalThis",
+  },
+  optimizeDeps: {
+    include: ["@solana/web3.js", "buffer"],
+  },
   resolve: {
     alias: {
       "@": `${process.cwd()}/src`,
