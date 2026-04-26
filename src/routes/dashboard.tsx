@@ -107,6 +107,17 @@ const NAV_ITEMS = [
     ),
   },
   {
+    label: "Alerts",
+    to: "/dashboard/alerts",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M7.5 1.5a5 5 0 0 1 5 5c0 3.5-1.5 5-1.5 5h-7s-1.5-1.5-1.5-5a5 5 0 0 1 5-5z"/>
+        <path d="M6 11.5a1.5 1.5 0 0 0 3 0"/>
+        <path d="M7.5 1.5v-1"/>
+      </svg>
+    ),
+  },
+  {
     label: "Audit Log",
     to: "/dashboard/audit",
     icon: (
