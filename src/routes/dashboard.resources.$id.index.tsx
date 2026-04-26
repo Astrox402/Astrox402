@@ -7,26 +7,26 @@ export const Route = createFileRoute("/dashboard/resources/$id/")({
 });
 
 const STATUS_STYLES: Record<string, string> = {
-  active:   "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+  active:   "bg-accent/10      border-accent/20       text-accent",
   paused:   "bg-yellow-500/10  border-yellow-500/20  text-yellow-400",
   draft:    "bg-border/30      border-border          text-muted-foreground",
   archived: "bg-red-500/10     border-red-500/20      text-red-400",
 };
 const STATUS_DOT: Record<string, string> = {
-  active:   "bg-emerald-400",
+  active:   "bg-accent",
   paused:   "bg-yellow-400",
   draft:    "bg-muted-foreground",
   archived: "bg-red-400",
 };
 
 const LIFECYCLE_ACTIONS: Record<ResourceStatus, { label: string; next: ResourceStatus; style: string }[]> = {
-  draft:    [{ label: "Activate",  next: "active",   style: "text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10" }],
+  draft:    [{ label: "Activate",  next: "active",   style: "text-accent border-accent/30 hover:bg-accent/10" }],
   active:   [
     { label: "Pause",    next: "paused",   style: "text-yellow-400 border-yellow-500/30 hover:bg-yellow-500/10"  },
     { label: "Archive",  next: "archived", style: "text-red-400    border-red-500/30    hover:bg-red-500/10"     },
   ],
   paused:   [
-    { label: "Resume",   next: "active",   style: "text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10" },
+    { label: "Resume",   next: "active",   style: "text-accent border-accent/30 hover:bg-accent/10" },
     { label: "Archive",  next: "archived", style: "text-red-400    border-red-500/30    hover:bg-red-500/10"     },
   ],
   archived: [{ label: "Restore",   next: "draft",    style: "text-muted-foreground border-border hover:bg-white/5" }],
@@ -116,6 +116,22 @@ function ResourceDetailPage() {
           >
             Edit
           </button>
+          <Link
+            to="/dashboard/resources/$id/blocklist"
+            params={{ id }}
+            className="h-9 px-4 rounded-lg border border-red-500/20 bg-red-500/5 text-red-400 text-[13px] flex items-center gap-1.5 hover:bg-red-500/10 transition-colors"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 1a5 5 0 1 0 0 10A5 5 0 0 0 6 1zM2.5 2.5l7 7"/></svg>
+            Blocklist
+          </Link>
+          <Link
+            to="/dashboard/resources/$id/policy"
+            params={{ id }}
+            className="h-9 px-4 rounded-lg border border-accent/25 bg-accent/6 text-accent text-[13px] flex items-center gap-1.5 hover:bg-accent/12 transition-colors"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 1v10M1 6h10"/></svg>
+            Quote Policy
+          </Link>
         </div>
       </div>
 
@@ -123,7 +139,7 @@ function ResourceDetailPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { k: "Requests",     v: r.requests.toLocaleString() },
-          { k: "Revenue",      v: r.revenue,  color: "text-emerald-400" },
+          { k: "Revenue",      v: r.revenue,  color: "text-accent" },
           { k: "Success rate", v: r.requests > 0 ? successRate : "—", color: "text-accent" },
           { k: "Environment",  v: r.environment },
         ].map((s) => (
@@ -202,11 +218,11 @@ X-Payment-Dest: 8xMHk…rV2Qw`}</pre>
                     <td className="px-5 py-3 font-mono text-accent/80">{l.method}</td>
                     <td className="px-5 py-3 font-mono">{l.path}</td>
                     <td className="px-5 py-3">
-                      <span className={`font-mono text-[11px] ${l.status === 200 ? "text-emerald-400" : l.status === 402 ? "text-yellow-400" : "text-red-400"}`}>
+                      <span className={`font-mono text-[11px] ${l.status === 200 ? "text-accent" : l.status === 402 ? "text-yellow-400" : "text-red-400"}`}>
                         {l.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3 font-mono text-emerald-400/80">{l.amount}</td>
+                    <td className="px-5 py-3 font-mono text-accent/80">{l.amount}</td>
                     <td className="px-5 py-3 font-mono text-muted-foreground/60">{l.tx}</td>
                   </tr>
                 ))}
@@ -244,15 +260,15 @@ X-Payment-Dest: 8xMHk…rV2Qw`}</pre>
                     <td className="px-5 py-3 font-mono text-muted-foreground whitespace-nowrap">{p.time}</td>
                     <td className="px-5 py-3 font-mono text-accent/70">{p.tx}</td>
                     <td className="px-5 py-3 font-mono text-muted-foreground">{p.slot}</td>
-                    <td className="px-5 py-3 font-mono text-emerald-400">{p.amount}</td>
+                    <td className="px-5 py-3 font-mono text-accent/80">{p.amount}</td>
                     <td className="px-5 py-3">
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-mono px-2 py-0.5 rounded-full border ${
-                        p.status === "settled" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+                        p.status === "settled" ? "bg-accent/10 border-accent/20 text-accent" :
                         p.status === "pending" ? "bg-yellow-500/10  border-yellow-500/20  text-yellow-400" :
                         "bg-red-500/10 border-red-500/20 text-red-400"
                       }`}>
                         <span className={`h-1 w-1 rounded-full ${
-                          p.status === "settled" ? "bg-emerald-400" : p.status === "pending" ? "bg-yellow-400" : "bg-red-400"
+                          p.status === "settled" ? "bg-accent" : p.status === "pending" ? "bg-yellow-400" : "bg-red-400"
                         }`}/>
                         {p.status}
                       </span>
