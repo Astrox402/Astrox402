@@ -121,6 +121,18 @@ export interface ApiWebhook {
   failure_count: number;
 }
 
+export interface ApiWebhookDelivery {
+  id: string;
+  webhook_id: string;
+  payment_id: string | null;
+  event_type: string;
+  status: "success" | "failed";
+  status_code: number;
+  duration_ms: number;
+  error: string;
+  attempted_at: string;
+}
+
 export interface ApiAnalytics {
   payers: Array<{
     payer_wallet: string;
@@ -240,8 +252,14 @@ export const api = {
     await apiFetch(`/api/webhooks/${id}`, { method: "DELETE" });
   },
 
-  async pingWebhook(id: string): Promise<{ ok: boolean; sent_at?: string }> {
+  async pingWebhook(id: string): Promise<{ ok: boolean; status_code?: number; duration_ms?: number; error?: string }> {
     const r = await apiFetch(`/api/webhooks/${id}/ping`, { method: "POST" });
+    return r.json();
+  },
+
+  async getWebhookDeliveries(webhookId: string): Promise<ApiWebhookDelivery[]> {
+    const r = await apiFetch(`/api/webhook-deliveries?webhook_id=${encodeURIComponent(webhookId)}`);
+    if (!r.ok) return [];
     return r.json();
   },
 
