@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { useResources } from "@/lib/resourceStore";
+import { useResources, resourceStore } from "@/lib/resourceStore";
 import { api, type ApiPayment, type ApiStats, lamportsToDisplay, timeAgo } from "@/lib/api";
 import { usePaymentStream } from "@/hooks/usePaymentStream";
 import { getUser } from "@/lib/auth";
@@ -83,7 +83,8 @@ function DashboardOverview() {
 
   usePaymentStream(userId, handleLivePayment);
 
-  const isEmpty = resources.length === 0;
+  const storeLoaded = resourceStore.isLoaded();
+  const isEmpty = storeLoaded && resources.length === 0;
 
   const totalSolRevLam  = stats ? Number(stats.resources.total_sol_revenue_lamports) : 0;
   const totalUsdcRevLam = stats ? Number(stats.resources.total_usdc_revenue_lamports) : 0;
@@ -129,7 +130,7 @@ function DashboardOverview() {
     },
   ];
 
-  const recentResources = [...resources].reverse().slice(0, 5);
+  const recentResources = resources.slice(0, 5);
   const recentActivity  = payments.slice(0, 8);
 
   const chartBars = recentActivity.length > 0
